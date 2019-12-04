@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-business" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-business/user-center" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-business/user-center/user-center-business" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-business/user-center/user-center-client" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-codegenerator" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-commons" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-db-config" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-swagger2-config" charset="UTF-8" />
+  </component>
+</project>
