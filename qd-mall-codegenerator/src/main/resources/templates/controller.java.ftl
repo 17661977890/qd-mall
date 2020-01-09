@@ -1,7 +1,14 @@
 package ${package.Controller};
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
+import  ${package.Service}.${table.serviceName};
 
 <#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +28,7 @@ import ${superControllerClassPackage};
  * @since ${date}
  */
 <#if restControllerStyle>
-@Api(tags = {"${table.comment!}"})
+@Api(tags = {"${table.comment!}web层"})
 @RestController
 <#else>
 @Controller
@@ -36,54 +43,54 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 </#if>
 
- @Autowired
- private ${table.serviceName} targetService;
+      @Autowired
+      private ${table.serviceName} ${table.serviceName};
 
- /**
- * 查询分页数据
- */
- @ApiOperation(value = "查询分页数据")
- @RequestMapping(value = "/list")
- public ResponseWeb<Page> findListByPage(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,@RequestParam(name = "pageSize", defaultValue = "20") int pageSize){
-  return null;
-  }
+      /**
+       * 查询分页数据
+       */
+      @ApiOperation(value = "查询分页数据")
+      @RequestMapping(value = "/list")
+      public RestResponse findListByPage(@RequestBody RestRequest<${entity}> restRequest){
+       return null;
+      }
 
 
-  /**
-  * 根据id查询
-  */
-  @ApiOperation(value = "根据id查询数据")
-  @RequestMapping(value = "/getById")
-  public ResponseWeb<${entity}> getById(@RequestParam("pkid") String pkid){
-   return null;
-  }
+      /**
+       * 根据id查询详情
+       */
+      @ApiOperation(value = "根据id查询数据")
+      @RequestMapping(value = "/getById")
+      public RestResponse getById(@RequestParam("id") String id){
+       return null;
+      }
 
-  /**
-  * 新增
-  */
-  @ApiOperation(value = "新增数据")
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
-  public ResponseWeb<${entity}> add(@RequestBody ${entity} ${entity}){
-   return null;
-  }
+      /**
+       * 新增
+       */
+      @ApiOperation(value = "新增数据")
+      @RequestMapping(value = "/add", method = RequestMethod.POST)
+      public RestResponse add(@RequestBody ${entity} ${entity}){
+       return null;
+      }
 
-  /**
-  * 删除
-  */
-  @ApiOperation(value = "删除数据")
-  @RequestMapping(value = "/del")
-  public ResponseWeb<String> delete(@RequestParam("ids") List<String> ids){
-    return null;
-  }
+      /**
+       * 删除
+       */
+      @ApiOperation(value = "删除数据")
+      @RequestMapping(value = "/del")
+      public RestResponse delete(@RequestParam("ids") List<String> ids){
+        return null;
+      }
 
-    /**
-    * 修改
-    */
-    @ApiOperation(value = "更新数据")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseWeb<${entity}> update(@RequestBody ${entity} ${entity}){
-     return null;
-    }
+      /**
+       * 修改
+       */
+      @ApiOperation(value = "更新数据")
+      @RequestMapping(value = "/update", method = RequestMethod.POST)
+      public RestResponse update(@RequestBody ${entity} ${entity}){
+       return null;
+      }
 
 }
 </#if>

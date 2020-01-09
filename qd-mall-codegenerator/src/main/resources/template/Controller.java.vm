@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import ${package}.${moduleName}.model.${className};
 import ${package}.${moduleName}.service.${className}Service;
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
+import com.central.base.model.PageResult;
+import com.central.base.model.Result;
 
 /**
  * ${comments}

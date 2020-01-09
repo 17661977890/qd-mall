@@ -15,7 +15,7 @@
     <modules>
         <module>qd-mall-db-config</module>
         <module>qd-mall-swagger2-config</module>
-        <module>qd-mall-common-config</module>
+        <module>qd-mall-base-config</module>
     </modules>
 
 </project>

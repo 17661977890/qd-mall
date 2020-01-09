@@ -42,12 +42,15 @@ public class CodeGenerator {
 
         /**
          * 全局配置
+         * /qd-mall-business/user-center/user-center-business
+         * /qd-mall-business/user-center/user-center-client
+         * usercenter
          */
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir")+scanner("项目业务子模块");
         String projectClientPath = System.getProperty("user.dir")+scanner("项目独立接口子模块");
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("binbin");
+        gc.setAuthor("binsun");
         gc.setOpen(false);
         gc.setFileOverride(true);
         // 不需要ActiveRecord特性的请改为false
@@ -71,7 +74,7 @@ public class CodeGenerator {
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("123456");
         mpg.setDataSource(dsc);
 
         /**
@@ -100,7 +103,7 @@ public class CodeGenerator {
         // 如果模板引擎是velocity
         // String templatePath = "/templates/mapper.xml.vm";
 
-        // 实体类和maper.xml自定义输出配置
+        // 实体类和mapper.xml自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
         // 自定义配置会被优先输出
         focList.add(new FileOutConfig(templatePath) {
@@ -152,11 +155,11 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
+//        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
-        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
+//        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
         // 写于父类中的公共字段
         strategy.setSuperEntityColumns("id");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));

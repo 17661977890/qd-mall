@@ -25,6 +25,10 @@
     <dependencies>
         <dependency>
             <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-base-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-swagger2-config</artifactId>
         </dependency>
         <dependency>

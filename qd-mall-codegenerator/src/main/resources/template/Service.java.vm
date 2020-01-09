@@ -1,8 +1,8 @@
 package ${package}.${moduleName}.service;
 
 import ${package}.${moduleName}.entity.${className};
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
+import com.central.base.model.PageResult;
+import com.central.base.model.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;

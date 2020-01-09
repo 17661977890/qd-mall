@@ -42,6 +42,7 @@
         <spring-boot-dependencies.version>2.0.8.RELEASE</spring-boot-dependencies.version>
         <spring-cloud-dependencies.version>Finchley.SR3</spring-cloud-dependencies.version>
         <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
+        <spring-boot-starter-data-redis.version>2.1.4.RELEASE</spring-boot-starter-data-redis.version>
     </properties>
 
     <!--maven 聚合配置-->
@@ -115,6 +116,11 @@
             <!-- 自定义 通用配置依赖starter -->
             <dependency>
                 <groupId>com.qidian.mall</groupId>
+                <artifactId>qd-mall-base-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
                 <artifactId>qd-mall-db-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -156,6 +162,11 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-jwt</artifactId>
                 <version>${security-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot-starter-data-redis.version}</version>
             </dependency>
             <!-- 在Redis基础上的一个Java实用工具包 -->
             <dependency>
