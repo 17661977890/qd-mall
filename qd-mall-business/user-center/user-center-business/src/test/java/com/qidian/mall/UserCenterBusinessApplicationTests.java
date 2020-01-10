@@ -1,22 +1,21 @@
-package com.qidian.mall.usercenter;
+package com.qidian.mall;
 
-
-import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import org.jasypt.encryption.StringEncryptor;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class UserCenterClientApplicationTests {
+public class UserCenterBusinessApplicationTests {
     @Autowired
     private StringEncryptor stringEncryptor;
 
     @Test
     public void contextLoads() {
-
         //加密方法
         System.out.println(stringEncryptor.encrypt("123456"));
         System.out.println(stringEncryptor.encrypt("123456"));

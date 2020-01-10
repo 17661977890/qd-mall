@@ -1,5 +1,6 @@
 package com.qidian.mall.qdmallcodegenerator;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -14,12 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
+/**
+ * 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
+ *
+ * 注意这里的模板引擎有两种 vm 和 ftl 我这里在ftl的基础上做的升级改动。针对我目前项目的结构
+ */
 public class CodeGenerator {
 
     /**
      * <p>
-     * 读取控制台内容
+     * 读取控制台内容(控制台输入示例)
+     *  /qd-mall-business/user-center/user-center-business
+     *  /qd-mall-business/user-center/user-center-client
+     *  usercenter----去掉模块名 这个不需要输入
+     *  sys_user
      * </p>
      */
     public static String scanner(String tip) {
@@ -42,9 +51,7 @@ public class CodeGenerator {
 
         /**
          * 全局配置
-         * /qd-mall-business/user-center/user-center-business
-         * /qd-mall-business/user-center/user-center-client
-         * usercenter
+         *
          */
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir")+scanner("项目业务子模块");
@@ -52,9 +59,11 @@ public class CodeGenerator {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("binsun");
         gc.setOpen(false);
+        // 主键策略
+        gc.setIdType(IdType.AUTO);
         gc.setFileOverride(true);
         // 不需要ActiveRecord特性的请改为false
-        gc.setActiveRecord(true);
+        gc.setActiveRecord(false);
         // XML 二级缓存
         gc.setEnableCache(false);
         // XML ResultMap
@@ -81,7 +90,8 @@ public class CodeGenerator {
          * 包配置(代码生成路径)
          */
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(scanner("包模块名"));
+        //去掉这个，因为不便于生成dto vo的包名路径，只怪自己不想研究底层解析语法，这里图省事
+//        pc.setModuleName(scanner("包模块名"));
         pc.setParent("com.qidian.mall");
         mpg.setPackageInfo(pc);
 
@@ -98,8 +108,10 @@ public class CodeGenerator {
         // 如果模板引擎是freemarker
         // --这里我们用自定义的模板引擎路径: ./templates/mapper.xml.ftl
         // --官方默认的位置: /templates/mapper.xml.ftl
-        String templatePath = "./templates/mapper.xml.ftl";
-        String templatePath2 = "./templates/entity.java.ftl";
+        String templatePath = "/ftl/mapper.xml.ftl";
+        String templatePath2 = "/ftl/entity.java.ftl";
+        String templatePath3 = "/ftl/entityVO.java.ftl";
+        String templatePath4 = "/ftl/entityDTO.java.ftl";
         // 如果模板引擎是velocity
         // String templatePath = "/templates/mapper.xml.vm";
 
@@ -122,6 +134,22 @@ public class CodeGenerator {
                         + "/entity/" + tableInfo.getEntityName() + StringPool.DOT_JAVA;
             }
         });
+        focList.add(new FileOutConfig(templatePath3) {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义相应出参vo对象输出文件名（独立接口部分）
+                return projectClientPath + "/src/main/java/" + pc.getParent()
+                        + "/response/" + tableInfo.getEntityName()+"VO" + StringPool.DOT_JAVA;
+            }
+        });
+        focList.add(new FileOutConfig(templatePath4) {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义请求入参DTO输出文件名（独立接口部分）
+                return projectClientPath + "/src/main/java/" + pc.getParent()
+                        + "/request/" + tableInfo.getEntityName()+"DTO" + StringPool.DOT_JAVA;
+            }
+        });
         /*
         cfg.setFileCreate(new IFileCreate() {
             @Override
@@ -140,10 +168,10 @@ public class CodeGenerator {
          */
         TemplateConfig templateConfig = new TemplateConfig();
         //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-        templateConfig.setService("templates/service.java");
-        templateConfig.setController("templates/controller.java");
-        templateConfig.setServiceImpl("templates/serviceImpl.java");
-        templateConfig.setMapper("/templates/mapper.java");
+        templateConfig.setService("ftl/service.java");
+        templateConfig.setController("ftl/controller.java");
+        templateConfig.setServiceImpl("ftl/serviceImpl.java");
+        templateConfig.setMapper("ftl/mapper.java");
         // 关闭默认 xml 和 entity生成，调整生成 至 根目录
         templateConfig.setEntity(null);
         templateConfig.setXml(null);
@@ -161,7 +189,7 @@ public class CodeGenerator {
         // 公共父类
 //        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
         // 写于父类中的公共字段
-        strategy.setSuperEntityColumns("id");
+//        strategy.setSuperEntityColumns("id");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

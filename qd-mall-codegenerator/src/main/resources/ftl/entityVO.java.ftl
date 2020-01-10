@@ -1,5 +1,4 @@
-package ${package.Entity};
-
+package com.qidian.mall.response;
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
@@ -15,7 +14,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * ${table.comment!}
+ * ${table.comment!} VO 出参值对象
  * </p>
  *
  * @author ${author}
@@ -41,7 +40,7 @@ public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}><
 <#elseif activeRecord>
 public class ${entity} extends Model<${entity}> {
 <#else>
-public class ${entity} implements Serializable {
+public class ${entity}VO implements Serializable {
 </#if>
 
 <#if entitySerialVersionUID>

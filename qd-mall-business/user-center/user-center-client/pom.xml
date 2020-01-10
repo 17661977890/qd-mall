@@ -13,16 +13,10 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <jasypt.spring.boot.starter.version>1.16</jasypt.spring.boot.starter.version>
     </properties>
 
     <dependencies>
-        <!--配置文件加解密插件-->
-        <dependency>
-            <groupId>com.github.ulisesbocchio</groupId>
-            <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>${jasypt.spring.boot.starter.version}</version>
-        </dependency>
+
 
     </dependencies>
 

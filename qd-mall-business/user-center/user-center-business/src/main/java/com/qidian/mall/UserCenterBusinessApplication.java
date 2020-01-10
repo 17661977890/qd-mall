@@ -1,4 +1,4 @@
-package com.qidian.mall.usercenter;
+package com.qidian.mall;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
