@@ -1,0 +1,57 @@
+# 配置文件加密规则
+jasypt:
+  encryptor:
+    password: EbfYkitulv73I2p0mXI50JMXoaxZTKJ7JCCT
+
+spring:
+  application:
+    name: qd-mall-usercenter
+  jackson.date-format: yyyy-MM-dd HH:mm:ss
+  jackson.time-zone: GMT+8
+  # 国际化配置
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  datasource:
+    url: jdbc:mysql://localhost:3306/qd-mall?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password: 123456
+    timeout: 5000
+    jedis:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-wait: -1
+        max-idle: 8
+    port: 6379
+server:
+    port: 9002
+# MP配置
+logging:
+  level:
+    com:
+      qidian:
+        mall:
+          mapper:
+            SysUserMapper: debug
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.qidain.mall.entity
+mall:
+  swagger:
+    enabled: true
+    title: 用户中心
+    description: 用户中心接口文档
+    version: 1.0
+    base-package: com.qidian.mall.controller
+  cache-manager:
+    configs:
+      - key: menu
+        second: 600
+      - key: user
+        second: 1800
