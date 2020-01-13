@@ -4,14 +4,16 @@ import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,10 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author binsun
  * @since 2020-01-10
  */
+@Slf4j
 @Api(tags = {"系统用户名web层"})
 @RestController
 @RequestMapping("/sys-user")
 public class SysUserController extends BaseController {
+
+    private Logger logger = LoggerFactory.getLogger(SysUserController.class);
 
     @Autowired
     public ISysUserService sysUserService;
@@ -93,6 +98,8 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "全部查询", notes = "查询SysUser全部数据")
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) {
+        log.info("查询系统用户入参：{}",restRequest);
+        logger.info("sssssssssssssssss");
         if(restRequest.getBody()==null){
             throw new BusinessException("102101",getMessage("102101"));
         }

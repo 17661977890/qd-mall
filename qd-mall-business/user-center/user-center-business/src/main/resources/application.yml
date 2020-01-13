@@ -1,17 +1,7 @@
-# 配置文件加密规则
-jasypt:
-  encryptor:
-    password: EbfYkitulv73I2p0mXI50JMXoaxZTKJ7JCCT
 
 spring:
-  application:
-    name: qd-mall-usercenter
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
-  # 国际化配置
-  messages:
-    basename: i18n/messages
-    encoding: UTF-8
   datasource:
     url: jdbc:mysql://localhost:3306/qd-mall?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
@@ -31,14 +21,19 @@ spring:
     port: 6379
 server:
     port: 9002
-# MP配置
+# springboot自带logback日志打印级别配置（默认info）--->spring-boot-starter-web依赖中包含了相关日志依赖
 logging:
   level:
+    root: INFO
     com:
       qidian:
         mall:
           mapper:
             SysUserMapper: debug
+      alibaba:
+        nacos:
+          client:
+            naming: warn
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.qidain.mall.entity

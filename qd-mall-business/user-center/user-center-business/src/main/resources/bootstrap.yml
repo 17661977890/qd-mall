@@ -1,0 +1,21 @@
+server:
+  port: 7003
+
+mall:
+  nacos:
+    server-addr: localhost:8848
+
+spring:
+  application:
+    name: qd-mall-usercenter
+  cloud:
+    nacos:
+      config:
+        server-addr: ${mall.nacos.server-addr}
+        file-extension: yml
+        # 参数用来配置多个共享配置的Data Id，多个的时候用用逗号分隔
+        shared-dataids: common.yml
+        # 参数用来定义哪些共享配置的Data Id在配置变化时，应用中可以动态刷新，多个Data Id之间用逗号隔开。如果没有明确配置，默认情况下所有共享配置都不支持动态刷新
+        refreshable-dataids: common.yml
+      discovery:
+        server-addr: ${mall.nacos.server-addr}
