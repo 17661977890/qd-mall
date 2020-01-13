@@ -1,8 +1,20 @@
+
 # qd-mall
 * 奇点商城--->旨在项目搭建以及电商系统架构设计学习和研究，以及相关技术栈的整合学习
 
-## 目前实现依赖功能：
 
+## 目前实现依赖功能：
+````
+qd-mall -- 父项目，公共依赖
+|  |─qd-mall-business -- 业务模块一级工程
+|  |  |─user-center -- 用户中心
+|  |——qd-mall-codegenerator--mybatis-plus代码生成
+|  |─qd-mall-commons -- 通用工具(配置)一级工程
+|  |  |─qd-mall-base-config -- 封装基础项通用配置
+|  |  |─qd-mall-log-config -- 封装日志统一配置
+|  |  |─qd-mall-db-config -- 封装数据库通用配置
+|  |  |─qd-mall-swagger-config -- 封装swagger通用配置
+````
 
 #### (一) mybatis-plus代码生成
 * 模块位置：qd-mall-codegenerator
