@@ -46,7 +46,7 @@ class ${table.controllerName}<#if superControllerClass??> : ${superControllerCla
 <#if superControllerClass??>
 public class ${table.controllerName} extends ${superControllerClass} {
 <#else>
-public class ${table.controllerName} {
+public class ${table.controllerName} extends BaseController {
 </#if>
 
     @Autowired
@@ -60,6 +60,10 @@ public class ${table.controllerName} {
     @ApiOperation(value = "保存", notes = "保存数据到${entity}")
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse add${entity}(@RequestBody RestRequest<${entity}DTO> restRequest) {
+        //BaseController国际化的使用
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         Integer result = ${table.entityPath}Service.save(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -72,6 +76,9 @@ public class ${table.controllerName} {
     @ApiOperation(value = "更新数据", notes = "根据主键id更新${entity}数据")
     @RequestMapping(value = "/updateById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse update${entity}ById(@RequestBody RestRequest<${entity}DTO> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         Integer result = ${table.entityPath}Service.updateById(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -84,6 +91,9 @@ public class ${table.controllerName} {
     @ApiOperation(value = "删除数据", notes = "根据主键id伪删除${entity}数据")
     @RequestMapping(value = "/deleteById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse delete${entity}ById(@RequestBody RestRequest<String> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         Integer result = ${table.entityPath}Service.deleteById(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -96,6 +106,9 @@ public class ${table.controllerName} {
     @ApiOperation(value = "获取单条数据", notes = "根据主键id获取${entity}数据")
     @RequestMapping(value = "/getById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse get${entity}ById(@RequestBody RestRequest<String> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         ${entity}VO result = ${table.entityPath}Service.selectById(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -108,6 +121,9 @@ public class ${table.controllerName} {
     @ApiOperation(value = "全部查询", notes = "查询${entity}全部数据")
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse get${entity}All(@RequestBody RestRequest<${entity}DTO> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         List<${entity}VO> result = ${table.entityPath}Service.selectAll(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -120,6 +136,9 @@ public class ${table.controllerName} {
     @ApiOperation(value = "分页查询", notes = "分页查询${entity}全部数据")
     @RequestMapping(value = "/queryPage", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse get${entity}Page(@RequestBody RestRequest<${entity}DTO> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         IPage<${entity}VO> result = ${table.entityPath}Service.selectPage(restRequest.getBody());
         return new RestResponse().success(result);
     }

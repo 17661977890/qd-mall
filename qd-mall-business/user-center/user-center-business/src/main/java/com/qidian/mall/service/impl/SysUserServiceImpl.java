@@ -1,5 +1,6 @@
 package com.qidian.mall.service.impl;
 
+import com.central.base.message.MessageSourceService;
 import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.request.SysUserDTO;
 import com.qidian.mall.response.SysUserVO;
@@ -10,6 +11,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +25,7 @@ import java.util.Date;
 
 /**
 * <p>
- * SysUser服务实现类
+ * SysUser服务实现类---单一继承的弊端
  * </p>
 *
 * @author binsun
@@ -31,6 +33,8 @@ import java.util.Date;
 */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+    @Autowired
+    private MessageSourceService e;
 
     /**
     * 保存信息对象 ---JAVA8 新特性的时间属性为LocalDateTime
@@ -40,7 +44,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Integer save(SysUserDTO record) {
         SysUser data = this.convertEntity(record);
-        data.setCreateTime(LocalDateTime.now());
+        data.setCreateTime(new Date());
         return baseMapper.insert(data);
     }
 
@@ -52,7 +56,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Integer updateById(SysUserDTO record) {
         SysUser data = this.convertEntity(record);
-        data.setUpdateTime(LocalDateTime.now());
+        data.setUpdateTime(new Date());
         return baseMapper.updateById(data);
     }
 

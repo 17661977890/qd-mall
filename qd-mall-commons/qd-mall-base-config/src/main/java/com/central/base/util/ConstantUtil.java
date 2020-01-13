@@ -16,6 +16,8 @@ public class ConstantUtil {
 
     public static final String UN_KNOW_ERROR = "400";
 
+    public static final String ERROR_DATA = "null";
+
     /**
      * 操作项码：----修改数据状态
      */

@@ -34,15 +34,19 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 <#else>
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
+    //国际化依赖注入
+    @Autowired
+    private MessageSourceService e;
+
     /**
-    * 保存信息对象 ---JAVA8 新特性的时间属性为LocalDateTime
+    * 保存信息对象
     * @param record
     * @return
     */
     @Override
     public Integer save(${entity}DTO record) {
         ${entity} data = this.convertEntity(record);
-        data.setCreateTime(LocalDateTime.now());
+        data.setCreateTime(new Date());
         return baseMapper.insert(data);
     }
 
@@ -54,7 +58,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public Integer updateById(${entity}DTO record) {
         ${entity} data = this.convertEntity(record);
-        data.setUpdateTime(LocalDateTime.now());
+        data.setUpdateTime(new Date());
         return baseMapper.updateById(data);
     }
 

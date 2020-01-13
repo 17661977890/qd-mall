@@ -3,6 +3,8 @@ package com.central.base.restparam;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**

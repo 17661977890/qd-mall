@@ -1,8 +1,11 @@
 package com.qidian.mall.controller;
 
+import com.central.base.exception.BusinessException;
+import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = {"系统用户名web层"})
 @RestController
 @RequestMapping("/sys-user")
-public class SysUserController {
+public class SysUserController extends BaseController {
 
     @Autowired
     public ISysUserService sysUserService;
@@ -90,6 +93,9 @@ public class SysUserController {
     @ApiOperation(value = "全部查询", notes = "查询SysUser全部数据")
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) {
+        if(restRequest.getBody()==null){
+            throw new BusinessException("102101",getMessage("102101"));
+        }
         List<SysUserVO> result = sysUserService.selectAll(restRequest.getBody());
         return new RestResponse().success(result);
     }

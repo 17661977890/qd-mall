@@ -37,8 +37,7 @@ public class GlobalExceptionHandler {
         restResponseHeader.setMessage(ex.getMessage());
         restResponse.setHeader(restResponseHeader);
         Map map = new HashMap();
-        map.put("code",ConstantUtil.ERROR);
-        map.put("message",ex.getMessage());
+        map.put("data",ConstantUtil.ERROR_DATA);
         map.put("url",request.getRequestURI());
         restResponse.setBody(map);
         log.error("打印通用异常报错信息："+ex.getMessage()+";  具体请求："+request.getRequestURI());
@@ -60,8 +59,7 @@ public class GlobalExceptionHandler {
         restResponseHeader.setMessage(ex.getMessage());
         restResponse.setHeader(restResponseHeader);
         Map map = new HashMap();
-        map.put("code",ConstantUtil.ERROR);
-        map.put("message",ex.getMessage());
+        map.put("data",ConstantUtil.ERROR_DATA);
         map.put("url",request.getRequestURI());
         restResponse.setBody(map);
         log.error("打印自定义异常报错信息 ："+ex.getMessage()+";  具体请求："+request.getRequestURI());
@@ -85,8 +83,7 @@ public class GlobalExceptionHandler {
         restResponseHeader.setMessage(defaultMessage);
         restResponse.setHeader(restResponseHeader);
         Map map = new HashMap();
-        map.put("code",ConstantUtil.ERROR);
-        map.put("message",defaultMessage);
+        map.put("data",ConstantUtil.ERROR_DATA);
         map.put("url",request.getRequestURI());
         restResponse.setBody(map);
         log.error("打印参数校验异常报错信息 ："+defaultMessage+";  具体请求："+request.getRequestURI());

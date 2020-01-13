@@ -58,3 +58,12 @@
     * 启动类加@MapperScan 扫描注解
     * 有没有依赖mybatis-plus-boot-starter （因为被封装在db-config 公共以来中，user-center直接依赖db-config就行）
     * yml配置文件
+    
+* 代码生成的时间类型问题：
+    ````
+    Error attempting to get column 'update_time' from result set.  Cause: java.sql.SQLFeatureNotSupportedException
+    ; null; nested exception is java.sql.SQLFeatureNotSupportedException] with root cause
+    
+    因为mybatis生成的时间类型 默认为java的LocalDateTime 类型 mybatis 不支持此api，所以报错。
+    处理方法：修改日期类型Date ，代码生成工具类修改。gc.setDateType(DateType.ONLY_DATE);
+    ````
