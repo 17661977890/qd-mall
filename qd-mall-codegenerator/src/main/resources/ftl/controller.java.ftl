@@ -2,6 +2,7 @@ package ${package.Controller};
 
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
+import com.central.base.mvc.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -33,6 +34,7 @@ import ${superControllerClassPackage};
  * @author ${author}
  * @since ${date}
  */
+@Slf4j
 <#if restControllerStyle>
 @Api(tags = {"${table.comment!}web层"})
 @RestController

@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 * @author ${author}
 * @since ${date}
 */
+@Slf4j
 @Service
 <#if kotlin>
 open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
