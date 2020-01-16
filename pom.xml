@@ -53,6 +53,7 @@
         <module>qd-mall-commons</module>
         <!--代码生成-->
         <module>qd-mall-codegenerator</module>
+        <module>qd-mall-uaa</module>
 
     </modules>
 
