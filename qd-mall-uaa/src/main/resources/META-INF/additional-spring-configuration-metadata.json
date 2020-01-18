@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "mall.security.ignore.httpUrls",
+      "type": "java.lang.String",
+      "description": "Description for mall.security.ignore.httpUrls."
+  }
+] }

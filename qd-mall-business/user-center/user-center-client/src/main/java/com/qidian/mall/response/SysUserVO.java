@@ -1,23 +1,19 @@
-package com.qidian.mall.request;
+package com.qidian.mall.response;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
-import java.util.Date;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * <p>
- * 系统用户名DTO 入参对象
+ * 系统用户名 VO 出参值对象
  * </p>
  *
  * @author binsun
@@ -26,9 +22,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(value="SysUser对象", description="系统用户名")
-public class SysUserDTO extends Page implements Serializable {
+public class SysUserVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

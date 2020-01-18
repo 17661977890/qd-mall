@@ -1,0 +1,25 @@
+# RSA非对称加密token的keyProperties的相关属性配置（相关加密文件到时候可以通过指令替换自己的）
+encrypt:
+  key-store:
+    location: classpath:zlt.jks
+    secret: zlt!@#$
+    alias: zlt
+server:
+  port: 8088
+
+mall:
+  nacos:
+    server-addr: localhost:8848
+
+spring:
+  application:
+    name: qd-mall-uaaserver
+  cloud:
+    nacos:
+      config:
+        server-addr: ${mall.nacos.server-addr}
+        file-extension: yml
+        shared-dataids: common.yml
+        refreshable-dataids: common.yml
+      discovery:
+        server-addr: ${mall.nacos.server-addr}

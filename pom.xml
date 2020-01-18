@@ -134,6 +134,17 @@
                 <artifactId>qd-mall-log-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
+                <artifactId>qd-mall-redis-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
+                <artifactId>user-center-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

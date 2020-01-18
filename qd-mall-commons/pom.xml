@@ -17,6 +17,7 @@
         <module>qd-mall-swagger2-config</module>
         <module>qd-mall-base-config</module>
         <module>qd-mall-log-config</module>
+        <module>qd-mall-redis-config</module>
     </modules>
 
 </project>

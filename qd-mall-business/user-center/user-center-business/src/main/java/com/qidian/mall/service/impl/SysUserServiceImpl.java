@@ -1,6 +1,7 @@
 package com.qidian.mall.service.impl;
 
 import com.central.base.message.MessageSourceService;
+import com.qidian.mall.entity.CustomUserDetails;
 import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.request.SysUserDTO;
 import com.qidian.mall.response.SysUserVO;
@@ -122,9 +123,83 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return iPage;
     }
 
+    //========================== 授权认证相关接口 ============================
+
+    @Override
+    public CustomUserDetails findByUsername(String username) {
+        SysUser sysUser = this.selectByUsername(username);
+        return getLoginAppUser(sysUser);
+    }
+
+    @Override
+    public CustomUserDetails findByMobile(String mobile) {
+        SysUser sysUser = this.selectByOpenId(mobile);
+        return getLoginAppUser(sysUser);
+    }
+
+    @Override
+    public CustomUserDetails findByOpenId(String openId) {
+        SysUser sysUser = this.selectByMobile(openId);
+        return getLoginAppUser(sysUser);
+    }
+
+    private CustomUserDetails getLoginAppUser(SysUser sysUser) {
+        CustomUserDetails loginAppUser = new CustomUserDetails();
+        BeanUtils.copyProperties(sysUser, loginAppUser);
+        //这里可以对CustomUserDetails 进一步做数据追加 角色 权限等信息
+        return loginAppUser;
+    }
 
 
-     /**
+    /**
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
+    @Override
+    public SysUser selectByUsername(String username) {
+        List<SysUser> users = baseMapper.selectList(
+                new QueryWrapper<SysUser>().eq("username", username)
+        );
+        return getUser(users);
+    }
+
+    /**
+     * 根据手机号查询用户
+     * @param mobile
+     * @return
+     */
+    @Override
+    public SysUser selectByMobile(String mobile) {
+        List<SysUser> users = baseMapper.selectList(
+                new QueryWrapper<SysUser>().eq("mobile", mobile)
+        );
+        return getUser(users);
+    }
+
+    /**
+     * 根据openId查询用户
+     * @param openId
+     * @return
+     */
+    @Override
+    public SysUser selectByOpenId(String openId) {
+        List<SysUser> users = baseMapper.selectList(
+                new QueryWrapper<SysUser>().eq("open_id", openId)
+        );
+        return getUser(users);
+    }
+
+    private SysUser getUser(List<SysUser> users) {
+        SysUser user = null;
+        if (users != null && !users.isEmpty()) {
+            user = users.get(0);
+        }
+        return user;
+    }
+
+
+    /**
      * DTO -> Entity （copy 属性名和类型一致才可以转换）
      * @param dto 对象
      * @return Entity

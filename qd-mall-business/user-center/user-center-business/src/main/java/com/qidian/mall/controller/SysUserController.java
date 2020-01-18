@@ -4,7 +4,7 @@ import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
-import lombok.extern.log4j.Log4j;
+import com.qidian.mall.entity.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -117,6 +117,39 @@ public class SysUserController extends BaseController {
     public RestResponse getSysUserPage(@RequestBody RestRequest<SysUserDTO> restRequest) {
         IPage<SysUserVO> result = sysUserService.selectPage(restRequest.getBody());
         return new RestResponse().success(result);
+    }
+
+
+
+    /**
+     * 根据用户名查询用户
+     */
+    @GetMapping(value = "/users-anon/login", params = "username")
+    @ApiOperation(value = "根据用户名查询用户")
+    public RestResponse findByUsername(String username) {
+        return RestResponse.resultSuccess(sysUserService.findByUsername(username));
+    }
+
+    /**
+     * 通过手机号查询用户、角色信息
+     *
+     * @param mobile 手机号
+     */
+    @GetMapping(value = "/users-anon/mobile", params = "mobile")
+    @ApiOperation(value = "根据手机号查询用户")
+    public RestResponse findByMobile(String mobile) {
+        return RestResponse.resultSuccess(sysUserService.findByMobile(mobile));
+    }
+
+    /**
+     * 根据OpenId查询用户信息
+     *
+     * @param openId openId
+     */
+    @GetMapping(value = "/users-anon/openId", params = "openId")
+    @ApiOperation(value = "根据OpenId查询用户")
+    public RestResponse findByOpenId(String openId) {
+        return RestResponse.resultSuccess(sysUserService.findByOpenId(openId));
     }
 
 }
