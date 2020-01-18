@@ -1,0 +1,52 @@
+
+spring:
+  jackson.date-format: yyyy-MM-dd HH:mm:ss
+  jackson.time-zone: GMT+8
+  datasource:
+    url: jdbc:mysql://localhost:3306/mallcloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password:
+    timeout: 5000
+    jedis:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-wait: -1
+        max-idle: 8
+    port: 6379
+# 配置token 的存储配置方式 jwt
+mall:
+  oauth2:
+    token:
+      store:
+        type: authJwt
+  security:
+    ignore:
+      # 忽略认证的地址
+      httpUrls: >
+        /validata/**,
+        /clients,
+        /clients/**,
+        /login.html,
+        /css/**,
+        /images/**,
+        /js/**
+    code:
+      # 忽略验证码的应用编号
+      ignoreClientCode: app
+  swagger:
+    enabled: true
+    title: 认证中心
+    description: 认证中心接口文档
+    version: 1.0
+    base-package: com.qidian.mall.controller
+jwt:
+  expiration: 604800
+  secret: mySecret
+  tokenHead: 'Bearer '
+  tokenHeader: Authorization
