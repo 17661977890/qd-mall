@@ -1,6 +1,7 @@
 package com.qidian.mall.service.impl;
 
 import com.central.base.message.MessageSourceService;
+import com.central.base.util.PasswordEncoderUtil;
 import com.qidian.mall.entity.CustomUserDetails;
 import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.request.SysUserDTO;
@@ -13,9 +14,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,6 +38,8 @@ import java.util.Date;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
     @Autowired
     private MessageSourceService e;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
     * 保存信息对象 ---JAVA8 新特性的时间属性为LocalDateTime

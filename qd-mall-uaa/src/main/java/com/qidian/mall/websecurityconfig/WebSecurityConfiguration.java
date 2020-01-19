@@ -1,5 +1,6 @@
 package com.qidian.mall.websecurityconfig;
 
+import com.central.base.util.PasswordEncoderUtil;
 import com.qidian.mall.errorresponse.RestAuthenticationEntryPoint;
 import com.qidian.mall.errorresponse.RestfulAccessDeniedHandler;
 import com.qidian.mall.websecurityconfig.mobileprovider.MobileAuthenticationSecurityConfig;
@@ -7,6 +8,7 @@ import com.qidian.mall.websecurityconfig.openIdprovider.OpenIdAuthenticationSecu
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -54,6 +56,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * （1）全局用户认证身份管理器
      *  用户信息的全局配置（全局资源：为所有程序提供登录验证后备，登陆时的输入信息以此为准）
@@ -84,7 +89,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 以及为属性DaoAuthenticationProvider 设置 userDetailsService 属性，
         // 创建了UserBuilder对象，并设置了用户名和密码，
         // 所以再具体认证的时候，就会访问到这个userDetailsService，我们也可以对里面的方法进行重写来判断是否通过登录认证。
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     /**
@@ -155,14 +160,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter();
     }
 
-    /**
-     * 密码加密器
-     * @return
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     /**
      * 必不可少，否则SpringBoot会自动配置一个AuthenticationManager,覆盖掉内存中的用户

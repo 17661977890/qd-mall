@@ -34,6 +34,13 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
         return authenticationResult;
     }
 
+    /**
+     * 重写此方法目的：
+     * 底层ProviderManager验证管理类中的验证方法 会遍历所有的定义的provider，并根据token的类型来选择那个provider验证机制。
+     * 所以重写写这个方法就是为了 手机验证登录时 匹配到此provider 来进行业务逻辑的验证。
+     * @param authentication
+     * @return
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return MobileAuthenticationToken.class.isAssignableFrom(authentication);

@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * 给token设置额外信息（拓展）：
  * JwtAccessTokenConverter是用来给token添加附加信息的的转换器
+ * ------token 底层设置的默认的存活时间12H
  * @author 彬
  */
 public class CustomJwtAccessTokenConverter extends JwtAccessTokenConverter {
@@ -24,6 +25,8 @@ public class CustomJwtAccessTokenConverter extends JwtAccessTokenConverter {
 
     /**
      * token 生成器（添加参数）
+     *
+     * 注意这里追加用户信息的时候，CustomUserDetails 里面的信息是在用户中心业务模块总设置值的，那边没设置，这边就取不到值。
      * @param accessToken
      * @param authentication
      * @return

@@ -34,6 +34,10 @@ import java.io.Writer;
 
 /**
  * OAuth2相关操作
+ * Spring Security 的认证过程3部曲：
+ * （1）
+ * （2）
+ * （3）
  *
  * @author mall
  */
@@ -64,6 +68,7 @@ public class OAuth2Controller {
         if (umsAdminLoginParam.getPassword() == null || "".equals(umsAdminLoginParam.getPassword())) {
             throw new UnapprovedClientAuthenticationException("密码为空");
         }
+        //（1）username和password被获得后封装到一个UsernamePasswordAuthenticationToken（继承AbstractAuthenticationToken 而AbstractAuthenticationToken实现了Authentication接口，所以可以说是Authentication接口的实例）的实例中
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(umsAdminLoginParam.getUsername(), umsAdminLoginParam.getPassword());
         writerToken(request, response, token, "用户名或密码错误");
     }
@@ -99,13 +104,19 @@ public class OAuth2Controller {
             if (clientSecret == null || "".equals(clientSecret)) {
                 throw new UnapprovedClientAuthenticationException("请求头中无client_secret信息");
             }
-
+            // 验证client 是否存在（我们对客户端信息做了redis优化）
             ClientDetails clientDetails = getClient(clientId, clientSecret);
+            //封装client信息，底层会根据相关client的信息查询数据库来配置token 比如设置失效时间
             TokenRequest tokenRequest = new TokenRequest(MapUtils.EMPTY_MAP, clientId, clientDetails.getScope(), "customer");
             OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
+            //（2）这个封装了登录验证信息（用户名密码或者手机/openId）的token被传递给AuthenticationManager进行验证，
+            // 并调用provider验证机制，以及我们自行实现的查询用户信息的方法，检查认证成功后的返回一个得到完整填充的Authentication实例
             Authentication authentication = authenticationManager.authenticate(token);
+            //（3）通过调用SecurityContextHolder.getContext().setAuthentication(...)，参数传递authentication对象，来建立安全上下文（security context）
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            //（4）验证通过，我们会利用oauth2 来生成token，并发给前台用户
             OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
+            //调用底层token的生成方法（DefaultTokenServices实现了AuthorizationServerTokenServices接口提供的createAccessToken方法）
             OAuth2AccessToken oAuth2AccessToken = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
             oAuth2Authentication.setAuthenticated(true);
             writerObj(response, oAuth2AccessToken);

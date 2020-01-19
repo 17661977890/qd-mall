@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
+ * 通过feign 调用用户中心接口 验证登录验证信息是否正确
+ * 因为MobileUserDetailsService接口已经继承了 UserDetailsService接口
+ * 所以这里可以一起重写多个验证方法loadUserByUsername、loadUserByMobile
  * @author mall
  */
 @Slf4j
@@ -46,24 +49,5 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
         return  (CustomUserDetails)restResponse.getBody();
     }
 
-
-    /**
-     * @Description: 将数据转换到相应的容器
-     * @param bean
-     * @param clazz
-     * @return
-     * @throws
-     * @author SunF
-     * @date 2018/6/20 10:28
-     */
-    public static <T> T convertValue(Object bean, Class<T> clazz){
-        try{
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.convertValue(bean, clazz);
-        }catch(Exception e){
-            log.error("错误的转换：BeanUtil.convertValue() --->" + e.getMessage());
-            return null;
-        }
-    }
 
 }
