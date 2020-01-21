@@ -214,6 +214,70 @@ qd-mall -- 父项目，公共依赖
     ````
 * 测试：启动测试类的方法，看看在nacos后台配置的加密规则是否生效（可把配置删除进行对比测试），完善配置是可以正常运行并打印语句。
 
+
+#### spring security + oauth2 + jwt 实现统一鉴权认证中心
+
+* 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参}
+* 我们支持一下几种获取token登录的方式：
+    * 授权码模式：
+    * 密码模式：
+    * 客户端凭证模式：
+    * 简化模式：
+    * 自定义获取token 的方式：（上面四种是底层存在的，我们下边在controller包里自定义实现了几种方式）
+        * 用户名密码
+        * 手机号密码
+        * openId
+    
+* 几种授权类型：（我们都支持）
+    * authorization_code：授权码类型。（最安全，适用于第三方app和应用）
+    * implicit：隐式授权类型。
+    * password：资源所有者（即用户）密码类型。-----采用（因为是把密码交给了浏览器，不安全所以只适用于自己开发的应用）
+    * client_credentials：客户端凭据（客户端ID以及Key）类型。（客户端client请求，只要确认client信息准确，就把token发给client，适用于没有用户参与完全信任的服务器端服务）
+        * -----所以这种模式下Authentication 为null 所以你不能使用token转换器追加用户信息，即我们现在的 CustomJwtAccessTokenConverter 这个类可以取消，即token不追加用户信息。
+    
+* 我们支持几种token的存储方式：（可以通过配置文件来配置对应TokenStoreConfig配置类，默认使用JWT）
+    * 基于数据库
+    * 基于redis
+    * 基于jwt
+    * 基于内存
+    
+* 客户端详情获取：
+    * 我们基于数据库查询并且做了一层缓存优化（jdbc+redis） 表名：oauth_client_details
+    * 几个重要属性：
+    * clientId：（必须的）用来标识客户的Id。
+    * secret：（需要值得信任的客户端）客户端安全码，如果有的话。
+    * scope：用来限制客户端的访问范围，如果为空（默认）的话，那么客户端拥有全部的访问范围。
+    * authorizedGrantTypes：此客户端可以使用的授权类型，默认为空。
+    * authorities：此客户端可以使用的权限（基于Spring Security authorities）。
+    
+* spring security的验证流程（AuthenticationManager：https://www.jianshu.com/p/32fa221e03b7）：
+
+* token 的颁发生成管理(AuthorizationServerTokenServices接口：失效时间读书客户端详情数据库的配置，每个客户端目前都是5H)：
+
+* token的获取测试：（grant_type 不同模式认证传参不同）
+    * （1） **自定义模式**：
+        * 调用controller的3个方法，密码模式获取token （用户名密码、手机号密码、openId，注意请求头带client_id 和 client_secret两个参数）
+        
+    * （2） **授权码模式**：
+        * 因为需要session的支持，首先需要WebSecurityConfiguration配置类中做修改：在主过滤器中配置 httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED); 这个支持所有的oauth2认证，如果不是授权码模式可以不用session，即被注释的部分恢复
+        * 获取授权码GET请求： http://localhost:8088/oauth/authorize?response_type=code&client_id=webApp&redirect_uri=http://www.baidu.com
+        * 如果没有登录会先跳到登录自定义界面：http://localhost:8088/login.html
+        * 登录以后，用户信息在session中了，就会获取到授权码（redirect_uri后面的code 就是授权码，这里我们自定义授权码的存储生成策略RedisAuthorizationCodeServices：利用redis存储并设置了12位长度）：https://www.baidu.com/?code=H4yKSbukQ2Fn
+        * 拿到授权码去postman post请求http://localhost:8088/oauth/token?code=H4yKSbukQ2Fn&client_id=webApp&redirect_uri=http://www.baidu.com&grant_type=authorization_code&scope=app&client_secret=webApp 获取token 
+            * 注意几个必选参数： client_id client_secret scope grant_type=authorization_code redirect_uri  这些信息在数据库表oauth_client_details中都有存储要对应，否则会报错 违法的客户端之类的
+            
+    * （3）**客户端凭证模式** ： 
+        *  post请求url：http://localhost:8088/oauth/token?client_id=webApp&grant_type=client_credentials&scope=app&client_secret=webApp
+        * 此模式下 需要将 我们自定义的CustomJwtAccessTokenConverter token生成转换类 大部分代码注释掉，因为此模式下不涉及用户身份信息，所以Authentication 返回null。我们那个类就是对用户身份信息追加至token的，如果null 就会报空指针，
+        * 所以此模式不能追加用户信息至token 还用也没有refresh_token
+        ````
+          protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
+                OAuth2Request storedOAuth2Request = this.requestFactory.createOAuth2Request(client, tokenRequest);
+                return new OAuth2Authentication(storedOAuth2Request, (Authentication)null);
+            }
+        ````
+    
+
 #### LAST: 问题整理：
 
 * springboot整合mybatis-plus 过程中启动项目报错，mapper注入失败，主要是配置问题：
@@ -238,3 +302,11 @@ qd-mall -- 父项目，公共依赖
     
     解决方法：yml中配置 logging.level.com.alibaba.nacos.client.naming 的日志级别为warn
     ````
+* 在使用授权码模式进行认证授权流程时候，同一个类出现了类型不匹配，我们自定义的CustomUserDetails 这个用户信息类，我们在CustomJwtAccessTokenConverter 这了自定义的token生成转换器，追加用户信息的时候报错
+    * 原因： 因为在根节点pom中使用了spring-boot-devtools 的热部署（但是我设置了option 为true，也没用），这个依赖使用的类加载器和默认的不同，所以会出现这个问题。
+    * 参考连接：https://www.cnblogs.com/UncleWang001/p/10063172.html
+    * 调试：debug 选中类 ADD TO WATCH--->edit  .class .classloader() 可查看类加载器
+    * 启动热部署的情况下，
+      类的加载器是 org.springframework.boot.devtools.restart.classloader.RestartClassLoader
+      原先的类加载器（默认的系统类加载器）是 sun.misc.Launcher$AppClassLoader
+      因为是不同的类加载器，所以会报错。

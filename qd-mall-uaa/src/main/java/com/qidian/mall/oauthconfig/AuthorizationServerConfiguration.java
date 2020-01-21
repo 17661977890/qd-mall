@@ -23,6 +23,10 @@ import javax.annotation.Resource;
 
 /**
  * 一、配置oauth2授权认证服务机制
+ *  主要是重写3个配置方法：
+ *  （1）定义授权类型和令牌端点以及令牌服务
+ *  （2）配置令牌端点(Token Endpoint)的安全约束
+ *  （3）配置客户端详情服务（ClientDetailsService）
  * @author 彬
  */
 @Configuration
@@ -89,6 +93,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      * tokenKeyAccess("isAuthenticated()")：开启/oauth/token_key验证端口认证权限访问
      *
      * /oauth/token_key(如果使用JWT，可以获的公钥用于 token 的验签)
+     * Public Key公布在/oauth/token_key这个URL连接中，默认的访问安全规则是"denyAll()"，即在默认的情况下它是关闭的，所以需要在这里配置开启或者权限访问
+     *
+     * 这个如果配置支持allowFormAuthenticationForClients的，且url中有client_id和client_secret的会走ClientCredentialsTokenEndpointFilter来保护
+     * 如果没有支持allowFormAuthenticationForClients或者有支持但是url中没有client_id和client_secret的，走basic认证保护
      * @param security
      * @throws Exception
      */
@@ -123,6 +131,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     /**
      * 客户端详情配置注入（实现方式）
+     * 每个客户端在数据库都有自己设置的授权类型和token失效时间以及授权范围
      * @return
      */
     @Bean

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,7 +20,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import javax.annotation.Resource;
 
@@ -56,8 +62,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    @Autowired(required = false)
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Resource
+    private LogoutHandler oauthLogoutHandler;
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    @Autowired
+    private AuthenticationFailureHandler authenticationFailureHandler;
+
 
     /**
      * （1）全局用户认证身份管理器
@@ -104,11 +120,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      *  csrf().disable()：关闭csrf，防止请求出现csrf跨站请求伪造。
      *  authenticated()，为用户登陆后即可访问。
      *  permitAll(),不需要登录即可访问
-     *  httpBasic()：Http Basic认证方式
+     *  httpBasic()：Http Basic认证方式------这里未使用
      *      流程：1.浏览器发送get请求到服务器，服务器检查是否含有请求头Authorization信息，
      *          若没有则返回响应码401且加上响应头
      *          2.浏览器得到响应码自动弹出框让用户输入用户名和密码，
-     *          浏览器将用户名和密码进行base64编码（用户名：密码），设置请求头Authorization，继续访问
+     *          3.浏览器将用户名、冒号和密码进行base64编码（用户名：密码 admin:admin YWRtaW4lM0FhZG1pbg==），设置请求头Authorization，继续访问
+     *          Basic认证的优点是基本上所有流行的网页浏览器都支持，一般被用在受信赖的或安全性要求不高的系统中（如路由器配置页面的认证，tomcat管理界面认证）
+     *          缺点是，用户名密码基本等于是明文传输带来很大风险，并且没有注销认证信息的手段，只能依靠关闭浏览器退出认证。
      * OPTIONS方法是用于请求获得由Request-URI标识的资源在请求/响应的通信过程中可以使用的功能选项。
      * 通过这个方法，客户端可以在采取具体资源请求之前，决定对该资源采取何种必要措施，或者了解服务器的性能。
      * @param httpSecurity
@@ -116,48 +134,42 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()// 由于使用的是JWT，我们这里不需要csrf
-                .disable()
-                .sessionManagement()// 基于token，所以不需要session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .apply(openIdAuthenticationSecurityConfig)
-                .and()
-                .apply(mobileAuthenticationSecurityConfig)
-                .and()
+        // 由于使用的是JWT，我们这里不需要csrf
+        httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, // 允许对于网站静态资源的无授权访问
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js",
-                        "/swagger-resources/**",
-                        "/v2/api-docs/**"
-                )
+                .anyRequest()
+                //授权服务器关闭basic认证
                 .permitAll()
-                .antMatchers("/admin/login", "/admin/register")// 对登录注册要允许匿名访问
-                .permitAll()
-                .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
-                .permitAll()
-                .antMatchers("/**")//测试时全部运行访问
-                .permitAll()
-                .anyRequest()// 除上面外的所有请求全部需要鉴权认证
-                .authenticated();
+                    .and()
+                .formLogin()
+                    .loginPage("/login.html")
+                    .loginProcessingUrl("/user/login")
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler)
+                    .and()
+                .logout()
+                    .logoutUrl("/oauth/remove/token")
+                    .logoutSuccessUrl("/login.html")
+                    .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                    .addLogoutHandler(oauthLogoutHandler)
+                    .clearAuthentication(true)
+                    .and()
+                .apply(openIdAuthenticationSecurityConfig)
+                    .and()
+                .apply(mobileAuthenticationSecurityConfig);
         // 禁用缓存
         httpSecurity.headers().cacheControl();
-        // 添加JWT filter
-        httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        //添加自定义未授权和未登录结果返回
-        httpSecurity.exceptionHandling()
-                .accessDeniedHandler(restfulAccessDeniedHandler)
-                .authenticationEntryPoint(restAuthenticationEntryPoint);
-    }
-
-    @Bean
-    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter();
+        //添加自定义未授权和未登录结果返回-------暂时不用
+        // （1）基于密码 等模式可以无session,不支持授权码模式
+//        if (authenticationEntryPoint != null) {
+//            httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+//            httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        } else {
+//            // 授权码模式单独处理，需要session的支持，此模式可以支持所有oauth2的认证
+//            httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+//        }
+        // （2）授权码模式单独处理，需要session的支持，此模式可以支持所有oauth2的认证
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
 

@@ -8,7 +8,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>qd-mall-business</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>qd-mall-business</name>
     <packaging>pom</packaging>
     <description>奇点商城业务中心类</description>

@@ -40,7 +40,7 @@ public class ResJwtTokenStore {
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        CustomJwtAccessTokenConverter converter = new CustomJwtAccessTokenConverter();
         converter.setVerifierKey(getPubKey());
         return converter;
     }

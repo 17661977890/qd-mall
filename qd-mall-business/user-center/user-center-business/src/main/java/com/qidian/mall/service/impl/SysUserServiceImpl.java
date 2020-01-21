@@ -137,13 +137,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public CustomUserDetails findByMobile(String mobile) {
-        SysUser sysUser = this.selectByOpenId(mobile);
+        SysUser sysUser = this.selectByMobile(mobile);
         return getLoginAppUser(sysUser);
     }
 
     @Override
     public CustomUserDetails findByOpenId(String openId) {
-        SysUser sysUser = this.selectByMobile(openId);
+        SysUser sysUser = this.selectByOpenId(openId);
         return getLoginAppUser(sysUser);
     }
 

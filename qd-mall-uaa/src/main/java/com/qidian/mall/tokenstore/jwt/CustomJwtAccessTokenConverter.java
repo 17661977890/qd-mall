@@ -33,9 +33,14 @@ public class CustomJwtAccessTokenConverter extends JwtAccessTokenConverter {
      */
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getUserAuthentication().getPrincipal();
+        // 避免出现类加载器不一致的情况而导致同一个类，却类型不匹配
+        CustomUserDetails userDetails;
+        if(authentication.getUserAuthentication().getPrincipal() instanceof CustomUserDetails){
+            userDetails = (CustomUserDetails) authentication.getUserAuthentication().getPrincipal();
+        }else {
+            userDetails = new CustomUserDetails();
+        }
 
-        authentication.getUserAuthentication().getPrincipal();
         //将登陆用户id和角色代码放入token中
         Map<String, Object> info = new HashMap<String, Object>(2) {{
             put(TOKEN_SEG_USER_ID, userDetails.getId());

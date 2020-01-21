@@ -19,6 +19,8 @@ spring:
         max-wait: -1
         max-idle: 8
     port: 6379
+  thymeleaf:
+    prefix: classpath:/static/
 # 配置token 的存储配置方式 jwt
 mall:
   oauth2:
@@ -45,8 +47,3 @@ mall:
     description: 认证中心接口文档
     version: 1.0
     base-package: com.qidian.mall.controller
-jwt:
-  expiration: 604800
-  secret: mySecret
-  tokenHead: 'Bearer '
-  tokenHeader: Authorization

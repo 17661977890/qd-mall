@@ -52,6 +52,7 @@ public class RestResponse<T> implements Serializable {
         RestResponseHeader restResponseHeader = new RestResponseHeader();
         restResponseHeader.setCode(code);
         restResponseHeader.setMessage(msg);
+        this.setHeader(restResponseHeader);
         this.body = body;
         return this;
     }

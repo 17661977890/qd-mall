@@ -39,14 +39,14 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
 
     @Override
     public SocialUserDetails loadUserByUserId(String openId) {
-        RestResponse restResponse = sysUserApi.findByOpenId(openId);
-        return  (CustomUserDetails)restResponse.getBody();
+        RestResponse<CustomUserDetails>  restResponse = sysUserApi.findByOpenId(openId);
+        return  restResponse.getBody();
     }
 
     @Override
     public UserDetails loadUserByMobile(String mobile) {
-        RestResponse restResponse = sysUserApi.findByMobile(mobile);
-        return  (CustomUserDetails)restResponse.getBody();
+        RestResponse<CustomUserDetails>  restResponse = sysUserApi.findByMobile(mobile);
+        return restResponse.getBody();
     }
 
 
