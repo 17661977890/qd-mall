@@ -43,6 +43,7 @@
         <spring-cloud-dependencies.version>Finchley.SR3</spring-cloud-dependencies.version>
         <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
         <spring-boot-starter-data-redis.version>2.1.4.RELEASE</spring-boot-starter-data-redis.version>
+        <httpclient.version>4.5.2</httpclient.version>
     </properties>
 
     <!--maven 聚合配置-->
@@ -217,6 +218,13 @@
                 <groupId>com.didispace</groupId>
                 <artifactId>swagger-butler-core</artifactId>
                 <version>${swagger.butler.version}</version>
+            </dependency>
+            <!--httpclient http远程调用框架-->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+                <scope>compile</scope>
             </dependency>
             <!-- kaptcha 验证码生成工具 -->
             <dependency>

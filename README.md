@@ -8,12 +8,14 @@
 qd-mall -- 父项目，公共依赖
 |  |─qd-mall-business -- 业务模块一级工程
 |  |  |─user-center -- 用户中心
-|  |——qd-mall-codegenerator--mybatis-plus代码生成
+|  |—qd-mall-codegenerator--mybatis-plus代码生成
 |  |─qd-mall-commons -- 通用工具(配置)一级工程
 |  |  |─qd-mall-base-config -- 封装基础项通用配置
 |  |  |─qd-mall-log-config -- 封装日志统一配置
 |  |  |─qd-mall-db-config -- 封装数据库通用配置
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
+|  |-qd-mall-register -- nacos注册中心
+|  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权
 ````
 
 #### (一) mybatis-plus代码生成
@@ -215,7 +217,7 @@ qd-mall -- 父项目，公共依赖
 * 测试：启动测试类的方法，看看在nacos后台配置的加密规则是否生效（可把配置删除进行对比测试），完善配置是可以正常运行并打印语句。
 
 
-#### spring security + oauth2 + jwt 实现统一鉴权认证中心
+#### （五）spring security + oauth2 + jwt 实现统一鉴权认证中心
 
 * 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参}
 * 我们支持一下几种获取token登录的方式：

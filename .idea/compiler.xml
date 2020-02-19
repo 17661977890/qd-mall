@@ -6,33 +6,41 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="qd-mall-uaa" />
         <module name="qd-mall-codegenerator" />
-        <module name="qd-mall-db-config" />
-        <module name="qd-mall-swagger2-config" />
-        <module name="user-center-business" />
         <module name="user-center-client" />
+        <module name="user-center-business" />
+        <module name="qd-mall-swagger2-config" />
+        <module name="qd-mall-base-config" />
+        <module name="qd-mall-db-config" />
+        <module name="qd-mall-log-config" />
+        <module name="qd-mall-redis-config" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
-      <module name="qd-mall" target="8" />
-      <module name="qd-mall-business" target="8" />
-      <module name="qd-mall-codegenerator" target="8" />
-      <module name="qd-mall-commons" target="8" />
-      <module name="qd-mall-db-config" target="8" />
-      <module name="qd-mall-swagger2-config" target="8" />
-      <module name="user-center" target="8" />
-      <module name="user-center-business" target="8" />
-      <module name="user-center-client" target="8" />
+      <module name="qd-mall" target="1.8" />
+      <module name="qd-mall-base-config" target="1.8" />
+      <module name="qd-mall-business" target="1.8" />
+      <module name="qd-mall-codegenerator" target="1.8" />
+      <module name="qd-mall-commons" target="1.8" />
+      <module name="qd-mall-db-config" target="1.8" />
+      <module name="qd-mall-log-config" target="1.8" />
+      <module name="qd-mall-redis-config" target="1.8" />
+      <module name="qd-mall-swagger2-config" target="1.8" />
+      <module name="qd-mall-uaa" target="1.8" />
+      <module name="user-center" target="1.8" />
+      <module name="user-center-business" target="1.8" />
+      <module name="user-center-client" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="qd-mall" options="-parameters" />
-      <module name="qd-mall-business" options="-parameters" />
+      <module name="qd-mall" options="" />
+      <module name="qd-mall-business" options="" />
       <module name="qd-mall-codegenerator" options="" />
-      <module name="qd-mall-commons" options="-parameters" />
+      <module name="qd-mall-commons" options="" />
       <module name="qd-mall-db-config" options="" />
-      <module name="user-center" options="-parameters" />
+      <module name="user-center" options="" />
       <module name="user-center-business" options="" />
       <module name="user-center-client" options="" />
     </option>

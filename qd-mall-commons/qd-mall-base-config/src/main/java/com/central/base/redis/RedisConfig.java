@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * redis配置类
- * @author ZENG.XIAO.YAN
+ * @author binsun
  * @date   2018年6月6日
  *
  */
