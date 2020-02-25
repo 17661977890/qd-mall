@@ -347,3 +347,63 @@ qd-mall -- 父项目，公共依赖
     * repackage 命令，对第一步 打包成的 jar 进行再次打包，将之打成一个 可执行 jar ，通过将第一步打成的 jar 重命名为 *.original 文件
   
   * 因为该项目不是继承spring boot 即顶层父pom中没有parent 是springboot，所以需要配置 repackage 和 mainClass，如果顶层pom是继承的spring-boot-parent话，可以不用配置两者，默认是repackage。
+  
+  
+  * 关于指定maven编译的版本：三种方式：
+    ````
+        # 1 使用内置的属性配置
+    	<properties>
+    		<!-- 文件拷贝时的编码 -->
+    		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    		<!-- 编译时的编码 -->
+    		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+     
+    		<maven.compiler.source>1.8</maven.compiler.source>
+    		<maven.compiler.target>1.8</maven.compiler.target>
+    		<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+     
+    		<java.version>1.8</java.version>
+    	</properties>
+        # 2 使用插件maven-compiler-plugin
+    	<build>
+    		<plugins>
+    			<!-- java编译插件， 编译Java代码 -->
+    			<plugin>
+    				<groupId>org.apache.maven.plugins</groupId>
+    				<artifactId>maven-compiler-plugin</artifactId>
+    				<version>3.2</version><!--$NO-MVN-MAN-VER$ -->
+    				<configuration>
+    					<source>1.8</source>
+    					<target>1.8</target>
+    					<encoding>UTF-8</encoding><!-- 指定编码格式，否则在DOS下运行mvn compile命令时会出现莫名的错误，因为系统默认使用GBK编码 -->
+    				</configuration>
+    			</plugin>
+     
+    			<!-- 资源文件拷贝插件，处理资源文件 -->
+    			<plugin>
+    				<groupId>org.apache.maven.plugins</groupId>
+    				<artifactId>maven-resources-plugin</artifactId>
+    				<version>3.0.1</version><!--$NO-MVN-MAN-VER$ -->
+    				<configuration>
+    					<encoding>UTF-8</encoding><!-- 指定编码格式，否则在DOS下运行mvn命令时当发生文件资源copy时将使用系统默认使用GBK编码 -->
+    				</configuration>
+    			</plugin>
+    		</plugins>
+    	</build>
+        # 3、本地maven setting.xml 配置 或者 写在顶层pom中
+    	<profile>    
+            <id>jdk-1.8</id>    
+             <activation>    
+                  <activeByDefault>true</activeByDefault>    
+                  <jdk>1.8</jdk>    
+              </activation> 
+           
+                <properties>    
+                    <maven.compiler.source>1.8</maven.compiler.source>    
+                    <maven.compiler.target>1.8</maven.compiler.target>    
+                    <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>    
+                </properties>   
+         
+        </profile>
+    ````

@@ -112,7 +112,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <!--依赖使用范围：compile test provided 默认compile，并且觉有多级依赖传递可依赖性-->
+            <!--依赖使用范围：compile test provided 默认compile，并且有多级依赖传递可依赖性-->
             <scope>test</scope>
             <!--排除不需要的包-->
             <exclusions>
@@ -391,7 +391,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <!--指定maven 编译版本 和 jdk版本-->
+    <!--指定maven 编译版本 和 jdk版本，这个也可以在本地maven的settings.xml 配置-->
     <profiles>
         <profile>
             <id>jdk18</id>
@@ -423,7 +423,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- 直接打包插件，不打包依赖jar，只打包本地项目到jar -->
+            <!-- 指定源文件编译对应的jdk版本，和上边profile的作用相同，因为 maven3 maven-compiler-plugin默认是jdk 1.5 版本较低，编译会出错-->
             <!--            <plugin>-->
             <!--                <groupId>org.apache.maven.plugins</groupId>-->
             <!--                <artifactId>maven-compiler-plugin</artifactId>-->
@@ -442,15 +442,15 @@
         <repository>
             <!--是分配给快照一个唯一的版本号（由时间戳和构建流水号）？还是每次都使用相同的版本号？参见repositories/repository元素-->
             <uniqueVersion/>
-            <id>banseon-maven2</id>
-            <name>banseon maven2</name>
+            <id>qd-mall-maven</id>
+            <name>qd-mall maven</name>
             <url>file://${basedir}/target/deploy</url>
         </repository>
         <!--构件的快照部署到哪里？如果没有配置该元素，默认部署到repository元素配置的仓库，参见distributionManagement/repository元素-->
         <snapshotRepository>
             <uniqueVersion/>
-            <id>banseon-maven2</id>
-            <name>Banseon-maven2 Snapshot Repository</name>
+            <id>qd-mall-maven</id>
+            <name>qd-mall-maven Snapshot Repository</name>
             <url>scp://svn.baidu.com/banseon:/usr/local/maven-snapshot</url>
         </snapshotRepository>
     </distributionManagement>
