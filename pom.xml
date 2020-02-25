@@ -38,13 +38,54 @@
         <commons-configuration.version>1.10</commons-configuration.version>
         <txlcn.version>5.0.2.RELEASE</txlcn.version>
         <platform-bom>Cairo-SR3</platform-bom>
+        <!--springboot springcloudalibaba springcloud 版本关系要对应-->
         <spring-cloud-alibaba-dependencies.version>0.2.1.RELEASE</spring-cloud-alibaba-dependencies.version>
         <spring-boot-dependencies.version>2.0.8.RELEASE</spring-boot-dependencies.version>
         <spring-cloud-dependencies.version>Finchley.SR3</spring-cloud-dependencies.version>
+
         <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
         <spring-boot-starter-data-redis.version>2.1.4.RELEASE</spring-boot-starter-data-redis.version>
         <httpclient.version>4.5.2</httpclient.version>
     </properties>
+
+    <!--项目开发者列表-->
+    <developers>
+        <developer>
+            <id>bin</id>
+            <name>sunbin</name>
+            <email>17661977890@163.com</email>
+           <url/>
+            <!--项目开发者在项目中扮演的角色，角色元素描述了各种角色-->
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <!--项目的其他贡献者列表-->
+    <contributors>
+        <!--项目的其他贡献者。参见developers/developer元素-->
+        <contributor>
+            <name/><email/><url/><organization/><organizationUrl/><roles/><timezone/><properties/>
+        </contributor>
+    </contributors>
+
+    <!--描述了项目的license，用于生成项目的web站点的license页面，其他一些报表和validation也会用到该元素。-->
+    <licenses>
+        <license>
+            <!--license用于法律上的名称-->
+            <name>Apache 2</name>
+            <!--官方的license正文页面的URL-->
+            <url>http://www.baidu.com/banseon/LICENSE-2.0.txt</url>
+            <!--项目分发的主要方式：
+              repo，可以从Maven库下载
+              manual， 用户必须手动下载和安装依赖-->
+            <distribution>repo</distribution>
+            <!--关于license的补充信息-->
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
 
     <!--maven 聚合配置-->
     <modules>
@@ -350,22 +391,68 @@
         </dependencies>
     </dependencyManagement>
 
+    <!--指定maven 编译版本 和 jdk版本-->
+    <profiles>
+        <profile>
+            <id>jdk18</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>${java.version}</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>${java.version}</maven.compiler.source>
+                <maven.compiler.target>${java.version}</maven.compiler.target>
+                <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!--构建项目所需要的信息-->
     <build>
+        <!--子项目可以引用的默认插件信息。该插件配置项直到被引用时才会被解析或绑定到生命周期。给定插件的任何本地配置都会覆盖这里的配置-->
+        <!--统一打包插件版本规范-->
+        <pluginManagement>
+            <!--插件列表-->
+            <plugins>
+                <!--springboot的打包插件：把当前项目里所有依赖包和当前项目的源码都打成一个JAR包，同时还会将没有依赖包的JAR包也打出来，以.original为后缀的的就是了-->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
+            <!-- 直接打包插件，不打包依赖jar，只打包本地项目到jar -->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <version>2.3.2</version>-->
+            <!--                <configuration>-->
+            <!--                    <source>1.8</source>-->
+            <!--                    <target>1.8</target>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
+
+    <!--项目分发信息，在执行mvn deploy后表示要发布的位置。有了这些信息就可以把网站部署到远程服务器或者把构件部署到远程仓库。-->
+    <distributionManagement>
+        <!--部署项目产生的构件到远程仓库需要的信息-->
+        <repository>
+            <!--是分配给快照一个唯一的版本号（由时间戳和构建流水号）？还是每次都使用相同的版本号？参见repositories/repository元素-->
+            <uniqueVersion/>
+            <id>banseon-maven2</id>
+            <name>banseon maven2</name>
+            <url>file://${basedir}/target/deploy</url>
+        </repository>
+        <!--构件的快照部署到哪里？如果没有配置该元素，默认部署到repository元素配置的仓库，参见distributionManagement/repository元素-->
+        <snapshotRepository>
+            <uniqueVersion/>
+            <id>banseon-maven2</id>
+            <name>Banseon-maven2 Snapshot Repository</name>
+            <url>scp://svn.baidu.com/banseon:/usr/local/maven-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

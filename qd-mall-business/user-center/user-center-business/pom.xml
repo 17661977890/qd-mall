@@ -30,7 +30,26 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--打包时候，不加下面的配置，执行会报错 没有主清单属性-->
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--这个是默认 goal，在 mvn package 执行之后，这个命令再次打包生成可执行的 jar，
+                            同时将 mvn package jps生成的 jar 重命名为 *.origin；-->
+                            <goal>repackage</goal>
+                        </goals>
+                        <!--指定这个会生成一个exec的jar 可执行，另外的jar不能执行，只能被依赖-->
+                        <!--                   <configuration>-->
+                        <!--                      <classifier>exec</classifier>-->
+                        <!--                    </configuration>-->
+                    </execution>
+                </executions>
             </plugin>
+
         </plugins>
     </build>
 

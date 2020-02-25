@@ -156,7 +156,7 @@ qd-mall -- 父项目，公共依赖
 #### （四） 引入nacos 作为服务注册中心和配置中心，管理微服务项目
 
 * 启动目录：qd-mall-register/nacos/bin (windows启动startup.cmd linux启动startup.sh)
-* nacos后台地址：localhost:8848/nacos
+* nacos后台地址：localhost:8848/nacos  账号密码nacos
 * 一、服务注册步骤：
     * 1、安装nacos启动服务端
     * 2、客户端服务项目添加依赖配置：（切记版本对应，否则注册失败，可参考nacos-start github学习记录和官方文档）
@@ -312,3 +312,38 @@ qd-mall -- 父项目，公共依赖
       类的加载器是 org.springframework.boot.devtools.restart.classloader.RestartClassLoader
       原先的类加载器（默认的系统类加载器）是 sun.misc.Launcher$AppClassLoader
       因为是不同的类加载器，所以会报错。
+
+* 项目打包问题：父模块pom都不配置plugin 打包插件，以及接口依赖模块也不需要配置，只是在有启动类的模块配置即可，所以
+  在有打包插件（spring-boot-plugin-maven）的地方都要配置如下：（如果接口或公共依赖模块也配置了：只是配置 groupid和artifactid 两个标签就行，或者加一个exec的配置）
+  可以参考user-center模块的配置形式（有注释）
+  ````
+  <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+      <!--打包时候，不加下面的配置，执行会报错 没有主清单属性-->
+      <configuration>
+          <mainClass>${start-class}</mainClass>
+          <layout>ZIP</layout>
+      </configuration>
+      <executions>
+          <execution>
+              <goals>
+                  <!--这个是默认 goal，在 mvn package 执行之后，这个命令再次打包生成可执行的 jar，
+                  同时将 mvn package jps生成的 jar 重命名为 *.origin；-->
+                  <goal>repackage</goal>
+              </goals>
+              <!--指定这个会生成一个exec的jar 可执行，另外的jar不能执行，只能被依赖-->
+              <!--                   <configuration>-->
+              <!--                      <classifier>exec</classifier>-->
+              <!--                    </configuration>-->
+          </execution>
+      </executions>
+  </plugin>
+  ````
+  * maven 打包插件有很多种，自行百度，我这里都是直接用的springboot打包插件。会将本地项目和依赖的jar都进行打包。
+  * 本项目如果没有配置执行信息（goal：repackage）和 mainClass ，那么打出来的包，只能被依赖，而不会被执行，执行会报错没有主清单属性。
+  * repackage 功能的 作用，就是在打包的时候，多做一点额外的事情：
+    * 首先 mvn package 命令 对项目进行打包，打成一个 jar，这个 jar 就是一个普通的 jar，可以被其他项目依赖，但是不可以被执行
+    * repackage 命令，对第一步 打包成的 jar 进行再次打包，将之打成一个 可执行 jar ，通过将第一步打成的 jar 重命名为 *.original 文件
+  
+  * 因为该项目不是继承spring boot 即顶层父pom中没有parent 是springboot，所以需要配置 repackage 和 mainClass，如果顶层pom是继承的spring-boot-parent话，可以不用配置两者，默认是repackage。

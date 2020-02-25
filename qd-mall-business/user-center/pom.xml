@@ -16,6 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
         <jasypt.spring.boot.starter.version>1.16</jasypt.spring.boot.starter.version>
+        <start-class>com.qidian.mall.UserCenterBusinessApplication</start-class>
     </properties>
 
     <modules>
@@ -62,13 +63,6 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 
 </project>

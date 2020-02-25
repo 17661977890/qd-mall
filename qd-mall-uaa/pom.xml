@@ -11,6 +11,11 @@
     <description>授权认证服务器</description>
     <artifactId>qd-mall-uaa</artifactId>
 
+    <properties>
+        <java.version>1.8</java.version>
+        <start-class>com.qidian.mall.UaaCenterApplication</start-class>
+    </properties>
+
     <dependencies>
         <!--用户外部接口-->
         <dependency>
@@ -100,6 +105,22 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--打包时候，不加下面的配置，执行会报错 没有主清单属性-->
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--可以把依赖的包都打包到生成的Jar包中-->
+                            <goal>repackage</goal>
+                        </goals>
+<!--                        <configuration>-->
+<!--                            <classifier>exec</classifier>-->
+<!--                        </configuration>-->
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

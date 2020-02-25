@@ -20,8 +20,8 @@ public class UserCenterBusinessApplicationTests {
         System.out.println(stringEncryptor.encrypt("123456"));
         System.out.println(stringEncryptor.encrypt("123456"));
         //解密方法
+        System.out.println(stringEncryptor.decrypt("LmL0YwWu7iem5J+jD9pAS5v8VZvXl63Y"));
         System.out.println(stringEncryptor.decrypt("JrHjkKCEYDvsg2KhjPTv6j1LCQSYUAU4"));
-        System.out.println(stringEncryptor.decrypt("bsTEYo52zDjHqDS46oXaJqzEC/lrETSA"));
     }
 
 }

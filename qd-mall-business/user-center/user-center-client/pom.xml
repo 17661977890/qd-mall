@@ -38,12 +38,20 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--接口模块 不需要执行jar，只需要可以依赖就行，或者加下面的配置。
+                否则按照business模块的方式打包，business打包是会报错，程序包找不到，
+                因为那种方式可执行但是不能依赖-->
+                <!--这种只需要依赖的模块 也可以不用显示打包插件方式，全部注释也可以-->
+                <!--指定这个会生成一个exec的jar 可执行，另外的jar不能执行，只能被依赖-->
+                <!--                   <configuration>-->
+                <!--                      <classifier>exec</classifier>-->
+                <!--                    </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
     </build>
 
 </project>
