@@ -6,6 +6,10 @@ spring:
     username: root
     password: 123456
     driverClassName: com.mysql.jdbc.Driver
+    # 国际化配置
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
   redis:
     database: 0
     host: 127.0.0.1

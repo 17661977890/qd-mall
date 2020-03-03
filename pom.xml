@@ -438,20 +438,20 @@
 
     <!--项目分发信息，在执行mvn deploy后表示要发布的位置。有了这些信息就可以把网站部署到远程服务器或者把构件部署到远程仓库。-->
     <distributionManagement>
-        <!--部署项目产生的构件到远程仓库需要的信息-->
+        <!--部署项目产生的构件到远程仓库需要的信息  这里nexus私服仓库的是在我的阿里云服务器搭建的 账号密码 admin sunbin123-->
         <repository>
             <!--是分配给快照一个唯一的版本号（由时间戳和构建流水号）？还是每次都使用相同的版本号？参见repositories/repository元素-->
             <uniqueVersion/>
-            <id>qd-mall-maven</id>
-            <name>qd-mall maven</name>
-            <url>file://${basedir}/target/deploy</url>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://47.103.18.65:8081/repository/maven-releases/</url>
         </repository>
         <!--构件的快照部署到哪里？如果没有配置该元素，默认部署到repository元素配置的仓库，参见distributionManagement/repository元素-->
         <snapshotRepository>
             <uniqueVersion/>
-            <id>qd-mall-maven</id>
-            <name>qd-mall-maven Snapshot Repository</name>
-            <url>scp://svn.baidu.com/banseon:/usr/local/maven-snapshot</url>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://47.103.18.65:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
