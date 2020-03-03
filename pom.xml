@@ -455,4 +455,35 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <!--配置代理仓库，作用：可以从私服下载jar  上边的配置只是本地部署到私服的配置，如果这个不配置，是不会走私服拉jar-->
+    <!--也可以在本地maven的setting.xml配置，那样对本地所有项目起作用 全局性-->
+    <!--配置前依赖拉取流程：项目 本地 官方远程仓库-->
+    <!--配置后依赖拉取流程：项目 本地 私服  官方远程仓库-->
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Repository</name>
+            <url>http://47.103.18.65:8081/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>Nexus Plugin Repository</name>
+            <url>http://47.103.18.65:8081/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>
