@@ -407,3 +407,5 @@ qd-mall -- 父项目，公共依赖
          
         </profile>
     ````
+    * 项目部署--deploy： 顶层pom配置私服仓库（发行版和快照版），修改本地maven setting.xml配置，即可打包部署
+        * 可以用命令执行 mvn deploy -Dmaven.test.skip=true (跳过测试)
