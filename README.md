@@ -409,3 +409,11 @@ qd-mall -- 父项目，公共依赖
     ````
     * 项目部署--deploy： 顶层pom配置私服仓库（发行版和快照版），修改本地maven setting.xml配置，即可打包部署
         * 可以用命令执行 mvn deploy -Dmaven.test.skip=true (跳过测试)
+    * 项目-->本地-->私服-->官方远程仓库，按照这个流程下载坐标依赖，顶层pom新增配置代理仓库，以kaptcha jar为例，本地依赖坐标，
+    直接从远程仓库（我们本地配置的是阿里云）是拉不到的没有，这时候需要我们手动下载jar 地址：https://mvnrepository.com/artifact/com.google.code.kaptcha/kaptcha/2.3
+        * 命令上传第三方jar到私服：
+        ````
+        # 如第三方JAR包：kaptcha-2.3.jar Dfile 本地下载jar的所在路径 Durl 私服发行仓库 DrepositoryId maven server的私服id
+        mvn deploy:deploy-file -DgroupId=com.google.code.kaptcha -DartifactId=kaptcha -Dversion=2.3 -Dpackaging=jar -Dfile=/Users/minyoung/Downloads/kaptcha-2.3.jar -Durl=http://47.103.18.65:8081/repository/maven-releases/ -DrepositoryId=nexus-releases
+        ````
+        * 配置pom后刷新maven 获取私服的jar，如果不行，或者打包报错无权，那就要配置nexus的匿名用户访问。
