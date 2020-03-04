@@ -1,11 +1,19 @@
 
 # qd-mall
 * 奇点商城--->旨在项目搭建以及电商系统架构设计学习和研究，以及相关技术栈的整合学习
-
+* 通过maven-nexus私服和gitlab私有代码托管平台的搭建，该项目jar包已部署到私服，代码已经迁移至gitlab
+    * my-gitlab： 
+        * 自家虚拟机搭建：192.168.0.105 两个管理员账号：sunbin 和 admin （密码有道云记载）  地址：http://192.168.0.105:8082/sunbin/my-qd-mall
+        * 我自己的阿里云服务器中也基于linux原生搭建了gitlab，同时也利用了docker-compose搭建  账号都是默认 admin 密码也是有道云记载
+        * 注意事项：搭建过程中 服务器需要至少2G内存，否则很慢
+    * my-nexus：
+        * 在阿里云服务器用docker-compose搭建  地址：http://47.103.18.65:8081/
+         
 
 ## 目前实现依赖功能：
 ````
 qd-mall -- 父项目，公共依赖
+|  |-image -- 图片文件
 |  |─qd-mall-business -- 业务模块一级工程
 |  |  |─user-center -- 用户中心
 |  |—qd-mall-codegenerator--mybatis-plus代码生成
@@ -14,6 +22,7 @@ qd-mall -- 父项目，公共依赖
 |  |  |─qd-mall-log-config -- 封装日志统一配置
 |  |  |─qd-mall-db-config -- 封装数据库通用配置
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
+|  |  |-qd-mall-redis-config -- redis 通用配置
 |  |-qd-mall-register -- nacos注册中心
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权
 ````
@@ -313,8 +322,8 @@ qd-mall -- 父项目，公共依赖
       原先的类加载器（默认的系统类加载器）是 sun.misc.Launcher$AppClassLoader
       因为是不同的类加载器，所以会报错。
 
-* 项目打包问题：父模块pom都不配置plugin 打包插件，以及接口依赖模块也不需要配置，只是在有启动类的模块配置即可，所以
-  在有打包插件（spring-boot-plugin-maven）的地方都要配置如下：（如果接口或公共依赖模块也配置了：只是配置 groupid和artifactid 两个标签就行，或者加一个exec的配置）
+* **maven相关**： 
+  * 项目打包问题：父模块pom都不配置plugin 打包插件，以及接口依赖模块也不需要配置，只是在有启动类的模块配置即可，所以在有打包插件（spring-boot-plugin-maven）的地方都要配置如下：（如果接口或公共依赖模块也配置了：只是配置 groupid和artifactid 两个标签就行，或者加一个exec的配置）
   可以参考user-center模块的配置形式（有注释）
   ````
   <plugin>
