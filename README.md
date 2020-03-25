@@ -16,6 +16,7 @@ qd-mall -- 父项目，公共依赖
 |  |-image -- 图片文件
 |  |─qd-mall-business -- 业务模块一级工程
 |  |  |─user-center -- 用户中心
+|  |  |-quartz -- 定时调度框架的整合（旧版 springboot 1.x）
 |  |—qd-mall-codegenerator--mybatis-plus代码生成
 |  |─qd-mall-commons -- 通用工具(配置)一级工程
 |  |  |─qd-mall-base-config -- 封装基础项通用配置
@@ -288,6 +289,47 @@ qd-mall -- 父项目，公共依赖
             }
         ````
     
+#### (六)、quartz定时调度框架的集成：
+
+* 当前项目集成的是旧版 quartz （springboot1.x） 也可以集成springboot2.x之后的新版（starter依赖），在spring-security-oauth2 项目中集成案例
+    ````
+    # 旧版-需要配置quartz-properties 配置文件和configuration配置类
+    dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+    </dependency>
+  
+    # 新版 只需要将配置写在yml文件即可，不需要增加配置类
+    <!--springboot 2.0 之后集成了quartz starter-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-quartz</artifactId>
+    </dependency>
+  # quartz 在springboot2.0 之后配置在yml
+  spring：  
+    quartz:
+      #相关属性配置
+      properties:
+        org:
+          quartz:
+            scheduler:
+              instanceName: clusteredScheduler
+              instanceId: AUTO
+            jobStore:
+              class: org.quartz.impl.jdbcjobstore.JobStoreTX
+              driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+              tablePrefix: QRTZ_
+              isClustered: true
+              clusterCheckinInterval: 10000
+              useProperties: false
+            threadPool:
+              class: org.quartz.simpl.SimpleThreadPool
+              threadCount: 10
+              threadPriority: 5
+              threadsInheritContextClassLoaderOfInitializingThread: true
+    ````
+* 官方github： 数据库脚本：https://github.com/quartz-scheduler/quartz/tree/master/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore
+* 当前项目集成位置在user-center-business/quartz包下
 
 #### LAST: 问题整理：
 

@@ -3,6 +3,7 @@ package com.qidian.mall.controller;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qidian.mall.entity.LoginUserInfo;
 import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.websecurityconfig.mobileprovider.MobileAuthenticationToken;
 import com.qidian.mall.websecurityconfig.openIdprovider.OpenIdAuthenticationToken;
@@ -92,6 +93,18 @@ public class OAuth2Controller {
         writerToken(request, response, token, "手机号或密码错误");
     }
 
+
+    @ApiOperation(value = "获取登录用户信息")
+    @PostMapping("/oauth/user/info")
+    public RestResponse getLoginUserInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUserInfo loginUserInfo = new LoginUserInfo();
+        loginUserInfo.setUsername(authentication.getName());
+        return RestResponse.resultSuccess(loginUserInfo);
+    }
+
+
+
     /**
      * 自定义 token的认证方式以及获取令牌方式 （底层有密码模式 授权码模式 简化模式 客户端模式）我们这里有用户名密码和手机号 openId
      *  // 1. 从请求头中获取 ClientId
@@ -143,6 +156,8 @@ public class OAuth2Controller {
             exceptionHandler(response, e);
         }
     }
+
+
 
     private void exceptionHandler(HttpServletResponse response, Exception e) throws IOException {
         log.error("exceptionHandler-error:", e);

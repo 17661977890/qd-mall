@@ -4,6 +4,8 @@ import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
+import com.qidian.mall.quartz.QuartzJobManager;
+import com.qidian.mall.quartz.TestQuartz;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ import com.qidian.mall.response.SysUserVO;
 import com.qidian.mall.service.ISysUserService;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -97,7 +101,6 @@ public class SysUserController extends BaseController {
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) {
         log.info("查询系统用户入参：{}",restRequest);
-        logger.info("sssssssssssssssss");
         if(restRequest.getBody()==null){
             throw new BusinessException("102101",getMessage("102101"));
         }
@@ -148,6 +151,16 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "根据OpenId查询用户")
     public RestResponse findByOpenId(String openId) {
         return RestResponse.resultSuccess(sysUserService.findByOpenId(openId));
+    }
+
+    /**
+     * 测试定时调度
+     * @param request
+     * @throws Exception
+     */
+    @PostMapping("/task")
+    public void task(HttpServletRequest request) throws Exception {
+        QuartzJobManager.getInstance().addJob(TestQuartz.class, "testJob","Group1", "0/5 * * * * ? ");
     }
 
 }

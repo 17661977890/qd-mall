@@ -25,7 +25,11 @@
     </modules>
 
     <dependencies>
-
+        <!--旧版定时调度quartz springboot2.0已更新 -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
         <!--忘记此依赖 会报错 mapper注入失败相关-->
         <dependency>
             <groupId>com.qidian.mall</groupId>
