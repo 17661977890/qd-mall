@@ -30,6 +30,12 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
+        <!--基于springboot2.x 的quartz定时调度框架封装-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-quartz-config</artifactId>
+        </dependency>
+        
         <!--忘记此依赖 会报错 mapper注入失败相关-->
         <dependency>
             <groupId>com.qidian.mall</groupId>
@@ -47,6 +53,7 @@
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-log-config</artifactId>
         </dependency>
+
         <!--配置文件加解密插件-->
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>

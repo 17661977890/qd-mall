@@ -3,6 +3,8 @@ package com.qidian.mall.controller;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qidian.mall.api.SysUserApi;
+import com.qidian.mall.entity.CustomUserDetails;
 import com.qidian.mall.entity.LoginUserInfo;
 import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.websecurityconfig.mobileprovider.MobileAuthenticationToken;
@@ -23,6 +25,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +58,11 @@ public class OAuth2Controller {
     private ClientDetailsService clientDetailsService;
     @Resource
     private AuthorizationServerTokenServices authorizationServerTokenServices;
+    @Autowired
+    private TokenStore tokenStore;
+    @Resource
+    private SysUserApi sysUserApi;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -93,16 +101,41 @@ public class OAuth2Controller {
         writerToken(request, response, token, "手机号或密码错误");
     }
 
-
+    /**
+     * 获取登录用户信息（待测试）
+     * todo 使用spring cloud 做saas服务器时，经常会通过Feign调用远程服务。有时候我们的远程服务可能做了某些权限验证。
+     *      需要验证header或者token什么的。如果某没有token，可能会被阻止调用。那如何添加token呢。
+     *      如果每个方法都手动设置headers，那未免太麻烦。可以通过一个切面，自动帮我们添加请求header。
+     * todo ：所以需要配置feign拦截  实现RequestInterceptor 重写paply方法
+     *
+     * todo： feign的实现有三种方式 httpurlconnection（默认） httpclient okhttp  我们可以在yml配置使用后面两种
+     * @return
+     */
     @ApiOperation(value = "获取登录用户信息")
     @PostMapping("/oauth/user/info")
     public RestResponse getLoginUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 通过feign远程调用用户中心的获取用户信息接口，来追加登录用户信息
+        // TODO:  根据用户名查询 authentication.getName()
+        // RestResponse<CustomUserDetails> restResponse  = sysUserApi.findByUsername(authentication.getName());
+
         LoginUserInfo loginUserInfo = new LoginUserInfo();
         loginUserInfo.setUsername(authentication.getName());
         return RestResponse.resultSuccess(loginUserInfo);
     }
 
+    /**
+     * 登出----移除token（带测试）
+     * @return
+     */
+    @ApiOperation(value = "登出")
+    @PostMapping("/oauth/remove/token")
+    public RestResponse logout(HttpServletRequest request){
+        String access_token = request.getParameter("access_token");
+        OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(access_token);
+        tokenStore.removeAccessToken(oAuth2AccessToken);
+        return RestResponse.resultSuccess(null);
+    }
 
 
     /**

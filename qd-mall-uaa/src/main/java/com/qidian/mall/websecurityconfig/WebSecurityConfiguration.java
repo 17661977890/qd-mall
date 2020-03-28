@@ -160,6 +160,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 禁用缓存
         httpSecurity.headers().cacheControl();
         //添加自定义未授权和未登录结果返回-------暂时不用
+        // todo 不使用session 无状态应用 符合12要素
         // （1）基于密码 等模式可以无session,不支持授权码模式
 //        if (authenticationEntryPoint != null) {
 //            httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);

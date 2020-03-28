@@ -16,14 +16,17 @@ qd-mall -- 父项目，公共依赖
 |  |-image -- 图片文件
 |  |─qd-mall-business -- 业务模块一级工程
 |  |  |─user-center -- 用户中心
-|  |  |-quartz -- 定时调度框架的整合（旧版 springboot 1.x）
+|  |  |  |-user-business -- 用户业务模块
+|  |  |  |-quartz -- 定时调度框架的整合（旧版 springboot 1.x）
+|  |  |  |-async  -- 多线程异步任务使用案例
 |  |—qd-mall-codegenerator--mybatis-plus代码生成
 |  |─qd-mall-commons -- 通用工具(配置)一级工程
-|  |  |─qd-mall-base-config -- 封装基础项通用配置
+|  |  |─qd-mall-base-config -- 封装基础项通用配置（异步async 定时线程池 cros跨域 统一异常处理 统一出参入参规范 redis序列化配置 httpclient配置 国际化 相关工具类）
 |  |  |─qd-mall-log-config -- 封装日志统一配置
 |  |  |─qd-mall-db-config -- 封装数据库通用配置
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
-|  |  |-qd-mall-redis-config -- redis 通用配置
+|  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）
+|  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
 |  |-qd-mall-register -- nacos注册中心
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权
 ````
@@ -331,6 +334,33 @@ qd-mall -- 父项目，公共依赖
 * 官方github： 数据库脚本：https://github.com/quartz-scheduler/quartz/tree/master/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore
 * 当前项目集成位置在user-center-business/quartz包下
 
+* 在commons 模块新增配置quartz模块，基于springboot2.0的封装，使用方法如下：
+    * 业务类pom依赖坐标
+    ````
+    <!--基于springboot2.x 的quartz定时调度框架封装-->
+    <dependency>
+        <groupId>com.qidian.mall</groupId>
+        <artifactId>qd-mall-quartz-config</artifactId>
+    </dependency>
+    ````
+    * 业务类的yml文件 中配置,引入集成quartz的配置
+    ````
+    spring:
+      profiles:
+        include: quartz
+    ````
+    * 所有的定时任务处理逻辑方法，以后就可以写在此配置模块下job-taskexecute包下，按业务类型区分，不用在业务模块增加
+    * 业务模块方法中直接调用QuartzJobManager工具类的新增定时任务等方法 即可测试。
+
+### 多线程异步 @Async 和 定时任务线程池 schedule 的引入：
+
+* 异步任务的使用：
+    * 直接在需要做异步任务的方法加 @Async 注解接口，注意不可同类调用，否则无效，aop动态代理的原因 和事务注解一样。 
+    * 在需要的业务模块 yml文件中 配置线程池的配置参数，这里我们可以以用户中心模块为参考。----asyncController
+    * 配合 程序计数器的CountDownLatch 的使用。
+* 定时任务线程池的使用：
+    * 可以做一下简单定时任务的处理，本项目因为引入了更强大的定时调度框架，所以这里没有在写相关的定时处理等配置类，有需要可以网上百度
+    
 #### LAST: 问题整理：
 
 * springboot整合mybatis-plus 过程中启动项目报错，mapper注入失败，主要是配置问题：

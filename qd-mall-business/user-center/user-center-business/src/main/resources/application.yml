@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: quartz
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
   datasource:
@@ -57,6 +59,14 @@ http:
   staleConnectionCheckEnabled: true
   waitTime: 3000
   idleConTime: 3
+
+# base 模块async 异步任务 线程池相关配置
+threadpool:
+  core-pool-size: 20
+  max-pool-size: 30
+  queue-capacity: 1000
+  keep-alive-seconds: 1000
+  thread-name-prefix: "Async-Thread:"
 mall:
   swagger:
     enabled: true

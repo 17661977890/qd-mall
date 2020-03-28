@@ -170,6 +170,11 @@
             </dependency>
             <dependency>
                 <groupId>com.qidian.mall</groupId>
+                <artifactId>qd-mall-quartz-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
                 <artifactId>qd-mall-log-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
