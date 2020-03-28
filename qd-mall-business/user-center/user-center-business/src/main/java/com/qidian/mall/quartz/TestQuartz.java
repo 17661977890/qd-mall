@@ -20,7 +20,7 @@ public class TestQuartz implements BaseTaskJob {
 
         try {
 
-//            QuartzJobManager.getInstance().pauseJob("testJob","Group1");
+            QuartzJobManager.getInstance().pauseJob("testJob","Group1");
 //            QuartzJobManager.getInstance().jobdelete(this.getClass().getSimpleName(),"ah");//执行完此任务就删除自己
         } catch (Exception e) {
             e.printStackTrace();

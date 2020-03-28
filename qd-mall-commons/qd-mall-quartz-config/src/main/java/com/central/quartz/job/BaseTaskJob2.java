@@ -9,6 +9,6 @@ import org.quartz.JobExecutionException;
  * @Description: 基础任务调度taskJob接口
  * <p>
  */
-public interface BaseTaskJob extends Job {
+public interface BaseTaskJob2 extends Job {
     void execute(JobExecutionContext context) throws JobExecutionException;
 }

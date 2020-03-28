@@ -1,6 +1,6 @@
 package com.central.quartz.manager;
 
-import com.central.quartz.job.BaseTaskJob;
+import com.central.quartz.job.BaseTaskJob2;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
@@ -15,22 +15,22 @@ import java.util.*;
  * @date 2018/5/30.
  */
 @Component
-public class QuartzJobManager {
-    private static final Logger logger = LoggerFactory.getLogger(QuartzJobManager.class);
+public class QuartzJobManager2 {
+    private static final Logger logger = LoggerFactory.getLogger(QuartzJobManager2.class);
 
-    private static QuartzJobManager jobUtil;
+    private static QuartzJobManager2 jobUtil;
 
     @Autowired
     private Scheduler scheduler;
 
-    public QuartzJobManager() {
+    public QuartzJobManager2() {
         logger.info("init jobUtil");
         jobUtil = this;
     }
 
-    public static QuartzJobManager getInstance() {
+    public static QuartzJobManager2 getInstance() {
         logger.info("retun  JobCreateUtil");
-        return QuartzJobManager.jobUtil;
+        return QuartzJobManager2.jobUtil;
     }
 
     /**
@@ -50,7 +50,7 @@ public class QuartzJobManager {
         scheduler.start();
 
         //构建job信息
-        JobDetail jobDetail = JobBuilder.newJob(((BaseTaskJob) clazz.newInstance()).getClass()).withIdentity(jobName, jobGroupName).build();
+        JobDetail jobDetail = JobBuilder.newJob(((BaseTaskJob2) clazz.newInstance()).getClass()).withIdentity(jobName, jobGroupName).build();
 
         //表达式调度构建器(即任务执行的时间)
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
@@ -80,7 +80,7 @@ public class QuartzJobManager {
         scheduler.start();
 
         //构建job信息
-        JobDetail jobDetail = JobBuilder.newJob(((BaseTaskJob) clazz.newInstance()).getClass()).withIdentity(jobName, jobGroupName).build();
+        JobDetail jobDetail = JobBuilder.newJob(((BaseTaskJob2) clazz.newInstance()).getClass()).withIdentity(jobName, jobGroupName).build();
 
         //表达式调度构建器(即任务执行的时间)
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);

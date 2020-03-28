@@ -1,6 +1,6 @@
 package com.central.quartz.job.taskexecute;
 
-import com.central.quartz.job.BaseTaskJob;
+import com.central.quartz.job.BaseTaskJob2;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author bin
  */
 @Component
-public class TestQuartz implements BaseTaskJob {
+public class TestQuartz2 implements BaseTaskJob2 {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
