@@ -25,6 +25,10 @@
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <!--旧版定时调度quartz springboot2.0已更新 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>

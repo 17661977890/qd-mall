@@ -8,13 +8,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+//import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- *跨域请求配置
+ * spring web的跨域请求配置，因为 springcloudgateway 也配置了cors，其是基于webflux的，
+ * 所以如果后续请求统一走网关作为请求入口，这里的配置会冲突，那就直接注释点此处配置即可。
+ *
+ * 如果业务controller中用到了跨域的配置注解@CrossOrigin(origins="*",maxAge="3600"),也要去掉
  */
 @Configuration
-public class CorsConfig extends WebMvcConfigurerAdapter {
+public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("*")

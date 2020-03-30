@@ -27,6 +27,7 @@ qd-mall -- 父项目，公共依赖
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
 |  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）
 |  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
+|  |-qd-mall-gateway -- spring-cloud-gateway 动态路由网关
 |  |-qd-mall-register -- nacos注册中心
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权
 ````
@@ -232,7 +233,7 @@ qd-mall -- 父项目，公共依赖
 
 #### （五）spring security + oauth2 + jwt 实现统一鉴权认证中心
 
-* 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参}
+* 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参} 用户名密码 admin admin
 * 我们支持一下几种获取token登录的方式：
     * 授权码模式：
     * 密码模式：
@@ -360,7 +361,28 @@ qd-mall -- 父项目，公共依赖
     * 配合 程序计数器的CountDownLatch 的使用。
 * 定时任务线程池的使用：
     * 可以做一下简单定时任务的处理，本项目因为引入了更强大的定时调度框架，所以这里没有在写相关的定时处理等配置类，有需要可以网上百度
+
+
+### spring cloud gateway 动态路由网关的引入：
+* 官网：https://cloud.spring.io/spring-cloud-gateway/reference/html/
+* 相关功能实现：https://blog.csdn.net/squirrelanimal0922/article/details/90517946
+* 依赖：
+    ````
+    # springcloud gateway作为SpringCloud官方推出的第二代网关框架，取代了Zuul网关。
+     <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+    </dependency>
     
+    # 注意事项：Spring Cloud Gateway需要Spring Boot和Spring Webflux提供的Netty的运行时环境，因此，它不可以打包成war包，也不可以在传统的Servlet容器（比如tomcat）中运行。所以SpringCloudGateway项目中不能依赖 spring-boot-starter-web ，要不然会报错。
+  
+    # 此文网关模块 不引入base 和 swagger模块，并且把spring-boot-starter-web依赖从父pom剔除，各个业务模块需要自行引入
+    ````
+* 底层实现：底层基于netty传输层，而不是http应用层，作为流量入口，所以效率更高。
+* 功能：动态路由转发、限流控制、权限校验、过滤器、断路器hystrix
+    * 1、动态路由配置：gateway配置路由主要有两种方式，1.用yml配置文件，2.写在代码里@Bean注入。此文在yml配置
+    * 2、全局过滤器配置---待做
+  
 #### LAST: 问题整理：
 
 * springboot整合mybatis-plus 过程中启动项目报错，mapper注入失败，主要是配置问题：

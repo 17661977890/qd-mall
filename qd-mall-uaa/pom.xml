@@ -17,6 +17,10 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <!--用户外部接口-->
         <dependency>
             <groupId>com.qidian.mall</groupId>
@@ -26,10 +30,6 @@
         <dependency>
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-db-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
             <groupId>com.qidian.mall</groupId>

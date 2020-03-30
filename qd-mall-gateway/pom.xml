@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qd-mall</artifactId>
+        <groupId>com.qidian.mall</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>qd-mall-gateway</artifactId>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <start-class>com.qidian.mall.ApiGatewayApplication</start-class>
+    </properties>
+
+    <dependencies>
+        <!--Spring Cloud Gateway 不使用 Web 作为服务器，而是 使用 WebFlux 作为服务器，Gateway 项目已经依赖了 starter-webflux，
+        所以这里 千万不要依赖 starter-web 由于过滤器等功能依然需要 Servlet 支持，故这里还需要依赖 javax.servlet:javax.servlet-api-->
+        <!--公共配置依赖-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-db-config</artifactId>
+        </dependency>
+        <!--这两个基础模块不要依赖，应为含有spring web依赖 和网关有冲突启动失败-->
+<!--        <dependency>-->
+<!--            <groupId>com.qidian.mall</groupId>-->
+<!--            <artifactId>qd-mall-swagger2-config</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.qidian.mall</groupId>-->
+<!--            <artifactId>qd-mall-base-config</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-log-config</artifactId>
+        </dependency>
+        <!--spring cloud gateway api网关-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+        <!--虽然网关不搭配spring web，但是也要用到servlet过滤器等操作-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <!--nacos服务注册-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <!--依赖使用范围：compile test provided 默认compile，并且有多级依赖传递可依赖性-->
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--打包时候，不加下面的配置，执行会报错 没有主清单属性-->
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--可以把依赖的包都打包到生成的Jar包中-->
+                            <goal>repackage</goal>
+                        </goals>
+                        <!--                        <configuration>-->
+                        <!--                            <classifier>exec</classifier>-->
+                        <!--                        </configuration>-->
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

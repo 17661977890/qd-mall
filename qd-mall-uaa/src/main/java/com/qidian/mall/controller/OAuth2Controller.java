@@ -28,6 +28,7 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -47,6 +48,7 @@ import java.io.Writer;
  */
 @Api(tags = "OAuth2相关操作")
 @Slf4j
+@RequestMapping(value = "/api/oauth")
 @RestController
 public class OAuth2Controller {
     @Resource
@@ -68,7 +70,7 @@ public class OAuth2Controller {
     private AuthenticationManager authenticationManager;
 
     @ApiOperation(value = "用户名密码获取token")
-    @PostMapping("/oauth/user/token")
+    @PostMapping("/user/token")
     public void getUserTokenInfo(@RequestBody SysUser umsAdminLoginParam,
                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (umsAdminLoginParam.getUsername() == null || "".equals(umsAdminLoginParam.getUsername())) {
@@ -83,7 +85,7 @@ public class OAuth2Controller {
     }
 
     @ApiOperation(value = "openId获取token")
-    @PostMapping("/oauth/openId/token")
+    @PostMapping("/openId/token")
     public void getTokenByOpenId(
             @ApiParam(required = true, name = "openId", value = "openId") String openId,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -92,7 +94,7 @@ public class OAuth2Controller {
     }
 
     @ApiOperation(value = "mobile获取token")
-    @PostMapping("/oauth/mobile/token")
+    @PostMapping("/mobile/token")
     public void getTokenByMobile(
             @ApiParam(required = true, name = "mobile", value = "mobile") String mobile,
             @ApiParam(required = true, name = "password", value = "密码") String password,
@@ -112,7 +114,7 @@ public class OAuth2Controller {
      * @return
      */
     @ApiOperation(value = "获取登录用户信息")
-    @PostMapping("/oauth/user/info")
+    @PostMapping("/user/info")
     public RestResponse getLoginUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 通过feign远程调用用户中心的获取用户信息接口，来追加登录用户信息
@@ -129,7 +131,7 @@ public class OAuth2Controller {
      * @return
      */
     @ApiOperation(value = "登出")
-    @PostMapping("/oauth/remove/token")
+    @PostMapping("/remove/token")
     public RestResponse logout(HttpServletRequest request){
         String access_token = request.getParameter("access_token");
         OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(access_token);

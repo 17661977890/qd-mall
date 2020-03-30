@@ -1,6 +1,7 @@
 spring:
   profiles:
-    include: quartz
+    # 集成定时调度和多线程的相关配置
+    include: quartz,base
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
   datasource:
@@ -44,29 +45,6 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.qidain.mall.entity
 
-# httpclient配置
-http:
-  maxTotal: 100
-  #并发数
-  defaultMaxPerRoute: 20
-  #创建连接的最长时间
-  connectTimeout: 1000
-  #从连接池中获取到连接的最长时间
-  connectionRequestTimeout: 500
-  #数据传输的最长时间
-  socketTimeout: 10000
-  #提交请求前测试连接是否可用
-  staleConnectionCheckEnabled: true
-  waitTime: 3000
-  idleConTime: 3
-
-# base 模块async 异步任务 线程池相关配置
-threadpool:
-  core-pool-size: 20
-  max-pool-size: 30
-  queue-capacity: 1000
-  keep-alive-seconds: 1000
-  thread-name-prefix: "Async-Thread:"
 mall:
   swagger:
     enabled: true
