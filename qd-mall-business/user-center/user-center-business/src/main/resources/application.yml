@@ -1,3 +1,5 @@
+server:
+  port: 9002
 spring:
   profiles:
     # 集成定时调度和多线程的相关配置
@@ -9,7 +11,66 @@ spring:
     url: jdbc:mysql://localhost:3306/qd-mall?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
     password: root
-    driverClassName: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #连接池配置
+    druid:
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
+        session-stat-enable: true
+        session-stat-max-count: 10
+      stat-view-servlet: #访问监控网页的登录用户名和密码
+        url-pattern: /druid/*
+        reset-enable: false
+        #allow: 127.0.0.1
+        login-username: admin
+        login-password: admin
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      #连接等待超时时间
+      max-wait: 30000
+      #配置检测可以关闭的空闲连接间隔时间
+      time-between-eviction-runs-millis: 60000
+      #配置连接在池中的最小生存时间
+      min-evictable-idle-time-millis: 300000
+      #用来检测连接是否有效的sql，要求是一个查询语句，常用select 'x'。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用。
+      validation-query: select '1' from dual
+      #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      test-while-idle: true
+      #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      test-on-borrow: false
+      #建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+      test-on-return: false
+      #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+      pool-prepared-statements: false
+      max-open-prepared-statements: 20
+      #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
+      max-pool-prepared-statement-per-connection-size: 20
+      #配置监控统计拦截的filters
+      filter:
+        #监控统计用的filter:stat
+        stat:
+          enabled: true
+          merge-sql: true
+          log-slow-sql: true
+          #配置SQL慢的标准，执行时间超过slowSqlMillis的就是慢
+          slow-sql-millis: 5000
+        #防御sql注入的filter:wall
+        wall:
+          enabled: true
+          config:
+            #是否允许执行DELETE语句
+            delete-allow: true
+            #是否允许修改表
+            drop-table-allow: true
+        slf4j:
+          enabled: true
+          statement-executable-sql-log-enable: true
+          #所有Statement相关的日志
+          statement-log-enabled: false
     # 国际化配置
   messages:
     basename: i18n/messages
@@ -26,8 +87,6 @@ spring:
         max-wait: -1
         max-idle: 8
     port: 6379
-server:
-    port: 9002
 # springboot自带logback日志打印级别配置（默认info）--->spring-boot-starter-web依赖中包含了相关日志依赖
 logging:
   level:

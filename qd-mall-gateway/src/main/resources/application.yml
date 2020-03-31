@@ -7,7 +7,7 @@ spring:
     url: jdbc:mysql://localhost:3306/qd-mall?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
     password: root
-    driverClassName: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
   redis:
     database: 0
     host: 127.0.0.1
@@ -23,11 +23,11 @@ spring:
   # 路由网关配置
   cloud:
     gateway:
-      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略
+      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略，通过serviceId 路由到指定的服务，
       discovery:
         locator:
           enabled: true
-      # 配置路由规则
+      # 配置路由规则（路由、断言、过滤器）
       routes:
         # 1、用户中心
           # 采用自定义路由 ID（有固定用法，不同的 id 有不同的功能，详见：https://cloud.spring.io/spring-cloud-gateway/2.0.x/single/spring-cloud-gateway.html#gateway-route-filters）
@@ -37,17 +37,32 @@ spring:
           # Predicate 翻译过来是“谓词”的意思，必须，主要作用是匹配用户的请求，有很多种用法
           predicates:
             # Method 方法谓词，这里是匹配 GET 和 POST 请求 (路由断言)
-            - Method=GET,POST
+            - Path=/sys-user
+          default-filters:
+            # 熔断处理配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/defaultfallback
         # 2、授权认证中心
         - id: QD-MALL-UAASRVER
           uri: lb://qd-mall-uaaserver
           predicates:
             # 路径匹配，前缀过滤，以/api/oauth开头的
-            - Path=/api/oauth/**
+            - Path=/uaa/api/oauth/**
             # 过滤规则，
           filters:
-            # 去除请求路径前缀的接数，如本来请求为（需要加服务名）：http://localhost:8888/qd-mall-uaacenter/api/oauth/** 配置后直接http://localhost:8888/api/oauth/**即可
+            # 去除请求路径前缀的接数，如本来请求为（需要加服务名）：http://localhost:8888/qd-mall-uaaserver/uaa/api/oauth/** 配置后直接：http://localhost:8888/qd-mall-uaaserver/api/oauth/**即可
             - StripPrefix=1
+# 暴露端点，暴露路由信息，
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
 mall:
   swagger:
     enabled: true
@@ -60,3 +75,16 @@ mall:
 logging:
   level:
     org.springframework.cloud.gateway: debug
+
+# hystrix 3秒后自动超时触发熔断
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 1000
+feign:
+  hystrix:
+    enabled: true

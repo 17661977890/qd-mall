@@ -17,48 +17,48 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @since 2020-01-10
 */
 public interface ISysUserService extends IService<SysUser> {
-     /**
-     * 保存信息对象
-     * @param record 信息对象
-     * @return 影响记录数
-     */
-     Integer save(SysUserDTO record);
-
-     /**
-     * 根据主键更新信息对象
-     * @param record 信息对象
-     * @return 影响记录数
-     */
-     Integer updateById(SysUserDTO record);
-
-     /**
-     * 根据主键删除信息对象
-     * 逻辑删除,字段改为删除态
-     * @param id 主键
-     * @return 影响记录数
-     */
-     Integer deleteById(String id);
-
-     /**
-     * 根据主键查询信息对象
-     * @param id 主键
-     * @return 信息对象
-     */
-     SysUserVO selectById(String id);
+    /**
+    * 保存信息对象
+    * @param record 信息对象
+    * @return 影响记录数
+    */
+    Integer save(SysUserDTO record);
 
     /**
-     * 根据条件查询信息对象
-     * @param record 查询请求条件
-     * @return 信息列表
-     */
-     List<SysUserVO> selectAll(SysUserDTO record);
+    * 根据主键更新信息对象
+    * @param record 信息对象
+    * @return 影响记录数
+    */
+    Integer updateById(SysUserDTO record);
 
-      /**
-      * 分页查询信息对象
-      * @param record 查询请求条件
-      * @return 信息列表
-      */
-      IPage<SysUserVO> selectPage(SysUserDTO record);
+    /**
+    * 根据主键删除信息对象
+    * 逻辑删除,字段改为删除态
+    * @param id 主键
+    * @return 影响记录数
+    */
+    Integer deleteById(String id);
+
+    /**
+    * 根据主键查询信息对象
+    * @param id 主键
+    * @return 信息对象
+    */
+    SysUserVO selectById(String id);
+
+    /**
+    * 根据条件查询信息对象
+    * @param record 查询请求条件
+    * @return 信息列表
+    */
+    List<SysUserVO> selectAll(SysUserDTO record);
+
+    /**
+    * 分页查询信息对象
+    * @param record 查询请求条件
+    * @return 信息列表
+    */
+    IPage<SysUserVO> selectPage(SysUserDTO record);
 
     CustomUserDetails findByUsername(String username);
 

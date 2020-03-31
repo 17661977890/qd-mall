@@ -42,11 +42,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-        <!--虽然网关不搭配spring web，但是也要用到servlet过滤器等操作-->
+        <!-- 熔断、降级 -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
+<!--        &lt;!&ndash;虽然网关不搭配spring web，但是也要用到servlet过滤器等操作,db模块包含了 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>javax.servlet</groupId>-->
+<!--            <artifactId>javax.servlet-api</artifactId>-->
+<!--        </dependency>-->
         <!--nacos服务注册-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -57,11 +62,10 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <!--yml配置暴露端点需要此依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <!--依赖使用范围：compile test provided 默认compile，并且有多级依赖传递可依赖性-->
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 

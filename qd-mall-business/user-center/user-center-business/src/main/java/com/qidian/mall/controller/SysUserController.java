@@ -99,7 +99,8 @@ public class SysUserController extends BaseController {
     */
     @ApiOperation(value = "全部查询", notes = "查询SysUser全部数据")
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) {
+    public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) throws InterruptedException {
+//        Thread.sleep(5000);
         log.info("查询系统用户入参：{}",restRequest);
         if(restRequest.getBody()==null){
             throw new BusinessException("102101",getMessage("102101"));
