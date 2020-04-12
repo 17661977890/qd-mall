@@ -2,7 +2,9 @@ package com.qidian.mall.websecurityconfig.impl;
 
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson.JSON;
+import com.central.base.exception.BusinessException;
 import com.central.base.restparam.RestResponse;
+import com.central.base.util.ConstantUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qidian.mall.api.SysUserApi;
 import com.qidian.mall.entity.CustomUserDetails;
@@ -45,6 +47,9 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
         RestResponse<CustomUserDetails> restResponse = sysUserApi.findByUsername(username);
         if (restResponse == null || restResponse.getBody() == null) {
             throw new InternalAuthenticationServiceException("用户名或密码错误");
+        }
+        if(ConstantUtil.SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
+            throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.SERVICE_NOT_AVAILABLE);
         }
         return restResponse.getBody();
     }

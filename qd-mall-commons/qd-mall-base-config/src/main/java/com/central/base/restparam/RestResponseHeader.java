@@ -1,6 +1,8 @@
 package com.central.base.restparam;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -9,6 +11,8 @@ import java.io.Serializable;
  * @Author 彬
  * @Date 2019/4/19
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class RestResponseHeader implements Serializable{
 

@@ -104,6 +104,12 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.qidain.mall.entity
 
+# feign客户端开启熔断----谁调用谁开启
+feign:
+  hystrix:
+    enabled: true
+
+
 mall:
   swagger:
     enabled: true

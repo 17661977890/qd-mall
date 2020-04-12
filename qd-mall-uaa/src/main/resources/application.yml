@@ -48,3 +48,8 @@ mall:
     description: 认证中心接口文档
     version: 1.0
     base-package: com.qidian.mall.controller
+
+# 谁调用 feign客户端接口，谁配置开启熔断
+feign:
+  hystrix:
+    enabled: true

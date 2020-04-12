@@ -184,10 +184,20 @@ public class OAuth2Controller {
             OAuth2AccessToken oAuth2AccessToken = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
             oAuth2Authentication.setAuthenticated(true);
             writerObj(response, oAuth2AccessToken);
-        } catch (BadCredentialsException | InternalAuthenticationServiceException e) {
-            exceptionHandler(response, badCredenbtialsMsg);
+        } catch (InternalAuthenticationServiceException e) {
+            // 我们抛出的业务异常，如熔断服务调用失败，在底层会捕获并封装我们的业务异常信息，抛出InternalAuthenticationServiceException
+            /**
+             *          }catch (Exception var6) {
+             *             throw new InternalAuthenticationServiceException(var6.getMessage(), var6);
+             *         }
+             */
+            exceptionHandler(response, e);
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch (BadCredentialsException e){
+            // 如果是用户密码信息校验失败 会抛出此异常BadCredentialsException 我们自定信息msg输出
+            exceptionHandler(response,badCredenbtialsMsg);
+            e.printStackTrace();
+        }catch (Exception e) {
             exceptionHandler(response, e);
         }
     }
