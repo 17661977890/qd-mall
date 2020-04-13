@@ -361,7 +361,8 @@ qd-mall -- 父项目，公共依赖
     * 配合 程序计数器的CountDownLatch 的使用。
 * 定时任务线程池的使用：
     * 可以做一下简单定时任务的处理，本项目因为引入了更强大的定时调度框架，所以这里没有在写相关的定时处理等配置类，有需要可以网上百度
-
+* 多线程异常处理：
+    * 利用异步方法返回值，延迟处理异常，手动回滚事务。
 
 ### spring cloud gateway 动态路由网关的引入：
 * 官网：https://cloud.spring.io/spring-cloud-gateway/reference/html/
@@ -385,6 +386,10 @@ qd-mall -- 父项目，公共依赖
 
 ### druid 数据源连接池
 * （用户中心模块）监控访问地址：localhost:9002/druid/login.html
+
+### feign 客户端调用
+* 谁调用，谁开启feign支持（配置文件）
+* feign 接口层面的熔断降级处理
   
 #### LAST: 问题整理：
 

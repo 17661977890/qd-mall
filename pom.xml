@@ -97,6 +97,7 @@
         <module>qd-mall-codegenerator</module>
         <module>qd-mall-uaa</module>
         <module>qd-mall-gateway</module>
+        <module>qd-mall-fileserver</module>
 
     </modules>
 
@@ -181,10 +182,15 @@
                 <artifactId>qd-mall-redis-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <!--业务客户端-->
             <dependency>
                 <groupId>com.qidian.mall</groupId>
                 <artifactId>user-center-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
+                <artifactId>file-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

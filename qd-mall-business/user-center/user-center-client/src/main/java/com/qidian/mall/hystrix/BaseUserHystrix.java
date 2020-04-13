@@ -26,7 +26,7 @@ public class BaseUserHystrix {
     protected RestResponse getError(){
         RestResponse restResponse = new RestResponse();
         CustomUserDetails customUserDetails = new CustomUserDetails();
-        restResponse.setHeader(new RestResponseHeader(ConstantUtil.ERROR,ConstantUtil.SERVICE_NOT_AVAILABLE));
+        restResponse.setHeader(new RestResponseHeader(ConstantUtil.ERROR,ConstantUtil.USER_SERVICE_NOT_AVAILABLE));
         restResponse.setBody(customUserDetails);
         return restResponse;
     }

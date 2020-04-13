@@ -23,7 +23,11 @@ public class ConstantUtil {
 
     public static final Object ERROR_DATA = null;
 
-    public static final String SERVICE_NOT_AVAILABLE = "服务调用异常";
+    public static final String USER_SERVICE_NOT_AVAILABLE = "用户服务调用异常";
+
+    public static final String FILE_SERVICE_NOT_AVAILABLE = "文件服务调用异常";
+
+
 
 
 

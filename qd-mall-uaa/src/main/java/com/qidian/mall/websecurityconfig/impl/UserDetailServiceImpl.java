@@ -48,8 +48,8 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
         if (restResponse == null || restResponse.getBody() == null) {
             throw new InternalAuthenticationServiceException("用户名或密码错误");
         }
-        if(ConstantUtil.SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
-            throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.SERVICE_NOT_AVAILABLE);
+        if(ConstantUtil.USER_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
+            throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.USER_SERVICE_NOT_AVAILABLE);
         }
         return restResponse.getBody();
     }

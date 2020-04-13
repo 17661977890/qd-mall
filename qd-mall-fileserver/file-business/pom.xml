@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qd-mall-fileserver</artifactId>
+        <groupId>com.qidian.mall</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <description>文件存储服务oss业务模块</description>
+    <artifactId>file-business</artifactId>
+
+
+    <properties>
+        <java.version>1.8</java.version>
+        <start-class>com.qidian.mall.FileCenterApplication</start-class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>file-client</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--打包时候，不加下面的配置，执行会报错 没有主清单属性-->
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--可以把依赖的包都打包到生成的Jar包中-->
+                            <goal>repackage</goal>
+                        </goals>
+                        <!--                        <configuration>-->
+                        <!--                            <classifier>exec</classifier>-->
+                        <!--                        </configuration>-->
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    include: base
+  jackson.date-format: yyyy-MM-dd HH:mm:ss
+  jackson.time-zone: GMT+8
+  swagger:
+    enabled: true
+    title: 文件服务中心
+    description: 文件服务中心接口文档
+    version: 1.0
+    base-package: com.qidian.mall.controller
+
+aliyun-oss:
+  # bucket名称
+  bucketName: qd-mall-filecenter
+  # bucket域名
+  domainApp: https://qd-mall-filecenter.oss-cn-shanghai.aliyuncs.com/
+  # 注册地址
+  region: oss-cn-shanghai
+  # 地域节点
+  endpoint : https://oss-cn-shanghai.aliyuncs.com
+  # 用户访问控制
+  accessKeyId: LTAI4FiNLjgaRPkEMygPkynq
+  accessKeySecret: ybaqIhh58M7209HCKkcCGdPC4n0xjO

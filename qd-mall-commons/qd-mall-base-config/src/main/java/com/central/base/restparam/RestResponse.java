@@ -22,7 +22,7 @@ public class RestResponse<T> implements Serializable {
      * @param body
      * @return
      */
-    public RestResponse success(T body) {
+    public RestResponse<T> success(T body) {
         RestResponseHeader restResponseHeader = new RestResponseHeader();
         restResponseHeader.setCode(ConstantUtil.SUCCESS);
         restResponseHeader.setMessage("SUCCESS!");
@@ -44,11 +44,11 @@ public class RestResponse<T> implements Serializable {
         return new RestResponse().error(code, msg);
     }
 
-    public RestResponse error(String code, String msg) {
+    public RestResponse<T> error(String code, String msg) {
         return this.error(code, msg, null);
     }
 
-    public RestResponse error(String code, String msg, T body) {
+    public RestResponse<T> error(String code, String msg, T body) {
         RestResponseHeader restResponseHeader = new RestResponseHeader();
         restResponseHeader.setCode(code);
         restResponseHeader.setMessage(msg);
