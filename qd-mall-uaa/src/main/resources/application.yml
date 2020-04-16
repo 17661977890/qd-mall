@@ -28,6 +28,7 @@ mall:
     token:
       store:
         type: authJwt
+  # 配置忽略认证的请求
   security:
     ignore:
       # 忽略认证的地址
@@ -40,7 +41,7 @@ mall:
         /images/**,
         /js/**
     code:
-      # 忽略验证码的应用编号
+      # 忽略验证码的应用编号---暂时没用
       ignoreClientCode: app
   swagger:
     enabled: true
@@ -53,3 +54,10 @@ mall:
 feign:
   hystrix:
     enabled: true
+
+# 暴露端点，暴露路由信息，
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

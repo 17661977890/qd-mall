@@ -97,6 +97,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      *
      * 这个如果配置支持allowFormAuthenticationForClients的，且url中有client_id和client_secret的会走ClientCredentialsTokenEndpointFilter来保护
      * 如果没有支持allowFormAuthenticationForClients或者有支持但是url中没有client_id和client_secret的，走basic认证保护
+     *
+     * 第三行代码是允许客户端访问 OAuth2 授权接口，否则请求 token 会返回 401。
+     * 第二行是允许已授权用户访问 获取 token 接口。
+     * 一：不需要授权即可访问checkToken 接口
      * @param security
      * @throws Exception
      */

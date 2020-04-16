@@ -134,21 +134,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // 由于使用的是JWT，我们这里不需要csrf
+        // 由于使用的是JWT，我们这里不需要csrf,不使用session   // todo 不使用session 无状态应用 符合12要素
         httpSecurity.csrf().disable()
-                .authorizeRequests()
-                .anyRequest()
-                //授权服务器关闭basic认证
-                .permitAll()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
+                // 自定义登录页面（用户未授权请求资源会跳转此页面）
                 .formLogin()
                     .loginPage("/login.html")
-                    .loginProcessingUrl("/user/login")
+                    // 登录请求处理地址、成功返回、失败返回
+                    .loginProcessingUrl("/user/token")
                     .successHandler(authenticationSuccessHandler)
                     .failureHandler(authenticationFailureHandler)
                     .and()
+                // 登出配置
                 .logout()
-                    .logoutUrl("/oauth/remove/token")
+                    .logoutUrl("/remove/token")
                     .logoutSuccessUrl("/login.html")
                     .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                     .addLogoutHandler(oauthLogoutHandler)
@@ -156,11 +156,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                 .apply(openIdAuthenticationSecurityConfig)
                     .and()
-                .apply(mobileAuthenticationSecurityConfig);
+                .apply(mobileAuthenticationSecurityConfig)
+                    .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
+                .permitAll()
+                .antMatchers("/admin/login", "/admin/register")// 对登录注册要允许匿名访问，我们本项目暂时没有两个请求
+                .permitAll()
+                // 除以上请求 其余请求都要走认证---这里做了，那资源服务器的相关配置（要放开的请求）就不生效了，除了上面的配置都会拦截
+//                .anyRequest()
+//                .authenticated()
+                    .and()
+                // 自定义为授权和认证失败返回结果----因为我们在资源服务器对相关请求做的过滤拦截，那相关的异常信息也要在那边配置，这边不会生效
+                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).accessDeniedHandler(restfulAccessDeniedHandler);
         // 禁用缓存
         httpSecurity.headers().cacheControl();
         //添加自定义未授权和未登录结果返回-------暂时不用
-        // todo 不使用session 无状态应用 符合12要素
         // （1）基于密码 等模式可以无session,不支持授权码模式
 //        if (authenticationEntryPoint != null) {
 //            httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
@@ -170,7 +181,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //            httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 //        }
         // （2）授权码模式单独处理，需要session的支持，此模式可以支持所有oauth2的认证
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+//        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
 

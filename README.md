@@ -27,6 +27,9 @@ qd-mall -- 父项目，公共依赖
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
 |  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）
 |  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
+|  |-qd-mall-fileserver -- 文件存储服务oss
+|  |  |-file-business -- 业务实现 
+|  |  |-file-client -- 暴露接口feign
 |  |-qd-mall-gateway -- spring-cloud-gateway 动态路由网关
 |  |-qd-mall-register -- nacos注册中心
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权
@@ -233,7 +236,46 @@ qd-mall -- 父项目，公共依赖
 
 #### （五）spring security + oauth2 + jwt 实现统一鉴权认证中心
 
+* 基于spring security的HttpSecurity 配置，我们这里整合oauth2，所以流程如下：
+    * WebSecurityConfiguration ：
+    spring security配置安全认证类，配置从数据库读取用户信息，基于httpSecurity的安全配置，配置了登录登出和session以及自定义认证链的相关配置，
+    优先级在资源服务器之前。
+    * ResourceServerConfiguration：资源服务器，基于httpSecurity的安全配置，在WebSecurityConfiguration的之后执行，定义了需要放过的请求和需要认证的请求。
+        * 注意：因为我们WebSecurityConfiguration 配置中只是做了那些请求免登录，没有对其他请求做拦截或者放行的配置，
+        所以我们在资源服务器做这些请求的配置，那么.requestMatcher(request -> true) 这个要设置为true，否则匹配规则不生效，即不会匹配请求做认证拦截
+    * AuthorizationServerConfiguration ：认证服务器，定义客户端详情配置（数据库读取）、令牌存储生成方式、授权模式（类型）、授权码管理、令牌端点约束等
+
+* 关于资源服务器的配置简单说几句：
+    * 1、我们本项目目前真正可以做到认证授权功能的模块只有qd-mall-uaa模块，有资源服务器的配置，而其他模块都没有做相关配置，所以不会对相应的请求做拦截判断是否需要认证授权
+    * 2、如何看待本项目：
+        * 如果我们将本项目统一看成一个客户端项目，我们使用网关做统一的路由、拦截验证分发各个模块请求，我们只需要在网关模块配置一个资源服务器进行安全认证即可。
+        * 如果我们把我们本项目将每个微服务单独作为一个客户端，那我们就不再网关处做资源服务器配置，而是具体到每一个微服务模块（qd-mall-business下的每个模块，包括认证模块）进行配置资源服务器。         
+        * 所以就是一个客户端大小的问题，当你以终端为界限，那web端、手机端app等终端将是客户端，每个对应终端的项目做配置就行了，如果你把客户端按微服务应用程序application来划分，那就对每个为服务模块做配置。
+        
+* 实现认证授权的测试案例：
+    * 不需要校验的请求 oauthController 的资源服务器已经做了配置，不认证授权即可访问 （PermitProperties在此类配置和yml文件）
+    * 需要校验的请求 testController 过滤配置请求没有此类请求，所以 需要在请求头中添加 access-token 信息
+    ````
+    Authorization 
+    Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJyb2xlcyI6bnVsbCwiZXhwIjoxNTg3MDQzNjEyLCJYLUFPSE8tVXNlcklkIjoxLCJqdGkiOiI2OWVmYjg5OS1jNzc5LTQ5MDktOGZmOC1lODhjZDY5M2FhNjIiLCJjbGllbnRfaWQiOiJ6bHQifQ.PuoEa-1c0G5Crk3FPq3r2XPiRvaPwqB-nmaqxT2ZGwdY1xvFPI9_-6DCG0i_4QCQHlnmjpRwV5aX_POV33TNNukpXD0JRlxIeo05h25Kj8q6JsHRmo1RNrx2KbCyh3xx668tE201Rtgnc2JwPG-GPXK0Oz7QYoj-FuidloHm91yaDrjcACxs-63TjQivefzWeN5JdA6fpIiLe_o9BiHPMdhZNCJcIDh33s7wo81Xws-9_UBhgY0oUyHTP7Of12v_RJPnWsbQXfdyaIAuE74XZNN8pRJXAIsFcw_aD_AF8pNu0__wAzq1R250a4Tx_Bgpe93PGgeFAxvD_MJ-TADAwQ
+    
+    # 如果不加token请求，就会提示无权访问：
+    {
+        "error": "unauthorized",
+        "error_description": "Full authentication is required to access this resource"
+    }
+    # 因为本项目对资源服务器的安全认证配置做了相关异常自定义处理，所以会报我们的错 
+    {
+      "header": {
+          "code": "401",
+          "message": "暂未登录或token已经过期"
+      },
+      "body": "Full authentication is required to access this resource"
+    }
+    ````
 * 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参} 用户名密码 admin admin
+    * clientId 和 clientSecret 是在数据库 oauth_client_details中配置的
+    
 * 我们支持一下几种获取token登录的方式：
     * 授权码模式：
     * 密码模式：
@@ -268,11 +310,11 @@ qd-mall -- 父项目，公共依赖
     
 * spring security的验证流程（AuthenticationManager：https://www.jianshu.com/p/32fa221e03b7）：
 
-* token 的颁发生成管理(AuthorizationServerTokenServices接口：失效时间读书客户端详情数据库的配置，每个客户端目前都是5H)：
+* token 的颁发生成管理(AuthorizationServerTokenServices接口：失效时间读客户端详情数据库的配置，每个客户端目前都是5H)：
 
 * token的获取测试：（grant_type 不同模式认证传参不同）
     * （1） **自定义模式**：
-        * 调用controller的3个方法，密码模式获取token （用户名密码、手机号密码、openId，注意请求头带client_id 和 client_secret两个参数）
+        * 调用controller的3个方法，密码模式获取token （用户名密码、手机号密码、openId，注意请求头带client_id 和 client_secret两个参数)
         
     * （2） **授权码模式**：
         * 因为需要session的支持，首先需要WebSecurityConfiguration配置类中做修改：在主过滤器中配置 httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED); 这个支持所有的oauth2认证，如果不是授权码模式可以不用session，即被注释的部分恢复
@@ -292,6 +334,28 @@ qd-mall -- 父项目，公共依赖
                 return new OAuth2Authentication(storedOAuth2Request, (Authentication)null);
             }
         ````
+ 
+* 其他模块使用qd-mall-uaa的认证鉴权功能：以用户中心为列
+    *  在用户模块，增加资源服务器配置类，将认证无服务器远程调用的请求放开，否则认证服务器feign调用会失败，服务调用异常
+    *  在配置文件增加如下配置：
+    ````
+    # 建立资源服务和认证服务器的绑定，注意client-id和secret一定要和认证服务器生成token时使用的clientid是一致的，否则401
+    # 另外如果这里不配置，就会报错 无效token
+    # pom依赖对应的是spring-cloud-starter-oauth2 如果不导入此依赖，这里配置会黄色，就无效
+    security:
+      oauth2:
+        client:
+          client-id: zlt
+          client-secret: zlt
+          access-token-uri: http://localhost:8088/oauth/token
+          user-authorization-uri: http://localhost:8088/oauth/authorize
+        resource:
+          token-info-uri: http://localhost:8088/oauth/check_token
+    ````
+    * 后期优化： 
+        * （1）将此依赖 spring-cloud-starter-oauth2 和一些认证鉴权的相关独立配置抽出来作为一个公共starter模块包提供依赖服务
+    进而可以将用户资源服务器做相关配置优化
+        * （2）对feign 做相关拦截配置，增加Authorization access-token的相关请求头等配置，进而在认证服务器调用用户服务查询时不会被拦截。
     
 #### (六)、quartz定时调度框架的集成：
 
@@ -390,6 +454,9 @@ qd-mall -- 父项目，公共依赖
 ### feign 客户端调用
 * 谁调用，谁开启feign支持（配置文件）
 * feign 接口层面的熔断降级处理
+
+### oss 云存储整合
+* 其余相关api 参考，控制台开发者指南
   
 #### LAST: 问题整理：
 

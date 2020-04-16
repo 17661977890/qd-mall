@@ -4,6 +4,7 @@ package com.qidian.mall.errorresponse;
 import cn.hutool.json.JSONUtil;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        authException.printStackTrace();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.getWriter().println(JSONUtil.toJsonStr(new RestResponse().error(ConstantUtil.UNAUTHORIZED,"暂未登录或token已经过期",authException.getMessage())));

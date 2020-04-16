@@ -123,3 +123,14 @@ mall:
         second: 600
       - key: user
         second: 1800
+# 客户端资源不止要配置资源服务器，这里还要做配置，与认证服务器对应起来，pom依赖对应的是spring-cloud-starter-oauth2 如果不导入此依赖，这里配置会黄色，
+# 带token请求资源，会报无效token ，注意这里的客户端id和secret 配置要和token生成的对应，否则会报错401
+security:
+  oauth2:
+    client:
+      client-id: zlt
+      client-secret: zlt
+      access-token-uri: http://localhost:8088/oauth/token
+      user-authorization-uri: http://localhost:8088/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:8088/oauth/check_token

@@ -10,16 +10,16 @@ import java.util.List;
 /**
  * 配置需要放权的url白名单
  *
- * @author mall
+ * @author bin
  */
 @Setter
 @Getter
 public class PermitProperties {
     /**
-     * 监控中心和swagger需要访问的url
+     * oauth认证相关的请求、应用监控、数据源监控中心druid 和swagger需要访问的url 配置不需要认证即可访问
      */
     private static final String[] ENDPOINTS = {
-            "/oauth/**",
+            "/api/oauth/**",
             "/actuator/**",
             "/*/v2/api-docs",
             "/swagger/api-docs",
