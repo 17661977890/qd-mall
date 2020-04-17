@@ -19,6 +19,6 @@ aliyun-oss:
   region: oss-cn-shanghai
   # 地域节点
   endpoint : https://oss-cn-shanghai.aliyuncs.com
-  # 用户访问控制
-  accessKeyId: LTAI4FiNLjgaRPkEMygPkynq
-  accessKeySecret: ybaqIhh58M7209HCKkcCGdPC4n0xjO
+  # 用户访问控制--个人的
+  accessKeyId: ssss
+  accessKeySecret: ssss
