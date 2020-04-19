@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Import;
 
 /**
  * token存储配置
- *
+ * Spring Boot通过@ConditionalOnProperty来控制Configuration是否生效
+ * 如果类型type 在yml配置文件中有值，与havingValue表 一样，则返回true，则 @Configuration 配置生效，可以注入bean使用
+ * 否则返回false ，配置无效
  * @author mall
  */
 public class TokenStoreConfig {

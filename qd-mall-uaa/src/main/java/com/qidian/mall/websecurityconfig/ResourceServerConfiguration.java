@@ -1,10 +1,10 @@
 package com.qidian.mall.websecurityconfig;
 
 
-import com.qidian.mall.errorresponse.RestAuthenticationEntryPoint;
-import com.qidian.mall.errorresponse.RestfulAccessDeniedHandler;
+import com.central.auth.common.errorresponse.RestAuthenticationEntryPoint;
+import com.central.auth.common.errorresponse.RestfulAccessDeniedHandler;
+import com.central.auth.common.properties.SecurityProperties;
 import com.qidian.mall.tokenstore.config.TokenStoreConfig;
-import com.qidian.mall.utils.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

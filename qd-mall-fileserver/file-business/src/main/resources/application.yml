@@ -1,15 +1,21 @@
 spring:
-  profiles:
-    include: base
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
+  profiles:
+    include: base
+# swagger配置、认证过滤请求配置
+mall:
   swagger:
     enabled: true
     title: 文件服务中心
     description: 文件服务中心接口文档
     version: 1.0
     base-package: com.qidian.mall.controller
+  security:
+    ignore:
+      httpUrls:
 
+# 阿里云oss配置
 aliyun-oss:
   # bucket名称
   bucketName: qd-mall-filecenter
@@ -19,6 +25,24 @@ aliyun-oss:
   region: oss-cn-shanghai
   # 地域节点
   endpoint : https://oss-cn-shanghai.aliyuncs.com
-  # 用户访问控制--个人的
-  accessKeyId: ssss
-  accessKeySecret: ssss
+  # 用户访问控制
+  accessKeyId: LTAI4FiNLjgaRPkEMygPkynq
+  accessKeySecret: ybaqIhh58M7209HCKkcCGdPC4n0xjO
+
+# 资源服务器对应认证服务器的客户端信息和端点配置
+security:
+  oauth2:
+    client:
+      client-id: zlt
+      client-secret: zlt
+      access-token-uri: http://localhost:8088/oauth/token
+      user-authorization-uri: http://localhost:8088/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:8088/oauth/check_token
+
+# 暴露端点，暴露路由信息，
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

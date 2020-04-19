@@ -1,15 +1,12 @@
 package com.qidian.mall.websecurityconfig;
 
-import com.central.base.util.PasswordEncoderUtil;
-import com.qidian.mall.errorresponse.RestAuthenticationEntryPoint;
-import com.qidian.mall.errorresponse.RestfulAccessDeniedHandler;
+import com.central.auth.common.errorresponse.RestAuthenticationEntryPoint;
+import com.central.auth.common.errorresponse.RestfulAccessDeniedHandler;
 import com.qidian.mall.websecurityconfig.mobileprovider.MobileAuthenticationSecurityConfig;
 import com.qidian.mall.websecurityconfig.openIdprovider.OpenIdAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,12 +15,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 

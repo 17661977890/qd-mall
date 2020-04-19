@@ -27,6 +27,8 @@ public class ConstantUtil {
 
     public static final String FILE_SERVICE_NOT_AVAILABLE = "文件服务调用异常";
 
+    public static final String UTF_8 = "UTF-8";
+
 
 
 

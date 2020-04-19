@@ -14,14 +14,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import javax.annotation.Resource;
 
 /**
- * 用户中心资源服务器-----这里我们简化配置，只把认证服务器需要调用的feign接口的几个接口放开，其余都要认证鉴权。
+ * 文件中心资源服务器
  * @author bin
  * @date 2020-04-19
  */
 @EnableConfigurationProperties(SecurityProperties.class)
 @Configuration
 @EnableResourceServer
-public class UserResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+public class FileResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Resource
     private SecurityProperties securityProperties;

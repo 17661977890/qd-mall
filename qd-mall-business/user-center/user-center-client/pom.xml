@@ -16,17 +16,12 @@
     </properties>
 
     <dependencies>
-        <!--资源客户端，需要配合认证服务器，导入此依赖，而不是下边的依赖-->
+        <!--资源客户端，需要配合认证服务器，导入此依赖，-->
+        <!--认证鉴权配置相关依赖-->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-auth-config</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security.oauth</groupId>-->
-<!--            <artifactId>spring-security-oauth2</artifactId>-->
-<!--            <optional>true</optional>-->
-<!--            &lt;!&ndash; <scope>provided</scope> 这两个个不会进行依赖传递,因为business模块依赖本项目，这个依赖不要传递过去，否则 单独请求controller时候报错401无权&ndash;&gt;-->
-<!--        </dependency>-->
         <!--社交登录-->
         <dependency>
             <groupId>org.springframework.social</groupId>

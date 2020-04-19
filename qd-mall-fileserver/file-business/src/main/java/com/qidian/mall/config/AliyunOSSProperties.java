@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * oss 配置类
+ * 使用@Component 或者 @EnableConfigurationProperties(AliyunOSSProperties.class)才可以注入
  * @author bin
  */
 @Component

@@ -31,9 +31,10 @@
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-db-config</artifactId>
         </dependency>
+        <!--认证鉴权配置相关依赖-->
         <dependency>
             <groupId>com.qidian.mall</groupId>
-            <artifactId>qd-mall-base-config</artifactId>
+            <artifactId>qd-mall-auth-config</artifactId>
         </dependency>
         <dependency>
             <groupId>com.qidian.mall</groupId>
@@ -47,11 +48,7 @@
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-redis-config</artifactId>
         </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.1</version>
-        </dependency>
+
         <!--OAuth2 和 Spring Security 所需依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -77,11 +74,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!-- hutool java工具类库  -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
+
 
         <!--nacos服务注册-->
         <dependency>
@@ -91,12 +84,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 

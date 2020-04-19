@@ -19,6 +19,7 @@
         <module>qd-mall-log-config</module>
         <module>qd-mall-redis-config</module>
         <module>qd-mall-quartz-config</module>
+        <module>qd-mall-auth-config</module>
     </modules>
 
 </project>

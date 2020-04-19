@@ -182,6 +182,11 @@
                 <artifactId>qd-mall-redis-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
+                <artifactId>qd-mall-auth-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!--业务客户端-->
             <dependency>
                 <groupId>com.qidian.mall</groupId>

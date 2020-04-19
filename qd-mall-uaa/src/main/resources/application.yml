@@ -33,6 +33,7 @@ mall:
     ignore:
       # 忽略认证的地址
       httpUrls: >
+        /api/oauth/**,
         /validata/**,
         /clients,
         /clients/**,

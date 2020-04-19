@@ -12,6 +12,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +125,7 @@ public class HttpClientHelper {
 				for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
 					params.add(new BasicNameValuePair(entry.getKey(), entry.getValue().toString()));
 				}
-				HttpEntity entity = new UrlEncodedFormEntity(params);
+				HttpEntity entity = new UrlEncodedFormEntity(params, ConstantUtil.UTF_8);
 				httpPost.setEntity(entity);
 			}
 			// 设置头

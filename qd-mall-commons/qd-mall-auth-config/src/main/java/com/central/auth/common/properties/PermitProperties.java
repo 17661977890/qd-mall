@@ -1,8 +1,7 @@
-package com.qidian.mall.utils;
+package com.central.auth.common.properties;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +15,9 @@ import java.util.List;
 @Getter
 public class PermitProperties {
     /**
-     * oauth认证相关的请求、应用监控、数据源监控中心druid 和swagger需要访问的url 配置不需要认证即可访问
+     * 应用监控、数据源监控中心druid 和swagger需要访问的url 等公共服务请求配置不需要认证即可访问
      */
     private static final String[] ENDPOINTS = {
-            "/api/oauth/**",
             "/actuator/**",
             "/*/v2/api-docs",
             "/swagger/api-docs",
@@ -30,7 +28,7 @@ public class PermitProperties {
     };
 
     /**
-     * 设置不用认证的url
+     * 设置不用认证的url ---在配置文件中配置获取
      */
     private String[] httpUrls = {};
 

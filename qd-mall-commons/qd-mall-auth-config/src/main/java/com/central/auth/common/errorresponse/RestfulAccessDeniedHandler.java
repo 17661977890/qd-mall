@@ -1,4 +1,4 @@
-package com.qidian.mall.errorresponse;
+package com.central.auth.common.errorresponse;
 
 
 import cn.hutool.json.JSONUtil;

@@ -1,10 +1,9 @@
-package com.qidian.mall.errorresponse;
+package com.central.auth.common.errorresponse;
 
 
 import cn.hutool.json.JSONUtil;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
