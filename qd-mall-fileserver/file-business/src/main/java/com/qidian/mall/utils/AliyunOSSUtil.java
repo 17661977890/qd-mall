@@ -129,7 +129,7 @@ public class AliyunOSSUtil {
         try {
             assert fileName != null;
             String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-            fileName = UUID.randomUUID() +"-"+fileType+ "." + suffix+".";
+            fileName = UUID.randomUUID() +"-"+fileType+ "." + suffix;
             InputStream inputStream = file.getInputStream();
             ObjectMetadata objectMetadata = new ObjectMetadata();
             //设置数据流里有多少个字节可以读取

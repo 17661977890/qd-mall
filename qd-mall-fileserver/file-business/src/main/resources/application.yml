@@ -15,7 +15,7 @@ mall:
     ignore:
       httpUrls:
 
-# 阿里云oss配置
+# 阿里云oss配置 ---- 密钥暂时不生效，对应的阿里云访问控制用户我已删除，sorry 毕竟开源代码，私人账号不能给你们滥用
 aliyun-oss:
   # bucket名称
   bucketName: qd-mall-filecenter
