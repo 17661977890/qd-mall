@@ -27,9 +27,14 @@
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-security</artifactId>
         </dependency>
+        <!--feign 客户端远程调用，基于okhttp替换默认的HTTPURLConnection-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

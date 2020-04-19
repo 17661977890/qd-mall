@@ -104,8 +104,12 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.qidain.mall.entity
 
-# feign客户端开启熔断----谁调用谁开启
+# feign客户端,支持okhttp，开启熔断----谁调用谁开启
 feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
   hystrix:
     enabled: true
 

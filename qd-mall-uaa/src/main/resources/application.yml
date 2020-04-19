@@ -53,6 +53,10 @@ mall:
 
 # 谁调用 feign客户端接口，谁配置开启熔断
 feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
   hystrix:
     enabled: true
 
