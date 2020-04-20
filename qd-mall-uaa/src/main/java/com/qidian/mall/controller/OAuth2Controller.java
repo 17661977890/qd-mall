@@ -108,7 +108,7 @@ public class OAuth2Controller {
      * todo 使用spring cloud 做saas服务器时，经常会通过Feign调用远程服务。有时候我们的远程服务可能做了某些权限验证。
      *      需要验证header或者token什么的。如果某没有token，可能会被阻止调用。那如何添加token呢。
      *      如果每个方法都手动设置headers，那未免太麻烦。可以通过一个切面，自动帮我们添加请求header。
-     * todo ：所以需要配置feign拦截  实现RequestInterceptor 重写paply方法
+     * todo ：所以需要配置feign拦截  实现RequestInterceptor 重写apply方法
      *
      * todo： feign的实现有三种方式 httpurlconnection（默认） httpclient okhttp  我们可以在yml配置使用后面两种
      * @return
@@ -127,7 +127,9 @@ public class OAuth2Controller {
     }
 
     /**
-     * 登出----移除token（带测试）
+     * 登出----移除token
+     * 对于jwt 是不能移除的，因为jwt不会存在服务器，所以他的底层存储和移除方法都是空的，所以jwt在有效时间内都是有效的。
+     * 移除方法针对
      * @return
      */
     @ApiOperation(value = "登出")

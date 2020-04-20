@@ -260,9 +260,13 @@ qd-mall -- 父项目，公共依赖
     * 不需要校验的请求 oauthController 的资源服务器已经做了配置，不认证授权即可访问 （PermitProperties在此类配置和yml文件）
     * 需要校验的请求 testController 过滤配置请求没有此类请求，所以 需要在请求头中添加 access-token 信息
     ````
+    # 放在请求头中：
     Authorization 
     Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJyb2xlcyI6bnVsbCwiZXhwIjoxNTg3MDQzNjEyLCJYLUFPSE8tVXNlcklkIjoxLCJqdGkiOiI2OWVmYjg5OS1jNzc5LTQ5MDktOGZmOC1lODhjZDY5M2FhNjIiLCJjbGllbnRfaWQiOiJ6bHQifQ.PuoEa-1c0G5Crk3FPq3r2XPiRvaPwqB-nmaqxT2ZGwdY1xvFPI9_-6DCG0i_4QCQHlnmjpRwV5aX_POV33TNNukpXD0JRlxIeo05h25Kj8q6JsHRmo1RNrx2KbCyh3xx668tE201Rtgnc2JwPG-GPXK0Oz7QYoj-FuidloHm91yaDrjcACxs-63TjQivefzWeN5JdA6fpIiLe_o9BiHPMdhZNCJcIDh33s7wo81Xws-9_UBhgY0oUyHTP7Of12v_RJPnWsbQXfdyaIAuE74XZNN8pRJXAIsFcw_aD_AF8pNu0__wAzq1R250a4Tx_Bgpe93PGgeFAxvD_MJ-TADAwQ
     
+   # 或者将access_token 拼在请求url后面：
+    http://localhost:9002/sys-user/queryAll?access_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJyb2xlcyI6bnVsbCwiZXhwIjoxNTg3MzA4MzQ4LCJYLUFPSE8tVXNlcklkIjoxLCJqdGkiOiJjNTg2ZGEzNi02ZDMxLTQzY2YtODkyYy1lMTIxOTI3NWZkOWQiLCJjbGllbnRfaWQiOiJ6bHQifQ.VN8Uya3lCyd9_ew1lY8weueFghmqW2nQIwSgnUk1M6NkwYXBlAPE4_aBUNFNbah8CPsG4RwOZSq53XRSTHPLNE5Z2mzm9w6oCiGKzVyaQS2_DdyOxhsLPUkFo0ICiSp2ze6RWbw_kzwDJmpVkwgKgccFWwAWdRLr6xGrkT9kFgKAQ78HvbleLVJbx_ftWD7TQfTzHCU8uP0otN6C9dILjV6_vQMRF64ZyzezJ6KHXWsAD3NF7-FdimcxTtHPDamehjXAoUFtKk6Z6wTQXVfZxY5E4bZy6QeDpYC-Kj-aOy2EpEmyGIElCw2plHv0ktISsoub8glrOD7XDsFYgfxjFg
+  
     # 如果不加token请求，就会提示无权访问：
     {
         "error": "unauthorized",
@@ -277,8 +281,88 @@ qd-mall -- 父项目，公共依赖
       "body": "Full authentication is required to access this resource"
     }
     ````
-* 获取token的几个controller  请求头里 写client_id:app  client_secret:app 请求body {请求入参} 用户名密码 admin admin
+  
+* 获取jwt---token的几个controller测试：(配置token的生成存储方式为jwt)
+    * 请求头里 写client_id:app  client_secret:app 
+    * 请求body {请求入参} 用户名密码 admin admin
+      ````
+      {
+      	"username":"admin",
+      	"password":"admin"
+      }
+      ````
     * clientId 和 clientSecret 是在数据库 oauth_client_details中配置的
+    ````
+    # 响应结果：自定义的CustomJwtAccessTokenConverter--->JwtAccessTokenConverter的enhance
+    {
+        "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJyb2xlcyI6bnVsbCwiZXhwIjoxNTg3NDAxOTgxLCJYLUFPSE8tVXNlcklkIjoxLCJqdGkiOiI4OTQzYjAyMy1jNDY1LTRkOWUtYWFmYS0zZjFjODYwY2MzODAiLCJjbGllbnRfaWQiOiJ6bHQifQ.GeJD8CtPsBPPdfX9y2LfGJjDTRMDH_QloTOYFAJkpGyZggBCS3VUxp7aRd1M7Ayw0Rgcu87bkZwvot5hsmN3zmgAs5uqrM2cgZBKPvtl-F3TorTc0DAiU-uz1HAmRQn85MyZ1f_UBNIKeHhxGQddDa7wvyLlcBRHTMkZpC3fgYMHoUiBAkzFn55QqAZgvSnwSs7hZh1MPtXxs-qE4IOMYoy-HaOXATTKXiYI2Hu27Ix3bdsUq3c-KLGPlk_XQxat_CFNSte5XJa-qUBLF-jc0WI5IZCu6fNEh2NGM1r3WurWW1bhmRWdER6SoFdyJigKiQESt4NvJhp10n-UhXsv5g",
+        "token_type": "bearer",
+        "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJyb2xlcyI6bnVsbCwiYXRpIjoiODk0M2IwMjMtYzQ2NS00ZDllLWFhZmEtM2YxYzg2MGNjMzgwIiwiZXhwIjoxNTg3NDEyNzUyLCJYLUFPSE8tVXNlcklkIjoxLCJqdGkiOiI1MjBhNWEwZC02ZmVjLTQzNjgtOTZjMC1iNGU3YjI5OWQwZjIiLCJjbGllbnRfaWQiOiJ6bHQifQ.E-6mvjQucmYIRymHTN4k4d_5BPhEW2DjwbEdqiTcUw861peyLD4fo9Lo6zmqcSILoONYiyPbQSwyM8psT-jfg388UXQL2xCcgeciHEfAz6fAEuwXVjz7HzX3D1pcP0r6nZupb5HzfJHOTEuCab_xb_1j8UNFRtX-qH1AAO3B-DTLAJ4a3DXHwYlBs7PcrdeZNlyEPFW5mzlRpAIc8sz8BhMkearNWlpHR0DubG0x3SzYzXBmr95Wwhn56GsK-3zzCjkDxeG8_neCJHKsTke6TkAwQuteztp-ye0LPJgAcC0gOWKVn0p6nw71P0E4u29G3pLO77DedHPHKh79ERqxUA",
+        "expires_in": 17479,
+        "scope": "all",
+        "X-AOHO-UserId": 1,
+        "roles": null,
+        "jti": "8943b023-c465-4d9e-aafa-3f1c860cc380",
+        "X-AOHO-ClientId": null
+    }
+    # 底层默认的JwtAccessTokenConverter的enhance (没有追加用户身份信息)
+    {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODc0MDU1NjgsInVzZXJfbmFtZSI6ImFkbWluIiwianRpIjoiYTBkMzM0NGYtYzI5MS00NDEwLTg4ZTItN2Q5N2Q5NjhhOGY5IiwiY2xpZW50X2lkIjoiemx0Iiwic2NvcGUiOlsiYWxsIl19.hrxVtCaQB5XyayLqntVo6sQQ7lA54pOn8yu52ClD3wI",
+        "token_type": "bearer",
+        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODc0MTYzNjgsInVzZXJfbmFtZSI6ImFkbWluIiwianRpIjoiNTBjOWE3ZjQtZmNkMS00MTgzLWE3OGUtOThkNTgwZWQxNjY2IiwiY2xpZW50X2lkIjoiemx0Iiwic2NvcGUiOlsiYWxsIl0sImF0aSI6ImEwZDMzNDRmLWMyOTEtNDQxMC04OGUyLTdkOTdkOTY4YThmOSJ9.OGTDtiw-8FXk5TawZfQxUrht0DqPAwl4phNzqwXTDKQ",
+        "expires_in": 17967,
+        "scope": "all",
+        "jti": "a0d3344f-c291-4410-88e2-7d97d968a8f9"
+    }
+    解析：这里的access_token DefaultTokenServices的createAccessToken（）方法生成的uuid：8943b023-c465-4d9e-aafa-3f1c860cc380 就是jti，但是我们自行实现了jwt token的生成转换：CustomJwtAccessTokenConverter
+    所以我们会添加额外信息（用户验证信息）到token的生成结果中，调用父类的JwtAccessTokenConverter的enhance() ,有一段代码，result.setValue(this.encode(result, authentication));会将token和用户认证信息authentication
+    一起进行jwt的加密，
+    jwt 3个组成部分：Header（头部） Payload（有效载荷） Signature（签名） 结构：xxx.yyy.zzz 就像现在的access_token
+    
+    jwt的优点：无状态、安全 
+    jwt的缺点：JWT的最大缺点是服务器不保存会话状态，所以在使用期间不可能取消令牌或更改令牌的权限。
+    也就是说，一旦JWT签发，在有效期内将会一直有效。
+    为了减少盗用和窃取，JWT的有效期不宜设置太长，JWT不建议使用HTTP协议来传输代码，而是使用加密的HTTPS协议进行传输。
+    
+    使用方法：
+    客户端接收服务器返回的JWT，将其存储在Cookie或localStorage中。
+    此后，客户端将在与服务器交互中都会带JWT。如果将它存储在Cookie中，就可以自动发送，但是不会跨域，因此一般是将它放入HTTP请求的Header Authorization字段中。
+    Authorization: Bearer xxx.yyy.zzz
+    当跨域时，也可以将JWT被放置于POST请求的数据主体中。
+    ````
+* 测试配置token存储在redis：请求方式同上
+    ````
+    # 修改yml配置文件：
+    mall:
+      oauth2:
+        token:
+          store:
+            type: redis
+    # 响应结果：不是jwt，可以查看redis，已经存入token了 有9个文件
+    {
+        "access_token": "40ac7daa-3b6c-43cd-8d7d-878c0ea6dfd1",
+        "token_type": "bearer",
+        "refresh_token": "44643d56-8b8d-4fb0-bd4f-624c156697e9",
+        "expires_in": 17999,
+        "scope": "all"
+    }
+    # 同样携带token请求需要认证的资源（可以放在请求头Authorization bearer 281293sc-219321jci-2312c，可以放在表单access_token）
+    
+    # jwt是不能移除token的，因为底层remove方法没有处理逻辑，因为没有存储，而redis存储token，所以调用移除token接口，是直接可以从redis删除token
+    可以调用我们的logout登出方法测试。查看redis变化
+    
+    # 当我们移除token后，再去那被移除的token调用资源时，就会报错， InvalidTokenException 这个异常进行处理，并打印日志
+    {
+        "error": "invalid_token",
+        "error_description": "40ac7daa-3b6c-43cd-8d7d-878c0ea6dfd1"
+    }  
+    因为check_token端点会来判断token的合法性，即调用CustomRedisTokenStore的readAccessToken()来判断传入的token是否存在。
+    CustomRedisTokenStore 这个类就是我们实现的redis 对token的存储 移除 读取等操作的集合类
+    ```` 
+    * 存储token在redis
+    ![image]()
+    * 从redis移除token
+    ![image]()
     
 * 我们支持一下几种获取token登录的方式：
     * 授权码模式：
@@ -300,7 +384,7 @@ qd-mall -- 父项目，公共依赖
 * 我们支持几种token的存储方式：（可以通过配置文件来配置对应TokenStoreConfig配置类，默认使用JWT）
     * 基于数据库
     * 基于redis
-    * 基于jwt
+    * 基于jwt ： 底层不存储，方法是空的，如果生成的token是jwt 则服务器不会保存，其他都会保存到数据库、redis等等
     * 基于内存
     
 * 客户端详情获取：

@@ -1,17 +1,26 @@
 package com.qidian.mall.tokenstore.redis;
 
+import com.central.base.exception.BusinessException;
+import com.central.base.util.ConstantUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
 
@@ -20,6 +29,7 @@ import java.util.*;
  * 所以我就只能自定义一个，代码和RedisTokenStore一样，
  * 只是把所有conn.set(…)都换成conn..stringCommands().set(…)，
  */
+@Slf4j
 @Component
 public class CustomRedisTokenStore implements TokenStore {
     private static final String ACCESS = "access:";
@@ -227,6 +237,7 @@ public class CustomRedisTokenStore implements TokenStore {
 
     /**
      * 请求资源验证token 合法性
+     * 当用户携带token 请求资源服务器的资源时, OAuth2AuthenticationProcessingFilter 拦截token，进行token 和userdetails 过程，把无状态的token 转化成用户信息
      * ------请求经过过滤器后，会自动进入CustomRemoteTokenServices类里的loadAuthentication方法，
      * ------然后跳转到底层/oauth/check_token端点，里面具体逻辑会先调用resourceServerTokenServices接口的readAccessToken
      * ------在DefaultTokenService类中实现，并调用TokenStore接口中的readAccessToken()方法,
@@ -247,7 +258,17 @@ public class CustomRedisTokenStore implements TokenStore {
         }
         OAuth2AccessToken accessToken = deserializeAccessToken(bytes);
         if(accessToken == null){
-            throw new RuntimeException("token不合法");
+            // 不要抛自定义的业务异常，因为spring security的过滤器不知道你这个异常类，不能根据你这异常类做过滤处理，会出现请求数据成功，但是后台报自定义异常错误
+            //如果想自定义异常，请模仿InvalidTokenException 自定义，因为对这里做全局异常处理不会生效。
+//            throw new RuntimeException("token不存在");
+            log.error("token 不存在");
+            throw new InvalidTokenException("Token was not recognised");
+
+        }
+        if(accessToken.isExpired()){
+            log.error("token 已过期");
+            throw new InvalidTokenException("Token has expired");
+//            throw new RuntimeException("token已过期");
         }
         return accessToken;
     }

@@ -1,4 +1,4 @@
-# RSA非对称加密token的keyProperties的相关属性配置（相关加密文件到时候可以通过指令替换自己的）
+# RSA非对称加密token的keyProperties的相关属性配置（相关加密文件到时候可以通过指令替换自己的）---jwt加密使用
 encrypt:
   key-store:
     location: classpath:zlt.jks

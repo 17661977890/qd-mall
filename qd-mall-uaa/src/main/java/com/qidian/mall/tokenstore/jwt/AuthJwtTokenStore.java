@@ -38,7 +38,7 @@ public class AuthJwtTokenStore {
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        // 此处可以自定义实现jwt的生成转换器---进一步在jwt中追加用户信息。
+        // 此处可以自定义实现jwt的生成转换器---进一步在jwt中追加用户信息。如果想用底层默认值就去掉注释，注释下边的自定义部分
 //        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         CustomJwtAccessTokenConverter converter = new CustomJwtAccessTokenConverter();
         KeyPair keyPair = new KeyStoreKeyFactory
