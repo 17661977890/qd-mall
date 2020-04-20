@@ -360,9 +360,9 @@ qd-mall -- 父项目，公共依赖
     CustomRedisTokenStore 这个类就是我们实现的redis 对token的存储 移除 读取等操作的集合类
     ```` 
     * 存储token在redis
-    ![image]()
+    ![image](https://github.com/17661977890/qd-mall/blob/master/image/WechatIMG62.png)
     * 从redis移除token
-    ![image]()
+    ![image](https://github.com/17661977890/qd-mall/blob/master/image/WechatIMG63.png)
     
 * 我们支持一下几种获取token登录的方式：
     * 授权码模式：
