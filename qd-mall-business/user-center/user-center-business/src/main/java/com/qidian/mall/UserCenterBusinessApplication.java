@@ -1,13 +1,18 @@
 package com.qidian.mall;
 
+import com.central.feign.common.interceptor.FeignInterceptorConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.context.request.RequestContextListener;
 
+@Import(FeignInterceptorConfig.class)
 @EnableHystrix
 @EnableFeignClients
 //扫描到公共配置依赖里的相关配置（统一异常处理、国际化等）

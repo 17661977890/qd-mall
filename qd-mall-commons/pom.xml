@@ -20,6 +20,7 @@
         <module>qd-mall-redis-config</module>
         <module>qd-mall-quartz-config</module>
         <module>qd-mall-auth-config</module>
+        <module>qd-mall-feign-config</module>
     </modules>
 
 </project>

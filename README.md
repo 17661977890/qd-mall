@@ -540,8 +540,67 @@ qd-mall -- 父项目，公共依赖
 * （用户中心模块）监控访问地址：localhost:9002/druid/login.html
 
 ### feign 客户端调用
-* 谁调用，谁开启feign支持（配置文件）
-* feign 接口层面的熔断降级处理
+* 谁调用，谁开启feign支持，以及配置feign拦截器和hystrix的相关隔离策略和超时配置等（配置文件）
+
+* feign 接口层面的熔断降级处理 hystrix
+
+* 关于feign的超时配置，
+    * 发现问题：uaa模块首次请求用户feign接口，总是会超时触发熔断，
+    * 原因分析：是因为ribbon的懒加载，导致的，因为熔断超时时间默认1s，所以会出现超过1s的情况，就会触发熔断，服务调用异常，如果没有配置熔断，则会导致超时等报错。
+    * 解决办法：就是配置熔断和ribbon的超时时间配置或者开启ribbon的饥饿加载。
+
+* 关于feign拦截器的使用：
+    * 使用背景： 我们之前都是外部调用web-controller接口，需要认证，但是有时候我们需要服务之间的内部调用也需要认证，所以我们将资源服务器配置在了每一个服务模块（如用户服务、文件服务、认证服务）
+    但是，服务内部调用我们使用feign远程调用，不像controller层一样，可以由前端或者调用方将token配置在请求头或者请求body中来实现鉴权。
+    关于feign，框架给我们提供了响应的拦截器，可以传递外部服务携带的token给到被调用方。
+    * 举例说明：
+    ````
+    # uaa 认证模块 获取用户信息的接口 /api/oauth2/user/info ，如果这个接口也是需要鉴权的，就需要传递access_token,我们在这个接口中通过feign
+    远程调用了 user-center 用户模块的 根据用户名查询用户feign接口 queryByUsername，这个接口也是需要鉴权的。如果不传递token的话，会鉴权不通过的。401
+    所以我们在feign公共配置模块 增加了feign拦截器，将token信息，封装到feign调用的请求头中Authorization bearer 。。。。
+    这样 我们就可以成功的通过feign 传递token的方式来实现需要鉴权的接口的远程调用。
+  
+    # 我们实现拦截的方法用两种，本项目暂时使用第二种，需要在启动了添加 @Import(FeignInterceptorConfig.class) 使拦截器生效。（谁调用谁配置）
+    ````
+    * **问题整理：**
+        * 因为我们为feign接口的调用，提供了熔断机制hystrix，而熔断机制的隔离策略（线程隔离thread 和 信号量隔离 semaphore）对feign拦截器有不同的影响。
+        * feign的默认熔断隔离策略是线程隔离策略，这种隔离策略会导致 安全上下文 和请求上下文 用到threadlocal 置为null，
+        即不能进行请求信息和token的传递。
+        * 解决办法：1、关闭熔断：feign.enable.hystrix:false 2、配置信号量隔离  （都是在调用方配置） 
+    
+    * 关于hystrix隔离策略带来的问题，以及后期优化： 
+        * 1、信号量隔离策略虽然开销小（资源浪费较低），但是对于下游服务是在同一线程中处理，同步操作，多个服务调用耗时会累计，性能较差 ？？？
+        * 2、线程隔离策略，下游服务隔离，异步执行，互不影响，但是上下文不能从调用线程进行传递。这样就导致我们内部服务调用的鉴权操作会受影响。寻找其他替代方案？？？
+        * 3、信号量隔离策略在hystrix 1.4.0后支持超时配置。之前不可以
+        
+* 关于feign接口的请求问题：
+    * 默认不支持文件上传和表单请求。https://www.cnblogs.com/yangzhilong/p/11714620.html
+
+### hystrix 熔断机制详解：
+* 隔离策略：https://www.jianshu.com/p/b8d21248c9b1、https://www.jianshu.com/p/dc0410558fc9
+    ````
+    线程池隔离：
+      1、调用线程和hystrixCommand线程不是同一个线程，并发请求数受到线程池（不是容器tomcat的线程池，而是hystrixCommand所属于线程组的线程池）中的线程数限制，默认是10。
+      2、这个是默认的隔离机制
+      3、hystrixCommand线程无法获取到调用线程中的ThreadLocal中的值
+   信号量隔离：
+      1、调用线程和hystrixCommand线程是同一个线程，默认最大并发请求数是10
+      2、调用速度快，开销小，由于和调用线程是处于同一个线程，所以必须确保调用的微服务可用性足够高并且返回快才用
+    ````
+* 超时配置：在feign接口的调用方，配置超时
+* 配置完后，重启调用方和被调用方，才会生效
+````
+# 如果开启熔断 需要配置信号量隔离，默认的线程隔离，会使feign拦截器 不能获取请求上下文和安全上下文的信息（hystrixCommand线程无法获取到调用线程中的ThreadLocal中的值)
+# hystrix 1.4.0 后支持信号量隔离的超时配置。通过增大熔断超时时间，避免请求（打断点）时间过长，直接熔断。
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 5000
+````
 
 ### oss 云存储整合
 * 其余相关api 参考，控制台开发者指南
@@ -683,3 +742,19 @@ qd-mall -- 父项目，公共依赖
         mvn deploy:deploy-file -DgroupId=com.google.code.kaptcha -DartifactId=kaptcha -Dversion=2.3 -Dpackaging=jar -Dfile=/Users/minyoung/Downloads/kaptcha-2.3.jar -Durl=http://47.103.18.65:8081/repository/maven-releases/ -DrepositoryId=nexus-releases
         ````
         * 配置pom后刷新maven 获取私服的jar，如果不行，或者打包报错无权，那就要配置nexus的匿名用户访问。
+
+
+
+### 认证鉴权实现结构：
+   * uaa 作为认证服务和资源服务
+   * 每个业务微服务模块，作为单独的资源服务模块，配置资源服务器，请求需要提供认证信息（token）来通过鉴权
+   * 外部服务调用鉴权，传递token即可
+   * 内部服务调用鉴权，通过feign拦截器传递token ，但是会收到hystrix的熔断隔离策略的影响，
+     信号量策略超时配置，在hystrix 1.4.0之后也支持了！！！！
+   
+   * 为什么将资源服务器的鉴权配置配置在每个微服务模块，而不是统一在网关配置：
+       * 1、如果只是在网关配置，那么内部服务之间的访问或者不走网关直接请求微服务模块，不需要鉴权就可以访问，因为外部请求统一走网关也是约定的而已。
+       * 2、我们希望，内部微服务之间调用也需要有鉴权的过程，从而也避免出现直接避开网关而直接请求业务微服务模块而导致不需要鉴权的情况
+       * 3、我们只希望网关做服务转发和角色权限的访问校验， 
+   * 弊端：每个服务都做鉴权资源配置，问题： 服务之前toekn的传递（通过feign 拦截器）受熔断的隔离策略影响。信号量隔离性能比线程隔离并发性能差。
+   

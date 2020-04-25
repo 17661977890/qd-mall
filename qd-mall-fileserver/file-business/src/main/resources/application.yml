@@ -26,8 +26,8 @@ aliyun-oss:
   # 地域节点
   endpoint : https://oss-cn-shanghai.aliyuncs.com
   # 用户访问控制
-  accessKeyId: LTAI4FiNLjgaRPkEMygPkynq
-  accessKeySecret: ybaqIhh58M7209HCKkcCGdPC4n0xjO
+  accessKeyId: LTAI4G8qWFxhbeiMt3neriQH
+  accessKeySecret: HpzjqBVp2WHBDtfQELDe54tsQpVmZc
 
 # 资源服务器对应认证服务器的客户端信息和端点配置
 security:
@@ -56,3 +56,9 @@ feign:
     enabled: false
   hystrix:
     enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE

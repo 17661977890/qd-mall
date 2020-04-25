@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -104,7 +105,7 @@ public class OAuth2Controller {
     }
 
     /**
-     * 获取登录用户信息（待测试）
+     * 获取登录用户信息 --- 测试feign拦截器（传递token 实现内部服务调用的token鉴权）
      * todo 使用spring cloud 做saas服务器时，经常会通过Feign调用远程服务。有时候我们的远程服务可能做了某些权限验证。
      *      需要验证header或者token什么的。如果某没有token，可能会被阻止调用。那如何添加token呢。
      *      如果每个方法都手动设置headers，那未免太麻烦。可以通过一个切面，自动帮我们添加请求header。
@@ -118,12 +119,13 @@ public class OAuth2Controller {
     public RestResponse getLoginUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 通过feign远程调用用户中心的获取用户信息接口，来追加登录用户信息
-        // TODO:  根据用户名查询 authentication.getName()
-        // RestResponse<CustomUserDetails> restResponse  = sysUserApi.findByUsername(authentication.getName());
-
-        LoginUserInfo loginUserInfo = new LoginUserInfo();
-        loginUserInfo.setUsername(authentication.getName());
-        return RestResponse.resultSuccess(loginUserInfo);
+        // 根据用户名查询 authentication.getName()
+        RestResponse<SysUser> restResponse  = sysUserApi.queryByUsername(authentication.getName());
+        SysUser sysUser = restResponse.getBody();
+//        LoginUserInfo loginUserInfo = new LoginUserInfo();
+//        BeanUtils.copyProperties(sysUser,loginUserInfo);
+//        return RestResponse.resultSuccess(loginUserInfo);
+        return restResponse;
     }
 
     /**

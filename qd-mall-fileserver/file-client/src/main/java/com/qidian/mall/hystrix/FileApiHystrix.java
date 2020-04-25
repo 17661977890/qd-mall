@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileApiHystrix extends BaseFileHystrix implements FileApi {
     @Override
-    public RestResponse<FileInfoDTO> uploadFile(MultipartFile multipartFile) {
+    public RestResponse<FileInfoDTO> uploadFile(MultipartFile multipartFile,String fileType) {
         return getError();
     }
 }

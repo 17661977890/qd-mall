@@ -2,6 +2,7 @@ package com.qidian.mall.api;
 
 import com.central.base.restparam.RestResponse;
 import com.qidian.mall.entity.CustomUserDetails;
+import com.qidian.mall.entity.SysUser;
 import com.qidian.mall.hystrix.SysUserApiHystrix;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
@@ -20,6 +21,19 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @FeignClient(value = "qd-mall-usercenter",configuration = FeignClientsConfiguration.class,fallback = SysUserApiHystrix.class)
 public interface SysUserApi {
+
+
+    /**
+     * ================== uaa 获取用户信息使用 ==============
+     */
+
+    @RequestMapping(value = "/sys-user/queryByUsername",method = RequestMethod.GET)
+    RestResponse<SysUser> queryByUsername(@RequestParam("username") String username);
+
+
+    /**
+     *  ================== uaa 获取token 接口使用 ============
+     */
 
 
     /**

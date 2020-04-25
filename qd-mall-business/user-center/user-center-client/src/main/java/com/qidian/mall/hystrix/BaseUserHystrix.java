@@ -31,4 +31,12 @@ public class BaseUserHystrix {
         return restResponse;
     }
 
+
+    protected RestResponse getError2(){
+        RestResponse restResponse = new RestResponse();
+        restResponse.setHeader(new RestResponseHeader(ConstantUtil.ERROR,ConstantUtil.USER_SERVICE_NOT_AVAILABLE));
+        restResponse.setBody(null);
+        return restResponse;
+    }
+
 }

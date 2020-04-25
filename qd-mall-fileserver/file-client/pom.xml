@@ -14,16 +14,8 @@
     <dependencies>
         <!--feign 并使用okhttp的支持替换默认的urlconnection-->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-feign-config</artifactId>
         </dependency>
     </dependencies>
 </project>

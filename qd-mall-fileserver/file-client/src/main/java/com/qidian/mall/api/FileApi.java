@@ -7,6 +7,7 @@ import com.qidian.mall.response.FileInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,6 @@ public interface FileApi {
      * @param multipartFile
      * @return
      */
-    @RequestMapping("/file-center/uploadFile")
-    RestResponse<FileInfoDTO> uploadFile(@RequestParam("file")MultipartFile multipartFile);
+    @RequestMapping(value = "/file-center/uploadFile",method = RequestMethod.POST)
+    RestResponse<FileInfoDTO> uploadFile(@RequestParam("file")MultipartFile multipartFile,@RequestParam("fileType") String fileType);
 }

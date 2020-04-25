@@ -21,6 +21,11 @@
             <artifactId>user-center-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--文件服务-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>file-client</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.code.kaptcha/kaptcha -->
         <dependency>
             <groupId>com.google.code.kaptcha</groupId>

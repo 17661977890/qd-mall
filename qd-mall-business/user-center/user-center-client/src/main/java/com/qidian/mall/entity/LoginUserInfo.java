@@ -1,5 +1,6 @@
 package com.qidian.mall.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,7 +11,17 @@ import java.io.Serializable;
 @Data
 public class LoginUserInfo implements Serializable {
 
+
     private String username;
 
     private String headPhoto;
+
+    private String nickname;
+
+
+    private String headImgUrl;
+
+    private String mobile;
+
+    private Boolean sex;
 }

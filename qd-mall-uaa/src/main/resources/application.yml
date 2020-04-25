@@ -59,6 +59,16 @@ feign:
     enabled: false
   hystrix:
     enabled: true
+# 谁调用，谁配置
+# 如果开启熔断 需要配置信号量隔离，默认的线程隔离，会使feign拦截器 不能获取请求上下文和安全上下文的信息（threadLocal 置空）
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 5000
 
 # 暴露端点，暴露路由信息，
 management:

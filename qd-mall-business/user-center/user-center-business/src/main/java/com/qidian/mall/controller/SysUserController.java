@@ -4,13 +4,18 @@ import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
+import com.qidian.mall.api.FileApi;
 import com.qidian.mall.quartz.QuartzJobManager;
 import com.qidian.mall.quartz.TestQuartz;
+import com.qidian.mall.response.FileInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +27,9 @@ import com.qidian.mall.response.SysUserVO;
 import com.qidian.mall.service.ISysUserService;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -43,6 +50,9 @@ public class SysUserController extends BaseController {
 
     @Autowired
     public ISysUserService sysUserService;
+
+    @Resource
+    public FileApi fileApi;
 
     /**
     * 新增系统用户名数据
@@ -124,7 +134,22 @@ public class SysUserController extends BaseController {
 
 
     /**
-     * 根据用户名查询用户
+     * 根据用户名查询用户信息
+     */
+    @GetMapping(value = "/queryByUsername", params = "username")
+    @ApiOperation(value = "根据用户名查询用户")
+    public RestResponse queryByUsername(String username) {
+        return RestResponse.resultSuccess(sysUserService.selectByUsername(username));
+    }
+
+
+
+    /**
+     * =============== uaa认证授权获取token 接口使用 =============
+     */
+
+    /**
+     * 根据用户名查询用户 --
      */
     @GetMapping(value = "/users-anon/login", params = "username")
     @ApiOperation(value = "根据用户名查询用户")
@@ -155,6 +180,10 @@ public class SysUserController extends BaseController {
     }
 
     /**
+     * =================  测试接口 =================
+     */
+
+    /**
      * 测试定时调度
      * @param request
      * @throws Exception
@@ -162,6 +191,18 @@ public class SysUserController extends BaseController {
     @PostMapping("/task")
     public void task(HttpServletRequest request) throws Exception {
         QuartzJobManager.getInstance().addJob(TestQuartz.class, "testJob","Group1", "0/5 * * * * ? ");
+    }
+
+    /**
+     * 测试feign拦截传递token
+     * @param multipartFile
+     * @return
+     */
+    @PostMapping("/fileUpload")
+    public RestResponse testFileUpload(@RequestParam("file") MultipartFile multipartFile){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        RestResponse<FileInfoDTO>  restResponse= fileApi.uploadFile(multipartFile,"1");
+        return RestResponse.resultSuccess(restResponse);
     }
 
 }
