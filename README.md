@@ -8,7 +8,9 @@
         * 注意事项：搭建过程中 服务器需要至少2G内存，否则很慢
     * my-nexus：
         * 在阿里云服务器用docker-compose搭建  地址：http://47.103.18.65:8081/ （外网地址）
-         
+       
+## 业务架构图：
+![image](https://github.com/17661977890/qd-mall/blob/master/image/WechatIMG61.png)
 
 ## 目前实现依赖功能：
 ````
