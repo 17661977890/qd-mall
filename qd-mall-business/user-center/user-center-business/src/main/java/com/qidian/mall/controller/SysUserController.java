@@ -194,7 +194,7 @@ public class SysUserController extends BaseController {
     }
 
     /**
-     * 测试feign拦截传递token
+     * 测试feign拦截传递token ------因为feign默认不支持文件上传和表单请求，所以这个会报不是文件上传请求的错误，需要加配置，百度
      * @param multipartFile
      * @return
      */
