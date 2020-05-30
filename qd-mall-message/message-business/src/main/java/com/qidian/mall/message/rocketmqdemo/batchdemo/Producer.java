@@ -1,4 +1,4 @@
-package com.qidian.mall.message.rocketmq.batchdemo;
+package com.qidian.mall.message.rocketmqdemo.batchdemo;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;

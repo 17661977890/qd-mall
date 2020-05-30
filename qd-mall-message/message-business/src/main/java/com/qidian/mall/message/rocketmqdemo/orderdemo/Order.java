@@ -1,4 +1,4 @@
-package com.qidian.mall.message.rocketmq.orderdemo;
+package com.qidian.mall.message.rocketmqdemo.orderdemo;
 
 import lombok.Data;
 import lombok.ToString;

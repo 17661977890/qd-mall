@@ -1,4 +1,4 @@
-package com.qidian.mall.message.rocketmq.tarnsationdemo;
+package com.qidian.mall.message.rocketmqdemo.tarnsationdemo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.*;

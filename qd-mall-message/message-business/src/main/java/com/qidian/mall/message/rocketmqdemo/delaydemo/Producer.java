@@ -1,13 +1,8 @@
-package com.qidian.mall.message.rocketmq.delaydemo;
+package com.qidian.mall.message.rocketmqdemo.delaydemo;
 
-import com.qidian.mall.message.rocketmq.orderdemo.Order;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.common.message.MessageQueue;
-
-import java.util.List;
 
 /**
  * 延迟消息生产者

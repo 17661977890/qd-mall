@@ -1,14 +1,12 @@
-package com.qidian.mall.message.rocketmq.orderdemo;
+package com.qidian.mall.message.rocketmqdemo.orderdemo;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 顺序消息生产者

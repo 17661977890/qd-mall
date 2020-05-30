@@ -21,3 +21,8 @@ threadpool:
   queue-capacity: 1000
   keep-alive-seconds: 1000
   thread-name-prefix: "Async-Thread:"
+
+# id生成器相关配置（数据中心，工作机器 0-31）
+IdWorker:
+  datacenterId: 2
+  machineId: 3

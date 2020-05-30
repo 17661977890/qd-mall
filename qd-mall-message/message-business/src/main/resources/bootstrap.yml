@@ -7,7 +7,7 @@ mall:
 
 spring:
   application:
-    name: qd-mall-fileserver
+    name: qd-mall-messageserver
   cloud:
     nacos:
       config:

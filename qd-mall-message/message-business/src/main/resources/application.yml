@@ -35,6 +35,16 @@ management:
       exposure:
         include: '*'
 
+# rocketMq 生产者配置
+rocketmq:
+  name-server: 192.168.0.110:9876;192.168.0.111:9876
+  producer:
+    group: my-group
+  # 消费者一般在其他业务模块
+  consumer:
+    group: my-group
+
+
 # feign 开启熔断（调用方开启） 开启okhttp的支持
 feign:
   okhttp:

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 /**
- * 文件存储服务--暂用阿里的oss
+ * 消息服务
  * @Author binsun
  * @Date 2020-01-16
  * @Description

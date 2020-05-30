@@ -1,6 +1,7 @@
-package com.qidian.mall.message.rocketmq.batchdemo;
+package com.qidian.mall.message.rocketmqdemo.fliterdemo;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -9,13 +10,15 @@ import org.apache.rocketmq.common.message.MessageExt;
 import java.util.List;
 
 /**
- * 消费者 : 消费批量消息
+ * 消费者 : 过滤消费消息 ---- 通过 Sql表达式 来获取不同的消息
  * @author bin
  */
-public class Consumer {
+public class ConsumerBySql {
+
 
     /**
-     * 消费消息
+     * todo 报错解决： The broker does not support consumer to filter message by SQL92
+     * todo 配置文件修改：enablePropertyFilter=true
      * @param args
      * @throws Exception
      */
@@ -24,15 +27,14 @@ public class Consumer {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("group1");
         // 2、指定nameserver地址
         consumer.setNamesrvAddr("192.168.0.110:9876;192.168.0.111:9876");
-        // 3、订阅主题Topic和tag （切换tag，消费同步 异步 单向消息） 消费多个tag：  Tag1 ｜｜ Tag2 ｜｜ Tag3  直接写 * 消费所有的tag
-        consumer.subscribe("BatchTopic","*");
+        // 3、订阅主题Topic和tag  消费多个tag：  Tag1 ｜｜ Tag2 ｜｜ Tag3  直接写 * 消费所有的tag
+        consumer.subscribe("FilterTopic", MessageSelector.bySql("i>5"));
 
         // 4、设置回调函数监听器，处理消息
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             // 接受消息内容,返回结果
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-//                System.out.println(list);
                 for (MessageExt m:list) {
                     System.out.println("消费消息："+new String(m.getBody()));
                 }

@@ -1,4 +1,4 @@
-package com.qidian.mall.message.rocketmq.delaydemo;
+package com.qidian.mall.message.rocketmqdemo.orderdemo;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.*;
@@ -7,7 +7,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import java.util.List;
 
 /**
- * 消费者 : 消费延时消息
+ * 消费者 : 消费顺序消息
  * @author bin
  */
 public class Consumer {
@@ -23,22 +23,19 @@ public class Consumer {
         // 2、指定nameserver地址
         consumer.setNamesrvAddr("192.168.0.110:9876;192.168.0.111:9876");
         // 3、订阅主题Topic和tag （切换tag，消费同步 异步 单向消息） 消费多个tag：  Tag1 ｜｜ Tag2 ｜｜ Tag3  直接写 * 消费所有的tag
-        consumer.subscribe("DelayTopic","*");
+        consumer.subscribe("OrderTopic","*");
 
-        // 4、设置回调函数监听器，处理消息
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-            // 接受消息内容,返回结果
+        // 4、注册消息监听器，消费顺序消息： MessageListenerOrderly
+        consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-//                System.out.println(list);
-                for (MessageExt m:list) {
-                    System.out.println("消费消息："+new String(m.getBody()) +"消息id："+m.getMsgId()+"延迟时间："+(System.currentTimeMillis()-m.getStoreTimestamp()));
+            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
+                for (MessageExt messageExt : list) {
+                    System.out.println("消费消息："+new String(messageExt.getBody())+"  Thread-name："+Thread.currentThread().getName());
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                return ConsumeOrderlyStatus.SUCCESS;
             }
         });
         // 5、启动消费者consumer
         consumer.start();
-        System.out.println("消费者启动");
     }
 }

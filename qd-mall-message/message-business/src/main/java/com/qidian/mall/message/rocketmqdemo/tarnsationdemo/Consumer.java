@@ -1,4 +1,4 @@
-package com.qidian.mall.message.rocketmq.fliterdemo;
+package com.qidian.mall.message.rocketmqdemo.tarnsationdemo;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -9,10 +9,10 @@ import org.apache.rocketmq.common.message.MessageExt;
 import java.util.List;
 
 /**
- * 消费者 : 过滤消费消息 ---- 通过 Tag 来获取不同的消息
+ * 消费者 : 消费事务消息
  * @author bin
  */
-public class ConsumerByTag {
+public class Consumer {
 
 
     public static void main(String[] args) throws Exception {
@@ -21,7 +21,7 @@ public class ConsumerByTag {
         // 2、指定nameserver地址
         consumer.setNamesrvAddr("192.168.0.110:9876;192.168.0.111:9876");
         // 3、订阅主题Topic和tag  消费多个tag：  Tag1 ｜｜ Tag2 ｜｜ Tag3  直接写 * 消费所有的tag
-        consumer.subscribe("FilterTopic","Tag1 || Tag2");
+        consumer.subscribe("TransactionTopic","*");
 
         // 4、设置回调函数监听器，处理消息
         consumer.registerMessageListener(new MessageListenerConcurrently() {
