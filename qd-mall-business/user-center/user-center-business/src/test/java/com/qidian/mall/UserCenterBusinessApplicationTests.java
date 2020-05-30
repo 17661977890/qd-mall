@@ -1,5 +1,6 @@
 package com.qidian.mall;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.qidian.mall.quartz.QuartzJobManager;
 import com.qidian.mall.quartz.TestQuartz;
 import org.junit.Test;
@@ -62,6 +63,33 @@ public class UserCenterBusinessApplicationTests {
     public void testTask() throws Exception {
 //        QuartzJobManager.getInstance().addJob(TestQuartz.class, "testJob","Group1", "0/5 * * * * ? ");
         QuartzJobManager.getInstance().resumeJob("testJob","Group1");
+    }
+
+
+    @Test
+    public void test(){
+        String word = scrambleWorld("ABCAKYTNSAVD");
+        System.out.println(word);
+    }
+
+    private String scrambleWorld(String word){
+        StringBuilder changeWords =new StringBuilder();
+        int j =0;
+        while (j< word.length()-1) {
+            String subStr = word.substring(j, j+1);
+            String next = word.substring(j+1,j+2);
+            if("A".equals(subStr)){
+                changeWords.append(next).append(subStr);
+                j+=2;
+            }else {
+                changeWords.append(subStr);
+                j++;
+            }
+        }
+        if(j<word.length()){
+            changeWords.append(word.substring(j,j+1));
+        }
+        return changeWords.toString();
     }
 
 

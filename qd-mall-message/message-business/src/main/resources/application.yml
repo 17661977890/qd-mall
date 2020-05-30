@@ -1,0 +1,51 @@
+spring:
+  jackson.date-format: yyyy-MM-dd HH:mm:ss
+  jackson.time-zone: GMT+8
+  profiles:
+    include: base
+# swagger配置、认证过滤请求配置
+mall:
+  swagger:
+    enabled: true
+    title: 消息服务中心
+    description: 消息服务中心接口文档
+    version: 1.0
+    base-package: com.qidian.mall.message.controller
+  security:
+    ignore:
+      httpUrls:
+
+
+# 资源服务器对应认证服务器的客户端信息和端点配置
+security:
+  oauth2:
+    client:
+      client-id: zlt
+      client-secret: zlt
+      access-token-uri: http://localhost:8088/oauth/token
+      user-authorization-uri: http://localhost:8088/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:8088/oauth/check_token
+
+
+# 暴露端点，暴露路由信息，
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# feign 开启熔断（调用方开启） 开启okhttp的支持
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
