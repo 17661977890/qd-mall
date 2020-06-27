@@ -1,0 +1,32 @@
+#redis配置开始
+# Redis数据库索引（默认为0）
+spring:
+  redis:
+    database: 0
+    # Redis服务器地址
+    host: localhost
+      # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 123456
+    # jedis连接池 --- springboot版本2.x 已经替换底层jedis为lettuce 所以不推荐使用jedis pool（有时候不生效，有的springboot版本源码很多类不存在） 我们使用lettuce pool
+#    jedis:
+#      pool:
+#        # 最大连接数（负数没有限制）
+#        max-active: 1024
+#        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+#        max-wait: 10000
+#        # 连接池中的最大空闲连接
+#        max-idle: 200
+#        # 连接池中的最小空闲连接
+#        min-idle: 0
+    lettuce:
+      pool:
+        max-active: 100
+        max-wait: 10000
+        min-idle: 0
+        max-idle: 30
+    # 连接超时时间（毫秒）
+    timeout: 10000
+    #redis配置结束
+    block-when-exhausted: true

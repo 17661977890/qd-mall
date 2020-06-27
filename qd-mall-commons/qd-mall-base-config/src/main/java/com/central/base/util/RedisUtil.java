@@ -5,19 +5,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
+
 /**
- * Redis工具类
- * @author ZENG.XIAO.YAN
+ * Redis工具类 ---- 基于spring-boot-starter-data-redis redisTemplate
+ * @author sunbin
  * @date   2018年6月7日
  */
 @Component
 public final class RedisUtil {
+
+    /**
+     *  todo 因为我们在redis模块也有一个redisTemplate的配置类，后面我们会整合统一使用base模块的 ，
+     *  todo 所以  @Qualifier("redisTemplate1")使用此注解显式的指向 base的配置
+     */
     @Autowired
+    @Qualifier("redisTemplate1")
     private RedisTemplate<String, Object> redisTemplate;
     // =============================common============================
     /**

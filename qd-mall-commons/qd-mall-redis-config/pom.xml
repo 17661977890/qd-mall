@@ -13,21 +13,19 @@
     <description>redis通用组件</description>
     <dependencies>
 
+        <!--本pom 采用springboot-data 和 jedis直连两种方式来操作redis，选择其一即可-->
+        <!--springboot 2.x之后底层不再使用jedis，而是使用基于netty的lettuce，使用此依赖 操作redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>redis.clients</groupId>
-                    <artifactId>jedis</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>lettuce-core</artifactId>
-                    <groupId>io.lettuce</groupId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>lettuce-core</artifactId>-->
+<!--                    <groupId>io.lettuce</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
-        <!-- jedis客户端 -->
+        <!-- 使用 jedis客户端 操作redis -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>

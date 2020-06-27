@@ -24,11 +24,11 @@ qd-mall -- 父项目，公共依赖
 |  |—qd-mall-codegenerator--mybatis-plus代码生成
 |  |─qd-mall-commons -- 通用工具(配置)一级工程
 |  |  |-qd-mall-auth-config -- 认证授权相关公共配置类配置
-|  |  |─qd-mall-base-config -- 封装基础项通用配置（异步async 定时线程池 cros跨域 统一异常处理 统一出参入参规范 redis序列化配置 httpclient配置 国际化 相关工具类）
+|  |  |─qd-mall-base-config -- 封装基础项通用配置（异步async 定时线程池 cros跨域 统一异常处理 统一出参入参规范 redisTemplate序列化配置和工具类 httpclient配置 国际化 相关工具类）
 |  |  |─qd-mall-log-config -- 封装日志统一配置
 |  |  |─qd-mall-db-config -- 封装数据库通用配置
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
-|  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）
+|  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）、jedis 连接池配置和相关命令工具类（springboot 整合redis(配置、工具类参考base模块) 和 jedis 两种方式 来操作redis ）
 |  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
 |  |-qd-mall-fileserver -- 文件存储服务oss
 |  |  |-file-business -- 业务实现 
