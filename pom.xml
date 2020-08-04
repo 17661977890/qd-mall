@@ -46,6 +46,7 @@
         <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
         <spring-boot-starter-data-redis.version>2.1.4.RELEASE</spring-boot-starter-data-redis.version>
         <httpclient.version>4.5.2</httpclient.version>
+        <elasticsearch.version>7.6.1</elasticsearch.version>
     </properties>
 
     <!--项目开发者列表-->
@@ -99,6 +100,7 @@
         <module>qd-mall-gateway</module>
         <module>qd-mall-fileserver</module>
         <module>qd-mall-message</module>
+        <module>qd-mall-search</module>
 
     </modules>
 
@@ -209,6 +211,12 @@
                 <artifactId>message-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.qidian.mall</groupId>
+                <artifactId>search-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
@@ -391,6 +399,7 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+
             </dependency>
             <dependency>
                 <groupId>io.spring.platform</groupId>
@@ -412,6 +421,31 @@
                 <version>${spring-cloud-alibaba-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.elasticsearch</groupId>
+                        <artifactId>elasticsearch</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.elasticsearch.client</groupId>
+                        <artifactId>elasticsearch-rest-client</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

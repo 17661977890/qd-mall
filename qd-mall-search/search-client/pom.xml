@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qd-mall-search</artifactId>
+        <groupId>com.qidian.mall</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>search-client</artifactId>
+    <description>搜索服务客户端接口</description>
+    <dependencies>
+
+        <!--Springboot 集成的es 版本和我们安装的es服务端版本不对应，在自定properties中自定义版本7.6.1 没有覆盖springboot默认对应版本，没有生效，所以下边显示的声明相关版本es依赖-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+
+        </dependency>
+        <!--feign 并使用okhttp的支持替换默认的urlconnection-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-feign-config</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
