@@ -34,7 +34,13 @@ qd-mall -- 父项目，公共依赖
 |  |  |-file-business -- 业务实现 
 |  |  |-file-client -- 暴露接口feign
 |  |-qd-mall-gateway -- spring-cloud-gateway 动态路由网关
+|  |-qd-mall-message -- rocketMq 消息队列（消息服务）
+|  |  |-message-business -- 业务实现 
+|  |  |-message-client -- 暴露接口feign
 |  |-qd-mall-register -- nacos注册中心
+|  |-qd-mall-search -- es搜索服务
+|  |  |-search-business -- 业务实现 
+|  |  |-search-client -- 暴露接口feign
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）
 ````
 
@@ -606,6 +612,13 @@ hystrix:
 
 ### oss 云存储整合
 * 其余相关api 参考，控制台开发者指南
+
+### rocketMq 消息队列整合
+
+## es 搜索引擎单机整合
+* 测试类包含相关基本crud api
+* 完成仿京东 高级搜索实战--数据爬虫批量添加至索引库，高级搜索，高亮搜索等
+* es相关环境配置在linux 虚拟机
   
 #### LAST: 问题整理：
 

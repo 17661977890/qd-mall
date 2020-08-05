@@ -19,6 +19,7 @@ mall:
     ignore:
       httpUrls: >
         /index,
+        /api/**,
         /index.html,
         /css/**,
         /images/**,

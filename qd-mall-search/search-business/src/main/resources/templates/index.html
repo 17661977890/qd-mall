@@ -5,11 +5,11 @@
     <meta charset="utf-8"/>
     <title>孙彬之Java-ES仿京东实战</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <script th:src="@{/js/jquery.min.js}"></script>
+<!--    <script th:src="@{/js/jquery.min.js}"></script>-->
 </head>
 
 <body class="pg">
-<div class="page">
+<div class="page" id="app">
     <div id="mallPage" class=" mallist tmall- page-not-market ">
 
         <!-- 头部搜索 -->
@@ -31,11 +31,11 @@
                                     <div class="mallSearch-input clearfix">
                                         <div class="s-combobox" id="s-combobox-685">
                                             <div class="s-combobox-input-wrap">
-                                                <input type="text" autocomplete="off" value="dd" id="mq"
+                                                <input v-model="keyWord" type="text" autocomplete="off" value="dd" id="mq"
                                                        class="s-combobox-input" aria-haspopup="true">
                                             </div>
                                         </div>
-                                        <button type="submit" id="searchbtn">搜索</button>
+                                        <button type="submit" id="searchbtn" @click.prevent="searchKey" >搜索</button>
                                     </div>
                                 </fieldset>
                             </form>
@@ -87,21 +87,24 @@
                 <!-- 商品详情 -->
                 <div class="view grid-nosku">
 
-                    <div class="product">
+                    <div class="product" v-for="result in results">
                         <div class="product-iWrap">
                             <!--商品封面-->
                             <div class="productImg-wrap">
                                 <a class="productImg">
-                                    <img src="https://img.alicdn.com/bao/uploaded/i1/3899981502/O1CN01q1uVx21MxxSZs8TVn_!!0-item_pic.jpg">
+<!--                                    <img src="https://img.alicdn.com/bao/uploaded/i1/3899981502/O1CN01q1uVx21MxxSZs8TVn_!!0-item_pic.jpg">-->
+                                    <img :src="result.img">
                                 </a>
                             </div>
                             <!--价格-->
                             <p class="productPrice">
-                                <em><b>¥</b>2590.00</em>
+                                <em>{{result.price}}</b></em>
                             </p>
                             <!--标题-->
                             <p class="productTitle">
-                                <a> dkny秋季纯色a字蕾丝dd商场同款连衣裙 </a>
+<!--                                <a>{{result.title}}</a>-->
+                                <!--高亮显示-->
+                                <a v-html="result.title"></a>
                             </p>
                             <!-- 店铺名 -->
                             <div class="productShop">
@@ -120,8 +123,32 @@
     </div>
 </div>
 
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/vue.min.js}"></script>
 <script>
-
+    new Vue({
+        el: '#app',
+        data: {
+            keyWord: '',//搜索关键字
+            results: [] //搜索的结果
+        },
+        methods: {
+            searchKey(){
+                var keyWord = this.keyWord;
+                console.log(keyWord);
+                // 对接后端 (精准搜索)
+                // axios.get('/api/search/search/'+keyWord+"/1/10").then(response=>{
+                //     console.log(response.data.body)
+                //     this.results =response.data.body; // 绑定数据
+                // })
+                // 高亮搜索
+                axios.get('/api/search/searchHighLight/'+keyWord+"/1/10").then(response=>{
+                    console.log(response.data.body)
+                    this.results =response.data.body; // 绑定数据
+                })
+            }
+        }
+    })
 </script>
 
 </body>
