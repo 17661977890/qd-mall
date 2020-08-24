@@ -24,7 +24,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**").allowedOrigins("*")
                 .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type",
-                        "Last-Modified", "device", "token","x-token")
+                        "Last-Modified", "device", "token","x-token","*")
                 .exposedHeaders("Set-Cookie")
                 .allowCredentials(true).maxAge(3600);
     }
@@ -37,7 +37,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedMethods(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name(),
                         HttpMethod.PUT.name(), HttpMethod.OPTIONS.name())
                 .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type",
-                        "Last-Modified", "device", "token","x-token")
+                        "Last-Modified", "device", "token","x-token","*")
                 .exposedHeaders(HttpHeaders.SET_COOKIE)
                 .allowCredentials(true)
                 .maxAge(3600);

@@ -1,3 +1,4 @@
+
 server:
   port: 9002
 spring:
@@ -139,7 +140,8 @@ mall:
     ignore:
       # 忽略认证的地址,目前主要是给认证服务器提供feign接口的不需要认证 （因为生成token的请求，不能传递token，所以不要走feign拦截器）
       httpUrls: >
-        /*/users-anon/**
+        /*/users-anon/**,
+        /sys-user/**
 # 客户端资源不止要配置资源服务器，这里还要做配置，与认证服务器对应起来，pom依赖对应的是spring-cloud-starter-oauth2 如果不导入此依赖，这里配置会黄色，
 # 带token请求资源，会报无效token ，注意这里的客户端id和secret 配置要和token生成的对应，否则会报错401
 security:

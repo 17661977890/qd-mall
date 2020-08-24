@@ -23,10 +23,12 @@ spring:
   # 路由网关配置
   cloud:
     gateway:
-      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略，通过serviceId 路由到指定的服务，
+      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略，通过serviceId 路由到指定的服务，请求需要带服务id  比如 localhost:8888/qd-mall-usercenter/xxx/xxx
       discovery:
         locator:
           enabled: true
+          # 服务名称支持小写（如果是eureka注册中心 服务注册会将服务名改为大写，这个配置就是忽略服务名请求的大小写，但是我们是用nacos 不会改变服务名的大小写，所以不需要考虑这个问题）
+#          lower-case-service-id: true
       # 配置路由规则（路由、断言、过滤器）
       routes:
         # 1、用户中心
@@ -37,7 +39,8 @@ spring:
           # Predicate 翻译过来是“谓词”的意思，必须，主要作用是匹配用户的请求，有很多种用法
           predicates:
             # Method 方法谓词，这里是匹配 GET 和 POST 请求 (路由断言)
-            - Path=/sys-user
+            # path 路径谓词 匹配/sys-user/** 的,这里的路径匹配应该是类似于nginx的最大前缀匹配
+            - Path=/qd-mall-usercenter/**
           default-filters:
             # 熔断处理配置
             - name: Hystrix

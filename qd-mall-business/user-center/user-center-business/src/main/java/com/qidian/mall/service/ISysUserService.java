@@ -58,7 +58,7 @@ public interface ISysUserService extends IService<SysUser> {
     * @param record 查询请求条件
     * @return 信息列表
     */
-    IPage<SysUserVO> selectPage(SysUserDTO record);
+    IPage<SysUserVO> selectPage(SysUserDTO record,int pageSize,int pageNum);
 
     CustomUserDetails findByUsername(String username);
 

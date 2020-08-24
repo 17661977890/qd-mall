@@ -109,11 +109,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     * @return 信息列表
     */
     @Override
-    public IPage<SysUserVO> selectPage(SysUserDTO record) {
+    public IPage<SysUserVO> selectPage(SysUserDTO record,int pageSize,int pageNum) {
         // DTO -> entity 转换
         SysUser data = this.convertEntity(record);
         // 分页数据设置
-        Page<SysUser> page = new Page<>(record.getCurrent(),record.getSize());
+        Page<SysUser> page = new Page<>(pageNum,pageSize);
         // 查询条件
         QueryWrapper<SysUser> queryWrapper =  new QueryWrapper<>();
         queryWrapper.setEntity(data);

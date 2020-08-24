@@ -50,7 +50,7 @@ public class SysUserDTO extends Page implements Serializable {
     private String mobile;
 
     @ApiModelProperty(value = "性别")
-    private Boolean sex;
+    private Integer sex;
 
     private Boolean enabled;
 

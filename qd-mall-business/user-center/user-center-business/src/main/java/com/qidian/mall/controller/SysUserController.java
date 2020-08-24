@@ -127,7 +127,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "分页查询", notes = "分页查询SysUser全部数据")
     @RequestMapping(value = "/queryPage", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserPage(@RequestBody RestRequest<SysUserDTO> restRequest) {
-        IPage<SysUserVO> result = sysUserService.selectPage(restRequest.getBody());
+        IPage<SysUserVO> result = sysUserService.selectPage(restRequest.getBody(),restRequest.getHeader().getPageSize(),restRequest.getHeader().getPageNum());
         return new RestResponse().success(result);
     }
 

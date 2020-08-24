@@ -8,7 +8,7 @@ spring:
       # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
-    password: 123456
+    password:
     # jedis连接池 --- springboot版本2.x 已经替换底层jedis为lettuce 所以不推荐使用jedis pool（有时候不生效，有的springboot版本源码很多类不存在） 我们使用lettuce pool
 #    jedis:
 #      pool:
@@ -29,4 +29,4 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 10000
     #redis配置结束
-    block-when-exhausted: true
+#    block-when-exhausted: true
