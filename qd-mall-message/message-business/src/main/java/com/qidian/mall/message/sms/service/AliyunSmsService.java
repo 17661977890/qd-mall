@@ -3,6 +3,7 @@ package com.qidian.mall.message.sms.service;
 import com.aliyuncs.CommonResponse;
 import com.qidian.mall.message.request.SendSmsDTO;
 import com.qidian.mall.message.request.SmsQueryDTO;
+import com.qidian.mall.message.response.SendSmsVo;
 
 public interface AliyunSmsService  {
 
@@ -11,7 +12,7 @@ public interface AliyunSmsService  {
      * @param sendSmsDTO
      * @return
      */
-    CommonResponse sendSms(SendSmsDTO sendSmsDTO);
+    SendSmsVo sendSms(SendSmsDTO sendSmsDTO);
 
 
     /**

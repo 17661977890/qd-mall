@@ -8,10 +8,10 @@ spring:
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
   datasource:
-    # 192.168.0.109 本地虚拟机docker db （docker-compose部署）  本地mysql密码是root
+    # 192.168.0.109 本地虚拟机docker db （docker-compose部署）  mac 本地mysql密码是root 公司本地mysql 密码 123456
     url: jdbc:mysql://localhost:3306/qd-mall?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
-    password: root
+    password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     #连接池配置

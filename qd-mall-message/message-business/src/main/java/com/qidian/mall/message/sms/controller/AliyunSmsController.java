@@ -7,6 +7,7 @@ import com.central.base.restparam.RestResponse;
 import com.qidian.mall.message.enums.SmsTemplateTypeEnum;
 import com.qidian.mall.message.request.SendSmsDTO;
 import com.qidian.mall.message.request.SmsQueryDTO;
+import com.qidian.mall.message.response.SendSmsVo;
 import com.qidian.mall.message.sms.service.AliyunSmsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,10 +36,10 @@ public class AliyunSmsController extends BaseController {
      */
     @ApiOperation(value = "发送短信", notes = "阿里云发送短信，支持多手机")
     @RequestMapping(value = "/sendSms",method = RequestMethod.POST)
-    public RestResponse<CommonResponse> sendSms(@Validated @RequestBody SendSmsDTO sendSmsDTO){
+    public RestResponse<SendSmsVo> sendSms(@Validated @RequestBody SendSmsDTO sendSmsDTO){
         sendSmsDTO.setTemplateCode(SmsTemplateTypeEnum.getTemplateCodeByCode(sendSmsDTO.getBusinessType()));
-        CommonResponse commonResponse = aliyunSmsService.sendSms(sendSmsDTO);
-        return new RestResponse<CommonResponse>().success(commonResponse);
+        SendSmsVo sendSmsVo = aliyunSmsService.sendSms(sendSmsDTO);
+        return new RestResponse<SendSmsVo>().success(sendSmsVo);
     }
 
 

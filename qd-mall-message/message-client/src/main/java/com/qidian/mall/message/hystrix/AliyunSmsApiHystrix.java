@@ -4,6 +4,7 @@ import com.aliyuncs.CommonResponse;
 import com.central.base.restparam.RestResponse;
 import com.qidian.mall.message.api.AliyunSmsApi;
 import com.qidian.mall.message.request.SendSmsDTO;
+import com.qidian.mall.message.response.SendSmsVo;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +18,7 @@ public class AliyunSmsApiHystrix extends BaseMessageHystrix implements AliyunSms
 
 
     @Override
-    public RestResponse<CommonResponse> sendSms(SendSmsDTO sendSmsDTO) {
+    public RestResponse<SendSmsVo> sendSms(SendSmsDTO sendSmsDTO) {
         return getError();
     }
 }

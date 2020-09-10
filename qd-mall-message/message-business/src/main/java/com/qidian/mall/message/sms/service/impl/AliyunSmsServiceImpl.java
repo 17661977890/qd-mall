@@ -1,5 +1,6 @@
 package com.qidian.mall.message.sms.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -12,6 +13,7 @@ import com.central.base.exception.BusinessException;
 import com.central.base.message.MessageSourceService;
 import com.qidian.mall.message.request.SendSmsDTO;
 import com.qidian.mall.message.request.SmsQueryDTO;
+import com.qidian.mall.message.response.SendSmsVo;
 import com.qidian.mall.message.sms.config.AliyunSMSConfig;
 import com.qidian.mall.message.sms.service.AliyunSmsService;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +64,10 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
      * @return
      */
     @Override
-    public CommonResponse querySendDetails(SmsQueryDTO smsQueryDTO) {
+    public SendSmsVo querySendDetails(SmsQueryDTO smsQueryDTO) {
         IAcsClient iAcsClient = getClient();
         CommonRequest commonRequest = getSmsQueryRequest(smsQueryDTO);
+        SendSmsVo sendSmsVo = new SendSmsVo();
         CommonResponse commonResponse =null;
         try {
             commonResponse = iAcsClient.getCommonResponse(commonRequest);
@@ -78,7 +81,12 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
                     e.getErrorType());
             throw new BusinessException("300002",messageSourceService.getMessage("300002"));
         }
-        return commonResponse;
+        JSONObject jsonObject = JSONObject.parseObject(commonResponse.getData());
+        sendSmsVo.setCode(jsonObject.get("Code").toString());
+        sendSmsVo.setBizId(jsonObject.get("BizId").toString());
+        sendSmsVo.setMessage(jsonObject.get("Message").toString());
+        sendSmsVo.setRequestId(jsonObject.get("RequestId").toString());
+        return sendSmsVo;
     }
 
 
