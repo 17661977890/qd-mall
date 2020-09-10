@@ -43,6 +43,14 @@
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-log-config</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.qidian.mall</groupId>-->
+<!--            <artifactId>qd-mall-db-config</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.qidian.mall</groupId>
+            <artifactId>qd-mall-base-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
@@ -59,6 +67,13 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!--阿里云短信-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.3</version>
         </dependency>
 
         <!--nacos服务注册-->

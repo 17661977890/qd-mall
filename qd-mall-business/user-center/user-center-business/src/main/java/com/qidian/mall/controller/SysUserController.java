@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -110,6 +111,8 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "全部查询", notes = "查询SysUser全部数据")
     @RequestMapping(value = "/queryAll", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) throws InterruptedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getPrincipal());
 //        Thread.sleep(5000);
         log.info("查询系统用户入参：{}",restRequest);
         if(restRequest.getBody()==null){
@@ -127,6 +130,9 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "分页查询", notes = "分页查询SysUser全部数据")
     @RequestMapping(value = "/queryPage", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public RestResponse getSysUserPage(@RequestBody RestRequest<SysUserDTO> restRequest) {
+        //请求携带token 可以获取token 对应的信息。 因为携带token会经过spring security的过滤链
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getPrincipal());
         IPage<SysUserVO> result = sysUserService.selectPage(restRequest.getBody(),restRequest.getHeader().getPageSize(),restRequest.getHeader().getPageNum());
         return new RestResponse().success(result);
     }

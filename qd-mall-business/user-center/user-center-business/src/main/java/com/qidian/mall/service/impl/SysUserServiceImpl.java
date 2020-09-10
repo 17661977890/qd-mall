@@ -1,5 +1,6 @@
 package com.qidian.mall.service.impl;
 
+import com.central.base.exception.BusinessException;
 import com.central.base.message.MessageSourceService;
 import com.central.base.util.PasswordEncoderUtil;
 import com.qidian.mall.entity.CustomUserDetails;
@@ -132,6 +133,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public CustomUserDetails findByUsername(String username) {
         SysUser sysUser = this.selectByUsername(username);
+        if(sysUser==null){
+            throw new BusinessException("102201",e.getMessage("102201"));
+        }
         return getLoginAppUser(sysUser);
     }
 

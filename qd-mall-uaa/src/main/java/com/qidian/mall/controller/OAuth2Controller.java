@@ -72,7 +72,7 @@ public class OAuth2Controller {
 
     @ApiOperation(value = "用户名密码获取token")
     @PostMapping("/user/token")
-    public void getUserTokenInfo(@RequestBody SysUser umsAdminLoginParam,
+    public RestResponse getUserTokenInfo(@RequestBody SysUser umsAdminLoginParam,
                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (umsAdminLoginParam.getUsername() == null || "".equals(umsAdminLoginParam.getUsername())) {
             throw new UnapprovedClientAuthenticationException("用户名为空");
@@ -82,7 +82,7 @@ public class OAuth2Controller {
         }
         //（1）username和password被获得后封装到一个UsernamePasswordAuthenticationToken（继承AbstractAuthenticationToken 而AbstractAuthenticationToken实现了Authentication接口，所以可以说是Authentication接口的实例）的实例中
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(umsAdminLoginParam.getUsername(), umsAdminLoginParam.getPassword());
-        writerToken(request, response, token, "用户名或密码错误");
+        return writerToken(request, response, token, "用户名或密码错误");
     }
 
     @ApiOperation(value = "openId获取token")
@@ -134,8 +134,8 @@ public class OAuth2Controller {
      * 移除方法针对
      * @return
      */
-    @ApiOperation(value = "登出")
-    @PostMapping("/remove/token")
+    @ApiOperation(value = "登出 remove token")
+    @PostMapping("/user/logout")
     public RestResponse logout(HttpServletRequest request){
         String access_token = request.getParameter("access_token");
         OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(access_token);
@@ -160,7 +160,7 @@ public class OAuth2Controller {
      * @param badCredenbtialsMsg
      * @throws IOException
      */
-    private void writerToken(HttpServletRequest request, HttpServletResponse response, AbstractAuthenticationToken token
+    private RestResponse writerToken(HttpServletRequest request, HttpServletResponse response, AbstractAuthenticationToken token
             , String badCredenbtialsMsg) throws IOException {
         try {
             String clientId = request.getHeader("client_id");
@@ -187,7 +187,8 @@ public class OAuth2Controller {
             //调用底层token的生成方法（DefaultTokenServices实现了AuthorizationServerTokenServices接口提供的createAccessToken方法）
             OAuth2AccessToken oAuth2AccessToken = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
             oAuth2Authentication.setAuthenticated(true);
-            writerObj(response, oAuth2AccessToken);
+//            writerObj(response, oAuth2AccessToken);
+            return RestResponse.resultSuccess(oAuth2AccessToken);
         } catch (InternalAuthenticationServiceException e) {
             // 我们抛出的业务异常，如熔断服务调用失败，在底层会捕获并封装我们的业务异常信息，抛出InternalAuthenticationServiceException
             /**
@@ -195,17 +196,28 @@ public class OAuth2Controller {
              *             throw new InternalAuthenticationServiceException(var6.getMessage(), var6);
              *         }
              */
-            exceptionHandler(response, e);
+//            exceptionHandler(response, e);
             e.printStackTrace();
+            return exceptionHandler(ConstantUtil.ERROR,e.getMessage());
         } catch (BadCredentialsException e){
             // 如果是用户密码信息校验失败 会抛出此异常BadCredentialsException 我们自定信息msg输出
-            exceptionHandler(response,badCredenbtialsMsg);
+//            exceptionHandler(response,badCredenbtialsMsg);
             e.printStackTrace();
+            return exceptionHandler(ConstantUtil.ERROR,badCredenbtialsMsg);
+
+
         }catch (Exception e) {
-            exceptionHandler(response, e);
+            e.printStackTrace();
+            return exceptionHandler(ConstantUtil.ERROR,e.getMessage());
+//            exceptionHandler(response, e);
+
         }
     }
 
+    private RestResponse exceptionHandler(String code,String msg) throws IOException {
+        log.error("exceptionHandler-error:", msg);
+        return RestResponse.resultError(code,msg);
+    }
 
 
     private void exceptionHandler(HttpServletResponse response, Exception e) throws IOException {
@@ -215,7 +227,7 @@ public class OAuth2Controller {
 
     private void exceptionHandler(HttpServletResponse response, String msg) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        writerObj(response, RestResponse.resultError(ConstantUtil.ERROR,msg));
+        writerObj(response, RestResponse.resultError(ConstantUtil.UNAUTHORIZED,msg));
     }
 
     private void writerObj(HttpServletResponse response, Object obj) throws IOException {

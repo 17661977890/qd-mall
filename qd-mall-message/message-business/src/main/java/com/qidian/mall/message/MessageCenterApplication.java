@@ -1,6 +1,7 @@
 package com.qidian.mall.message;
 
 import com.central.feign.common.interceptor.FeignInterceptorConfig;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

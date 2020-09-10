@@ -10,10 +10,11 @@ mall:
     title: 消息服务中心
     description: 消息服务中心接口文档
     version: 1.0
-    base-package: com.qidian.mall.message.controller
+    base-package: com.qidian.mall.message.sms.controller
   security:
     ignore:
-      httpUrls:
+      httpUrls: >
+        /sms-server/**
 
 
 # 资源服务器对应认证服务器的客户端信息和端点配置
@@ -36,13 +37,13 @@ management:
         include: '*'
 
 # rocketMq 生产者配置
-rocketmq:
-  name-server: 192.168.0.110:9876;192.168.0.111:9876
-  producer:
-    group: my-group
-  # 消费者一般在其他业务模块
-  consumer:
-    group: my-group
+#rocketmq:
+#  name-server: 192.168.0.110:9876;192.168.0.111:9876
+#  producer:
+#    group: my-group
+#  # 消费者一般在其他业务模块
+#  consumer:
+#    group: my-group
 
 
 # feign 开启熔断（调用方开启） 开启okhttp的支持
@@ -59,3 +60,28 @@ hystrix:
       execution:
         isolation:
           strategy: SEMAPHORE
+
+
+#--------阿里云短信配置参数 start--------------#
+aliyun:
+  sms:
+    # 认证相关
+    accessKeyId: LTAI4G8qWFxhbeiMt3neriQH
+    accessKeySecret: HpzjqBVp2WHBDtfQELDe54tsQpVmZc
+    #产品名称:云通信短信API产品,开发者无需替换
+    product: Dysmsapi
+    #产品域名,开发者无需替换
+    domain: dysmsapi.aliyuncs.com
+    regionId: cn-hangzhou
+    #短信签名名称（国内/国际/港澳台消息-签名管理下面）
+    signName: "奇点商城"
+    #发送日期 支持30天内记录查询，格式yyyyMMdd
+    dateFormat: yyyyMMdd
+    #服务结点
+    endpointName: cn-hangzhou
+#--------阿里云短信配置参数 end--------------#
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.qidain.mall.entity
