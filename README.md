@@ -547,15 +547,101 @@ qd-mall -- 父项目，公共依赖
 ### druid 数据源连接池
 * （用户中心模块）监控访问地址：localhost:9002/druid/login.html
 
-### feign 客户端调用
-* 谁调用，谁开启feign支持，以及配置feign拦截器和hystrix的相关隔离策略和超时配置等（配置文件）
+### feign 客户端调用 + hystrix
 
+* 说明：
+    * 在Spring Cloud微服务体系下，微服务之间的互相调用可以通过Feign进行声明式调用，在这个服务调用过程中Feign会通过Ribbon从服务注册中心获取目标微服务的服务器地址列表，之后在网络请求的过程中Ribbon就会将请求以负载均衡的方式打到微服务的不同实例上，从而实现Spring Cloud微服务架构中最为关键的功能即服务发现及客户端负载均衡调用。
+     
+    * 另一方面微服务在互相调用的过程中，为了防止某个微服务的故障消耗掉整个系统所有微服务的连接资源，所以在实施微服务调用的过程中我们会要求在调用方实施针对被调用微服务的熔断逻辑。而要实现这个逻辑场景在Spring Cloud微服务框架下我们是通过Hystrix这个框架来实现的。
+      
+    * 调用方会针对被调用微服务设置调用超时时间，一旦超时就会进入熔断逻辑，而这个故障指标信息也会返回给Hystrix组件，Hystrix组件会根据熔断情况判断被调微服务的故障情况从而打开熔断器，之后所有针对该微服务的请求就会直接进入熔断逻辑，直到被调微服务故障恢复，Hystrix断路器关闭为止。
+
+
+* 在Spring Cloud中使用Feign进行微服务调用分为两层：Hystrix的调用和Ribbon的调用，Feign自身的配置会被覆盖。
+    ![image](https://img-blog.csdnimg.cn/20191012221343851.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NyYXp5bWFrZXJjaXJjbGU=,size_16,color_FFFFFF,t_70)
+    
+    
 * feign 接口层面的熔断降级处理 hystrix
 
-* 关于feign的超时配置，
-    * 发现问题：uaa模块首次请求用户feign接口，总是会超时触发熔断，
-    * 原因分析：是因为ribbon的懒加载，导致的，因为熔断超时时间默认1s，所以会出现超过1s的情况，就会触发熔断，服务调用异常，如果没有配置熔断，则会导致超时等报错。
-    * 解决办法：就是配置熔断和ribbon的超时时间配置或者开启ribbon的饥饿加载。
+* 配置相关：
+    * 谁调用，谁开启feign支持，以及配置feign拦截器和hystrix的相关隔离策略和超时配置等（配置文件）
+    * feign 相关
+    ````
+      feign:
+        #替换掉JDK默认HttpURLConnection实现的 Http Client
+        httpclient:
+          enabled: true
+        hystrix:
+          enabled: true
+        client:
+          config:
+            default:
+             #连接超时时间
+              connectTimeout: 5000
+             #读取超时时间
+              readTimeout: 5000
+    ````
+  
+    * hystrix 相关
+    ````
+      hystrix:
+        propagate:
+          request-attribute:
+            enabled: true
+        command:
+          #全局默认配置
+          default:
+            #线程隔离相关
+            execution:
+              timeout:
+                #是否给方法执行设置超时时间，默认为true。一般我们不要改。
+                enabled: true
+              isolation:
+                #配置请求隔离的方式，这里是默认的线程池方式。还有一种信号量的方式semaphore，使用比较少。
+                strategy: threadPool
+                thread:
+                  #方式执行的超时时间，默认为1000毫秒，在实际场景中需要根据情况设置
+                  timeoutInMilliseconds: 10000
+                  #发生超时时是否中断方法的执行，默认值为true。不要改。
+                  interruptOnTimeout: true
+                  #是否在方法执行被取消时中断方法，默认值为false。没有实际意义，默认就好！
+                  interruptOnCancel: false
+        circuitBreaker:   #熔断器相关配置
+          enabled: true   #是否启动熔断器，默认为true，false表示不要引入Hystrix。
+          requestVolumeThreshold: 20     #启用熔断器功能窗口时间内的最小请求数，假设我们设置的窗口时间为10秒，
+          sleepWindowInMilliseconds: 5000    #所以此配置的作用是指定熔断器打开后多长时间内允许一次请求尝试执行，官方默认配置为5秒。
+          errorThresholdPercentage: 50   #窗口时间内超过50%的请求失败后就会打开熔断器将后续请求快速失败掉,默认配置为50
+    ````
+    
+    * ribbon 相关
+    ````
+    ribbon:
+      # 饥饿加载
+      eager-load:
+        enabled: true
+      #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
+      MaxAutoRetries: 1
+      #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
+      MaxAutoRetriesNextServer: 1
+      #说明：是否所有的操作都重试，默认为true
+      OkToRetryOnAllOperations: true
+      #说明：从注册中心刷新服务器列表信息的时间间隔，默认为2000毫秒，即2秒
+      ServerListRefreshInterval: 2000
+      #说明：使用Apache HttpClient连接超时时间，单位为毫秒
+      ConnectTimeout: 3000
+      #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
+      ReadTimeout: 3000
+    ````
+    
+    * 关于feign的超时配置，
+        * 发现问题：uaa模块首次请求用户feign接口，总是会超时触发熔断，
+        * 原因分析：是因为ribbon的懒加载，导致的，因为熔断超时时间默认1s，所以会出现超过1s的情况，就会触发熔断，服务调用异常，如果没有配置熔断，则会导致超时等报错。
+        * 解决办法：就是配置熔断和ribbon的超时时间配置或者开启ribbon的饥饿加载。
+        
+        * 如果开启了Hystrix，那么Ribbon的超时时间配置与Hystrix的超时时间配置则存在依赖关系，因为涉及到Ribbon的重试机制，所以一般情况下都是Ribbon的超时时间小于Hystrix的超时时间
+            * Ribbon重试次数(包含首次)= 1 + ribbon.MaxAutoRetries + ribbon.MaxAutoRetriesNextServer + (ribbon.MaxAutoRetries * ribbon.MaxAutoRetriesNextServer)
+            * Hystrix的超时时间=Ribbon的重试次数(包含首次) * (ribbon.ReadTimeout + ribbon.ConnectTimeout)
+        * 如果不启用Hystrix，Feign的超时时间则是Ribbon的超时时间，Feign自身的配置也会被覆盖。
 
 * 关于feign拦截器的使用：
     * 使用背景： 我们之前都是外部调用web-controller接口，需要认证，但是有时候我们需要服务之间的内部调用也需要认证，所以我们将资源服务器配置在了每一个服务模块（如用户服务、文件服务、认证服务）
@@ -584,7 +670,7 @@ qd-mall -- 父项目，公共依赖
 * 关于feign接口的请求问题：
     * 默认不支持文件上传和表单请求。https://www.cnblogs.com/yangzhilong/p/11714620.html
 
-### hystrix 熔断机制详解：
+### hystrix 熔断机制详解： ---- 后期优化 sentinel代替
 * 隔离策略：https://www.jianshu.com/p/b8d21248c9b1、https://www.jianshu.com/p/dc0410558fc9
     ````
     线程池隔离：

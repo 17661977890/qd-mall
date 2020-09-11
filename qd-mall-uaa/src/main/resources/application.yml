@@ -50,7 +50,7 @@ mall:
     title: 认证中心
     description: 认证中心接口文档
     version: 1.0
-    base-package: com.qidian.mall.controller
+    base-package: com.qidian.mall.uaa.controller
 
 # 谁调用 feign客户端接口，谁配置开启熔断
 feign:
@@ -60,8 +60,9 @@ feign:
     enabled: false
   hystrix:
     enabled: true
-# 谁调用，谁配置
-# 如果开启熔断 需要配置信号量隔离，默认的线程隔离，会使feign拦截器 不能获取请求上下文和安全上下文的信息（threadLocal 置空）
+
+# hystrix 相关配置：
+# 如果开启熔断 需要配置信号量隔离，默认的线程隔离，会使feign拦截器 不能获取请求上下文和安全上下文的信息（threadLocal 置空） --- 后面使用sentine 替换看看
 hystrix:
   command:
     default:
@@ -69,7 +70,24 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           thread:
-            timeoutInMilliseconds: 5000
+            timeoutInMilliseconds: 15000
+# ribbon 相关配置（覆盖feign的超时配置）
+ribbon:
+  # 饥饿加载
+  eager-load:
+    enabled: true
+#  #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
+#  MaxAutoRetries: 1
+#  #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
+#  MaxAutoRetriesNextServer: 1
+#  #说明：是否所有的操作都重试，默认为true
+#  OkToRetryOnAllOperations: true
+#  #说明：从注册中心刷新服务器列表信息的时间间隔，默认为2000毫秒，即2秒
+#  ServerListRefreshInterval: 2000
+  #说明：使用Apache HttpClient连接超时时间，单位为毫秒
+  ConnectTimeout: 3000
+  #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
+  ReadTimeout: 3000
 
 # 暴露端点，暴露路由信息，
 management:

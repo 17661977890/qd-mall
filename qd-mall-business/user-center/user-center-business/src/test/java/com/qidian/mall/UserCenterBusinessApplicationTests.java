@@ -1,8 +1,10 @@
 package com.qidian.mall;
 
-import com.alibaba.druid.sql.visitor.functions.Char;
-import com.qidian.mall.quartz.QuartzJobManager;
-import com.qidian.mall.quartz.TestQuartz;
+import com.central.base.restparam.RestResponse;
+import com.qidian.mall.user.UserCenterBusinessApplication;
+import com.qidian.mall.user.api.SysUserApi;
+import com.qidian.mall.user.entity.CustomUserDetails;
+import com.qidian.mall.user.quartz.QuartzJobManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +13,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.jasypt.encryption.StringEncryptor;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.UUID;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = UserCenterBusinessApplication.class)
 public class UserCenterBusinessApplicationTests {
     @Autowired
     private StringEncryptor stringEncryptor;
+
+    @Autowired
+    private SysUserApi sysUserApi;
 
     @Test
     public void contextLoads() {
@@ -68,8 +66,11 @@ public class UserCenterBusinessApplicationTests {
 
     @Test
     public void test(){
-        String word = scrambleWorld("ABCAKYTNSAVD");
-        System.out.println(word);
+//        String word = scrambleWorld("ABCAKYTNSAVD");
+//        System.out.println(word);
+
+        RestResponse<CustomUserDetails>  restResponse =  sysUserApi.findByUsername("admin");
+        System.out.println(restResponse);
     }
 
     private String scrambleWorld(String word){

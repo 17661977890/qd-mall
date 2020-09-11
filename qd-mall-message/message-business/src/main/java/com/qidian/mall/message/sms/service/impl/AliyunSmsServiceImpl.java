@@ -39,10 +39,11 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
      * @return
      */
     @Override
-    public CommonResponse sendSms(SendSmsDTO sendSmsDTO) {
+    public SendSmsVo sendSms(SendSmsDTO sendSmsDTO) {
         IAcsClient iAcsClient = getClient();
         CommonRequest commonRequest = getSendSmsRequest(sendSmsDTO);
         CommonResponse commonResponse =null;
+        SendSmsVo sendSmsVo = new SendSmsVo();
         try {
             commonResponse = iAcsClient.getCommonResponse(commonRequest);
         } catch (ClientException e) {
@@ -55,7 +56,12 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
                     e.getErrorType());
             throw new BusinessException("300001",messageSourceService.getMessage("300001"));
         }
-        return commonResponse;
+        JSONObject jsonObject = JSONObject.parseObject(commonResponse.getData());
+        sendSmsVo.setCode(jsonObject.get("Code").toString());
+        sendSmsVo.setBizId(jsonObject.get("BizId").toString());
+        sendSmsVo.setMessage(jsonObject.get("Message").toString());
+        sendSmsVo.setRequestId(jsonObject.get("RequestId").toString());
+        return sendSmsVo;
     }
 
     /**
@@ -64,10 +70,10 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
      * @return
      */
     @Override
-    public SendSmsVo querySendDetails(SmsQueryDTO smsQueryDTO) {
+    public CommonResponse querySendDetails(SmsQueryDTO smsQueryDTO) {
         IAcsClient iAcsClient = getClient();
         CommonRequest commonRequest = getSmsQueryRequest(smsQueryDTO);
-        SendSmsVo sendSmsVo = new SendSmsVo();
+
         CommonResponse commonResponse =null;
         try {
             commonResponse = iAcsClient.getCommonResponse(commonRequest);
@@ -81,12 +87,7 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
                     e.getErrorType());
             throw new BusinessException("300002",messageSourceService.getMessage("300002"));
         }
-        JSONObject jsonObject = JSONObject.parseObject(commonResponse.getData());
-        sendSmsVo.setCode(jsonObject.get("Code").toString());
-        sendSmsVo.setBizId(jsonObject.get("BizId").toString());
-        sendSmsVo.setMessage(jsonObject.get("Message").toString());
-        sendSmsVo.setRequestId(jsonObject.get("RequestId").toString());
-        return sendSmsVo;
+        return commonResponse;
     }
 
 

@@ -11,7 +11,7 @@ spring:
   redis:
     database: 0
     host: 127.0.0.1
-    password:
+    password: 123456
     timeout: 5000
     jedis:
       pool:
@@ -59,8 +59,8 @@ spring:
             - StripPrefix=1
       # 3、消息服务中心
         - id: QD-MALL-MESSAGESRVER
-        uri: lb://qd-mall-messageserver
-        predicates:
+          uri: lb://qd-mall-messageserver
+          predicates:
           # 路径匹配，前缀过滤，以/api/oauth开头的
           - Path=/qd-mall-messageserver/**
 
@@ -79,7 +79,7 @@ mall:
     title: 网关中心
     description: 网关中心接口文档
     version: 1.0
-    base-package: com.qidian.mall.controller
+    base-package: com.qidian.mall.gateway.controller
 
 # 配置日志级别，方别调试
 logging:

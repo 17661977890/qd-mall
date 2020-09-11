@@ -13,7 +13,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <start-class>com.qidian.mall.UaaCenterApplication</start-class>
+        <start-class>com.qidian.mall.uaa.UaaCenterApplication</start-class>
     </properties>
 
     <dependencies>
