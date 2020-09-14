@@ -34,7 +34,7 @@ spring:
         # 1、用户中心
           # 采用自定义路由 ID（有固定用法，不同的 id 有不同的功能，详见：https://cloud.spring.io/spring-cloud-gateway/2.0.x/single/spring-cloud-gateway.html#gateway-route-filters）
         - id: QD-MALL-USERCENTER
-          # 采用 LoadBalanceClient 方式请求，以 lb:// 开头，后面的是注册在 Nacos 上的服务名
+          # 采用 LoadBalanceClient 方式请求，以 lb:// 开头，后面的是注册在 Nacos 上的服务名 --- 这就是走的ribbon的负载策略（如果想改吧默认的负载策略，可以按照在配置文件指定ribbon的负载策略或者自定义）
           uri: lb://qd-mall-usercenter
           # Predicate 翻译过来是“谓词”的意思，必须，主要作用是匹配用户的请求，有很多种用法
           predicates:
