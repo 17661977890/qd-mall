@@ -46,6 +46,11 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
         SendSmsVo sendSmsVo = new SendSmsVo();
         try {
             commonResponse = iAcsClient.getCommonResponse(commonRequest);
+            JSONObject jsonObject = JSONObject.parseObject(commonResponse.getData());
+            sendSmsVo.setCode(jsonObject.get("Code").toString());
+            sendSmsVo.setBizId(jsonObject.get("BizId").toString());
+            sendSmsVo.setMessage(jsonObject.get("Message").toString());
+            sendSmsVo.setRequestId(jsonObject.get("RequestId").toString());
         } catch (ClientException e) {
             e.printStackTrace();
             log.error("发送短信发生错误。错误代码是 [{}]，错误消息是 [{}]，错误请求ID是 [{}]，错误Msg是 [{}]，错误类型是 [{}]",
@@ -55,12 +60,10 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
                     e.getErrMsg(),
                     e.getErrorType());
             throw new BusinessException("300001",messageSourceService.getMessage("300001"));
+        }catch (Exception e){
+            log.error("调用发送短信接口失败：{}",e.getMessage());
+            throw new BusinessException("300001",messageSourceService.getMessage("300001"));
         }
-        JSONObject jsonObject = JSONObject.parseObject(commonResponse.getData());
-        sendSmsVo.setCode(jsonObject.get("Code").toString());
-        sendSmsVo.setBizId(jsonObject.get("BizId").toString());
-        sendSmsVo.setMessage(jsonObject.get("Message").toString());
-        sendSmsVo.setRequestId(jsonObject.get("RequestId").toString());
         return sendSmsVo;
     }
 

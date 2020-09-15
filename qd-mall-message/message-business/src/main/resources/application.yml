@@ -86,8 +86,8 @@ ribbon:
 aliyun:
   sms:
     # 认证相关 LTAI4G8qWFxhbeiMt3neriQH HpzjqBVp2WHBDtfQELDe54tsQpVmZc
-    accessKeyId: LTAI4G8qWFxhbeiMt3neriQH
-    accessKeySecret: HpzjqBVp2WHBDtfQELDe54tsQpVmZc
+    accessKeyId: LTAI4G8pvKuGshe12teLaHRr
+    accessKeySecret: 3FQIw5KHOTRkf4hhX7oRytDMvixzZy
     #产品名称:云通信短信API产品,开发者无需替换
     product: Dysmsapi
     #产品域名,开发者无需替换

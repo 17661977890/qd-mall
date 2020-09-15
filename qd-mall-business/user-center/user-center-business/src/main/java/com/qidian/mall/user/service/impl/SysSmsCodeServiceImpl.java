@@ -3,6 +3,7 @@ package com.qidian.mall.user.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseServiceImpl;
@@ -41,7 +42,7 @@ import java.util.List;
 @Service
 public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsService {
 
-    @Autowired
+    @Resource
     private AliyunSmsApi aliyunSmsApi;
 
     @Autowired
@@ -72,7 +73,10 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             // 调用短信发送服务，并封装返回结果
             SendSmsDTO sendSmsDTO = new SendSmsDTO();
             sendSmsDTO.setPhoneNumbers(sysSmsCodeDTO.getReceiveTerminalNo());
-            sendSmsDTO.setTemplateParam(sysSmsCode.getVerificationCode());
+            // todo 这边后期优化， code 为模板参数，固定的 最好再消息服务端设置好，客户端只需要传验证码值就行了
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code",sysSmsCode.getVerificationCode());
+            sendSmsDTO.setTemplateParam(jsonObject.toJSONString());
             sendSmsDTO.setBusinessType(sysSmsCodeDTO.getBusinessType());
             RestResponse<SendSmsVo> restResponse = aliyunSmsApi.sendSms(sendSmsDTO);
             if(ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
