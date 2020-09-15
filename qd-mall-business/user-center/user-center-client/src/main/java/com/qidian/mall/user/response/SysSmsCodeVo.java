@@ -17,7 +17,7 @@ public class SysSmsCodeVo implements Serializable {
     /**
      * 消息验证码id
      */
-    private String smsCodeId;
+    private Long smsCodeId;
 
     /**
      * 验证码

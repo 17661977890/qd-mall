@@ -1,10 +1,16 @@
 package com.qidian.mall;
 
+import com.central.base.exception.BusinessException;
 import com.central.base.restparam.RestResponse;
+import com.central.base.util.ConstantUtil;
+import com.qidian.mall.message.api.AliyunSmsApi;
+import com.qidian.mall.message.request.SendSmsDTO;
+import com.qidian.mall.message.response.SendSmsVo;
 import com.qidian.mall.user.UserCenterBusinessApplication;
 import com.qidian.mall.user.api.SysUserApi;
 import com.qidian.mall.user.entity.CustomUserDetails;
 import com.qidian.mall.user.quartz.QuartzJobManager;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.jasypt.encryption.StringEncryptor;
 
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = UserCenterBusinessApplication.class)
 public class UserCenterBusinessApplicationTests {
@@ -21,6 +28,8 @@ public class UserCenterBusinessApplicationTests {
 
     @Autowired
     private SysUserApi sysUserApi;
+    @Autowired
+    private AliyunSmsApi aliyunSmsApi;
 
     @Test
     public void contextLoads() {
@@ -69,9 +78,18 @@ public class UserCenterBusinessApplicationTests {
 //        String word = scrambleWorld("ABCAKYTNSAVD");
 //        System.out.println(word);
 
-        RestResponse<CustomUserDetails>  restResponse =  sysUserApi.findByUsername("admin");
-        System.out.println(restResponse);
-    }
+//    RestResponse<CustomUserDetails>  restResponse =  sysUserApi.findByUsername("admin");
+//        System.out.println(restResponse);
+        SendSmsDTO sendSmsDTO = new SendSmsDTO();
+        sendSmsDTO.setPhoneNumbers("17661977890");
+        sendSmsDTO.setTemplateParam("{\\\"code\\\":\\\"123456\\\"}");
+        sendSmsDTO.setBusinessType(1);
+        RestResponse<SendSmsVo> restResponse = aliyunSmsApi.sendSms(sendSmsDTO);
+        if(ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
+            throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE);
+        }
+        log.info("invoke alibaba send sms api,result:{} ",restResponse);
+}
 
     private String scrambleWorld(String word){
         StringBuilder changeWords =new StringBuilder();

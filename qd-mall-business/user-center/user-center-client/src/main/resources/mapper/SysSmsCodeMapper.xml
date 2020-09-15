@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qidian.mall.user.mapper.SysSmsCodeMapper">
+  <resultMap id="BaseResultMap" type="com.qidian.mall.user.entity.SysSmsCode">
+    <!--@mbg.generated-->
+    <!--@Table sys_sms_code-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="receive_terminal_type" jdbcType="BOOLEAN" property="receiveTerminalType" />
+    <result column="receive_terminal_no" jdbcType="VARCHAR" property="receiveTerminalNo" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
+    <result column="verification_code" jdbcType="VARCHAR" property="verificationCode" />
+    <result column="business_type" jdbcType="BOOLEAN" property="businessType" />
+    <result column="client_ip" jdbcType="VARCHAR" property="clientIp" />
+    <result column="platform_type" jdbcType="BOOLEAN" property="platformType" />
+    <result column="is_send" jdbcType="CHAR" property="isSend" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="is_used" jdbcType="CHAR" property="isUsed" />
+    <result column="use_time" jdbcType="TIMESTAMP" property="useTime" />
+    <result column="verify_time" jdbcType="TIMESTAMP" property="verifyTime" />
+    <result column="verify_code" jdbcType="VARCHAR" property="verifyCode" />
+    <result column="verify_message" jdbcType="VARCHAR" property="verifyMessage" />
+    <result column="delete_flag" jdbcType="CHAR" property="deleteFlag" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, receive_terminal_type, receive_terminal_no, expired_time, verification_code, 
+    business_type, client_ip, platform_type, is_send, send_time, is_used, use_time, verify_time, 
+    verify_code, verify_message, delete_flag, version, create_time, update_time
+  </sql>
+</mapper>

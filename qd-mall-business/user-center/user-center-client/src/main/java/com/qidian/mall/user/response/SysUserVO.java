@@ -67,7 +67,10 @@ public class SysUserVO implements Serializable {
     private String openId;
 
     @ApiModelProperty(value = "删除标识")
-    private Boolean isDel;
+    private Boolean deleteFlag;
+
+    @ApiModelProperty(value = "用户注册来源ip")
+    private Boolean clientIp;
 
 
 }

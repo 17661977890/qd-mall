@@ -46,7 +46,7 @@ management:
 #    group: my-group
 
 
-# feign 开启熔断（调用方开启） 开启okhttp的支持
+# feign客户端,支持okhttp，开启熔断----谁调用谁开启
 feign:
   okhttp:
     enabled: true
@@ -54,20 +54,40 @@ feign:
     enabled: false
   hystrix:
     enabled: true
+
 hystrix:
   command:
     default:
       execution:
         isolation:
           strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 15000
+# ribbon 相关配置（覆盖feign的超时配置）
+ribbon:
+  # 饥饿加载
+  eager-load:
+    enabled: true
+  #  #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
+  #  MaxAutoRetries: 1
+  #  #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
+  #  MaxAutoRetriesNextServer: 1
+  #  #说明：是否所有的操作都重试，默认为true
+  #  OkToRetryOnAllOperations: true
+  #  #说明：从注册中心刷新服务器列表信息的时间间隔，默认为2000毫秒，即2秒
+  #  ServerListRefreshInterval: 2000
+  #说明：使用Apache HttpClient连接超时时间，单位为毫秒
+  ConnectTimeout: 3000
+  #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
+  ReadTimeout: 3000
 
 
 #--------阿里云短信配置参数 start--------------#
 aliyun:
   sms:
-    # 认证相关
-    accessKeyId: LTAI4G8qWFxhbeiMt3neriQH
-    accessKeySecret: HpzjqBVp2WHBDtfQELDe54tsQpVmZc
+    # 认证相关 LTAI4G8qWFxhbeiMt3neriQH HpzjqBVp2WHBDtfQELDe54tsQpVmZc
+    accessKeyId: LTAI4G8pvKuGshe12teLaHRr
+    accessKeySecret: 3FQIw5KHOTRkf4hhX7oRytDMvixzZy
     #产品名称:云通信短信API产品,开发者无需替换
     product: Dysmsapi
     #产品域名,开发者无需替换
@@ -80,8 +100,3 @@ aliyun:
     #服务结点
     endpointName: cn-hangzhou
 #--------阿里云短信配置参数 end--------------#
-
-
-mybatis-plus:
-  mapper-locations: classpath:/mapper/*Mapper.xml
-  type-aliases-package: com.qidain.mall.entity

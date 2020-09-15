@@ -30,7 +30,28 @@ public class RestResponse<T> implements Serializable {
         this.body = body;
         return this;
     }
-    public static RestResponse resultSuccess(Object data) {
+
+
+    public RestResponse<T> error(String code, String msg) {
+        return this.error(code, msg, null);
+    }
+
+    public RestResponse<T> error(String code, String msg, T body) {
+        RestResponseHeader restResponseHeader = new RestResponseHeader();
+        restResponseHeader.setCode(code);
+        restResponseHeader.setMessage(msg);
+        this.setHeader(restResponseHeader);
+        this.body = body;
+        return this;
+    }
+
+    /**
+     * 成功返回处理
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> RestResponse resultSuccess(T data) {
         return new RestResponse().success(data);
     }
 
@@ -44,16 +65,7 @@ public class RestResponse<T> implements Serializable {
         return new RestResponse().error(code, msg);
     }
 
-    public RestResponse<T> error(String code, String msg) {
-        return this.error(code, msg, null);
-    }
-
-    public RestResponse<T> error(String code, String msg, T body) {
-        RestResponseHeader restResponseHeader = new RestResponseHeader();
-        restResponseHeader.setCode(code);
-        restResponseHeader.setMessage(msg);
-        this.setHeader(restResponseHeader);
-        this.body = body;
-        return this;
+    public static <T> RestResponse resultError(String code, String msg,T body) {
+        return new RestResponse().error(code, msg,body);
     }
 }

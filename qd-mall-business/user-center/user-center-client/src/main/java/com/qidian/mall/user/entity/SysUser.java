@@ -1,7 +1,6 @@
 package com.qidian.mall.user.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -53,9 +52,11 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "类型")
     private String type;
 
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
@@ -65,8 +66,46 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "open_id")
     private String openId;
 
+    @TableLogic
     @ApiModelProperty(value = "删除标识")
-    private Boolean isDel;
+    private String deleteFlag;
+
+    @ApiModelProperty(value = "用户注册来源ip")
+    private String clientIp;
+
+    public static final String COL_ID = "id";
+
+    public static final String COL_USERNAME = "username";
+
+    public static final String COL_PASSWORD = "password";
+
+    public static final String COL_NICKNAME = "nickname";
+
+    public static final String COL_HEAD_IMG_URL = "head_img_url";
+
+    public static final String COL_MOBILE = "mobile";
+
+    public static final String COL_CLIENT_IP = "client_ip";
+
+    public static final String COL_SEX = "sex";
+
+    public static final String COL_ENABLED = "enabled";
+
+    public static final String COL_TYPE = "type";
+
+    public static final String COL_COMPANY = "company";
+
+    public static final String COL_OPEN_ID = "open_id";
+
+
+    public static final String COL_DELETE_FLAG = "delete_flag";
+
+    public static final String COL_VERSION = "version";
+
+    public static final String COL_CREATE_TIME = "create_time";
+
+    public static final String COL_UPDATE_TIME = "update_time";
+
 
 
 }

@@ -8,9 +8,9 @@ package com.qidian.mall.message.enums;
  */
 public enum SmsTemplateTypeEnum {
 
-    WEB(1, "SMS_199773002","注册"),
-    MOBILE(2,"SMS_199773002", "登录"),
-    ABILITY(3, "SMS_199773002","重置密码");
+    REG(1, "SMS_199773002","注册"),
+    LOGIN(2,"SMS_199773002", "登录"),
+    RESET_PWD(3, "SMS_199773002","重置密码");
 
     private Integer code;
     private String templateCode;

@@ -32,6 +32,14 @@ public class ConstantUtil {
     public static final String UTF_8 = "UTF-8";
 
 
+    /**
+     * 是否
+     */
+    public static final String DELETE_FLAG_N = "N";
+
+    public static final String DELETE_FLAG_Y = "Y";
+
+
 
 
 

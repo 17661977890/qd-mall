@@ -28,7 +28,8 @@
         <redisson.version>3.9.1</redisson.version>
         <kaptcha.version>0.0.9</kaptcha.version>
         <hutool.version>4.3.1</hutool.version>
-        <mybatis-plus-boot-starter.version>3.2.0</mybatis-plus-boot-starter.version>
+        <!--原3.2版本-->
+        <mybatis-plus-boot-starter.version>3.4.0</mybatis-plus-boot-starter.version>
         <mysql-connector-java.version>5.1.47</mysql-connector-java.version>
         <aliyun-sdk-oss>3.4.0</aliyun-sdk-oss>
         <qiniu-java-sdk>7.2.17</qiniu-java-sdk>
