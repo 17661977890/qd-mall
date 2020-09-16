@@ -53,7 +53,7 @@ feign:
   httpclient:
     enabled: false
   hystrix:
-    enabled: true
+    enabled: false
 
 hystrix:
   command:

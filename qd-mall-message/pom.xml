@@ -43,6 +43,7 @@
             <groupId>com.qidian.mall</groupId>
             <artifactId>qd-mall-log-config</artifactId>
         </dependency>
+        <!--没有配置数据库丽娜姐-->
 <!--        <dependency>-->
 <!--            <groupId>com.qidian.mall</groupId>-->
 <!--            <artifactId>qd-mall-db-config</artifactId>-->

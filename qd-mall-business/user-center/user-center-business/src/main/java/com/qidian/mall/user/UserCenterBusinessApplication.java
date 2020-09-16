@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 @Import(FeignInterceptorConfig.class)
 //@EnableHystrix
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.qidian.mall.message")
 //扫描到公共配置依赖里的相关配置（统一异常处理、国际化等）
 @ComponentScan({"com.qidian.mall","com.central"})
 //服务注册发现

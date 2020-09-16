@@ -551,9 +551,7 @@ qd-mall -- 父项目，公共依赖
 
 * 说明：
     * 在Spring Cloud微服务体系下，微服务之间的互相调用可以通过Feign进行声明式调用，在这个服务调用过程中Feign会通过Ribbon从服务注册中心获取目标微服务的服务器地址列表，之后在网络请求的过程中Ribbon就会将请求以负载均衡的方式打到微服务的不同实例上，从而实现Spring Cloud微服务架构中最为关键的功能即服务发现及客户端负载均衡调用。
-     
     * 另一方面微服务在互相调用的过程中，为了防止某个微服务的故障消耗掉整个系统所有微服务的连接资源，所以在实施微服务调用的过程中我们会要求在调用方实施针对被调用微服务的熔断逻辑。而要实现这个逻辑场景在Spring Cloud微服务框架下我们是通过Hystrix这个框架来实现的。
-      
     * 调用方会针对被调用微服务设置调用超时时间，一旦超时就会进入熔断逻辑，而这个故障指标信息也会返回给Hystrix组件，Hystrix组件会根据熔断情况判断被调微服务的故障情况从而打开熔断器，之后所有针对该微服务的请求就会直接进入熔断逻辑，直到被调微服务故障恢复，Hystrix断路器关闭为止。
 
 
@@ -616,9 +614,10 @@ qd-mall -- 父项目，公共依赖
     * ribbon 相关
     ````
     ribbon:
-      # 饥饿加载
+      # 饥饿加载(并指定那个feign服务端需要饥饿加载) ---- 注意：饥饿加载配置一定要指定那个客户端，否则无效
       eager-load:
         enabled: true
+        clients: qd-mall-messageserver
       #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
       MaxAutoRetries: 1
       #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
@@ -631,6 +630,12 @@ qd-mall -- 父项目，公共依赖
       ConnectTimeout: 3000
       #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
       ReadTimeout: 3000
+  
+       # 饥饿加载的生效日志，如果配置生效，启动完成后就会打印下边的日志，如果没有生效，需要调用的时候才会打印！！
+       org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker Bean 'configurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$15acfde5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+       com.netflix.config.ChainedDynamicProperty Flipping property: qd-mall-usercenter.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+       com.netflix.loadbalancer.BaseLoadBalancer Client: qd-mall-usercenter instantiated a LoadBalancer: DynamicServerListLoadBalancer:{NFLoadBalancer:name=qd-mall-usercenter,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:null
+       com.netflix.loadbalancer.DynamicServerListLoadBalancer Using serverListUpdater PollingServerListUpdater
     ````
     
     * 关于feign的超时配置，
@@ -657,10 +662,14 @@ qd-mall -- 父项目，公共依赖
     # 我们实现拦截的方法用两种，本项目暂时使用第二种，需要在启动了添加 @Import(FeignInterceptorConfig.class) 使拦截器生效。（谁调用谁配置）
     ````
     * **问题整理：**
-        * 因为我们为feign接口的调用，提供了熔断机制hystrix，而熔断机制的隔离策略（线程隔离thread 和 信号量隔离 semaphore）对feign拦截器有不同的影响。
-        * feign的默认熔断隔离策略是线程隔离策略，这种隔离策略会导致 安全上下文 和请求上下文 用到threadlocal 置为null，
-        即不能进行请求信息和token的传递。
-        * 解决办法：1、关闭熔断：feign.enable.hystrix:false 2、配置信号量隔离  （都是在调用方配置） 
+        * （1） feign 拦截器 不能传递token
+            * 因为我们为feign接口的调用，提供了熔断机制hystrix，而熔断机制的隔离策略（线程隔离thread 和 信号量隔离 semaphore）对feign拦截器有不同的影响。
+            * feign的默认熔断隔离策略是线程隔离策略，这种隔离策略会导致 安全上下文 和请求上下文 用到threadlocal 置为null，即不能进行请求信息和token的传递。
+            * 解决办法：1、关闭熔断：feign.enable.hystrix:false 2、配置信号量隔离  （都是在调用方配置） 
+        * （2） 关于调用feign的api接口，直接走熔断！！！
+            * 1、配置不完善，因为超时配置问题造成（hystrix 超时小于ribbon，或者因为懒加载默认超时1s，首次熔断）
+            * 2、客户端调用方启动类 开启feign的注解扫描没有写basePackages====>正确写法，多个逗号分隔  @EnableFeignClients(basePackages = "com.qidian.mall.message")
+                * 原因解释：如果使用了springcloud的openFeign,在application上需要添加@EnableFeignClients注解.却没有明确指明basePackages的路劲；则spring ioc不会自动为外部引入的其他服务jar包里, 标注了@FeignClient注解的interface自动生成bean对象
     
     * 关于hystrix隔离策略带来的问题，以及后期优化： 
         * 1、信号量隔离策略虽然开销小（资源浪费较低），但是对于下游服务是在同一线程中处理，同步操作，多个服务调用耗时会累计，性能较差 ？？？

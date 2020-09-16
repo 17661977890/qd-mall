@@ -73,10 +73,11 @@ hystrix:
             timeoutInMilliseconds: 15000
 # ribbon 相关配置（覆盖feign的超时配置）
 ribbon:
-  # 饥饿加载
+  # 饥饿加载(配置那个服务端需要饥饿加载)
   eager-load:
     enabled: true
-#  #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
+    clients: qd-mall-usercenter
+  #  #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
 #  MaxAutoRetries: 1
 #  #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
 #  MaxAutoRetriesNextServer: 1

@@ -93,10 +93,7 @@ spring:
 logging:
   level:
     root: INFO
-    com:
-      qidian:
-        mall:
-          mapper: debug
+    com.qidian.mall.user.mapper: debug
 
 #      alibaba:
 #        nacos:
@@ -104,7 +101,7 @@ logging:
 #            naming: warn
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
-  type-aliases-package: com.qidain.mall.entity
+  type-aliases-package: com.qidain.mall.user.entity
   global-config:
     db-config:
       #驼峰下划线转换
@@ -130,12 +127,13 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           thread:
-            timeoutInMilliseconds: 15000
+            timeoutInMilliseconds: 20000
 # ribbon 相关配置（覆盖feign的超时配置）
 ribbon:
   # 饥饿加载
   eager-load:
     enabled: true
+    clients: qd-mall-messageserver
   #  #说明：同一台实例的最大自动重试次数，默认为1次，不包括首次
   #  MaxAutoRetries: 1
   #  #说明：要重试的下一个实例的最大数量，默认为1，不包括第一次被调用的实例
