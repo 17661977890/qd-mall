@@ -19,9 +19,8 @@ public class RegUserDTO implements Serializable {
 
     public interface Add{}
     /**
-     * 注册用户账号（手机号）
+     * 注册用户账号
      */
-    @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "手机号格式错误",groups = Add.class)
     @NotBlank(message = "注册用户账号不能为空",groups = {Add.class})
     private String username;
     /**
@@ -34,6 +33,13 @@ public class RegUserDTO implements Serializable {
      */
     @NotBlank(message = "确认密码不能为空",groups = {Add.class})
     private String confirmPassword;
+
+    /**
+     * 手机号
+     */
+    @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "手机号格式错误",groups = Add.class)
+    @NotBlank(message = "注册用户账号不能为空",groups = {Add.class})
+    private String mobile;
     /**
      * 短信验证
      */

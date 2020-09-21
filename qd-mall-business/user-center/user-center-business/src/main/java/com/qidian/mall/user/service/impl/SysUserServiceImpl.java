@@ -63,7 +63,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysSmsCodeDTO sysSmsCodeDTO = new SysSmsCodeDTO();
         sysSmsCodeDTO.setPlatformType(regUserDTO.getPlatformType());
         sysSmsCodeDTO.setBusinessType(regUserDTO.getBusinessType());
-        sysSmsCodeDTO.setReceiveTerminalNo(regUserDTO.getUsername());
+        sysSmsCodeDTO.setReceiveTerminalNo(regUserDTO.getMobile());
         sysSmsCodeDTO.setReceiveTerminalType(regUserDTO.getReceiveTerminalType());
         sysSmsCodeDTO.setVerificationCode(regUserDTO.getSmsCode());
         sysSmsCodeDTO.setSmsCodeId(regUserDTO.getSmsCodeId());
@@ -81,7 +81,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         newUser.setId(new IdWorker().nextId());
         newUser.setUsername(regUserDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(regUserDTO.getPassword()));
-        newUser.setMobile(regUserDTO.getUsername());
+        newUser.setMobile(regUserDTO.getMobile());
         newUser.setEnabled(ConstantUtil.DELETE_FLAG_Y);
         // web端注册为商家，移动端为app用户
         if(3==regUserDTO.getPlatformType()){
