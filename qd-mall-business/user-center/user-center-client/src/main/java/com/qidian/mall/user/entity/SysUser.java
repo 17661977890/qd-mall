@@ -26,8 +26,8 @@ public class SysUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "id", type = IdType.INPUT)
+    private Long id;
 
     @ApiModelProperty(value = "用户名")
     private String username;
@@ -47,7 +47,10 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "性别")
     private Integer sex;
 
-    private Boolean enabled;
+    /**
+     * Y:启用 N：未启用
+     */
+    private String enabled;
 
     @ApiModelProperty(value = "类型")
     private String type;

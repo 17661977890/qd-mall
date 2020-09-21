@@ -1,6 +1,7 @@
 package com.qidian.mall.user.request;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
@@ -50,4 +51,13 @@ public class SysSmsCodeDTO implements Serializable {
     @NotNull(message = "接收终端类型不能为空", groups = {Send.class})
     @Range(min=1, max=2, message = "接收终端类型只能是[1:手机,2：邮箱]", groups = {Send.class})
     private Integer receiveTerminalType;
+
+
+    /**
+     * ==================== 后台验证 =====================
+     */
+
+    private String verificationCode;
+
+    private String smsCodeId;
 }

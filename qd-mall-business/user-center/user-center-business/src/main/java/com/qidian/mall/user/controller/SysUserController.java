@@ -4,10 +4,12 @@ import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
+import com.central.base.util.IpUtil;
 import com.qidian.mall.file.api.FileApi;
 import com.qidian.mall.user.quartz.QuartzJobManager;
 import com.qidian.mall.user.quartz.TestQuartz;
 import com.qidian.mall.file.response.FileInfoDTO;
+import com.qidian.mall.user.request.RegUserDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +55,21 @@ public class SysUserController extends BaseController {
 
     @Resource
     public FileApi fileApi;
+
+    /**
+     * 用户注册
+     * @param restRequest
+     * @return
+     */
+    @ApiOperation(value = "用户注册", notes = "用户注册")
+    @RequestMapping(value = "/regUser", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse regUser(@Validated(RegUserDTO.Add.class)  @RequestBody RestRequest<RegUserDTO> restRequest,HttpServletRequest request) {
+        restRequest.getBody().setClientIp(IpUtil.getIpAddress(request));
+        boolean result = sysUserService.regUser(restRequest.getBody());
+        return new RestResponse().success(result);
+    }
+
+
 
     /**
     * 新增系统用户名数据

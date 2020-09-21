@@ -2,11 +2,17 @@ package com.qidian.mall.user.service.impl;
 
 import com.central.base.exception.BusinessException;
 import com.central.base.message.MessageSourceService;
+import com.central.base.util.ConstantUtil;
+import com.central.base.util.IdWorker;
 import com.qidian.mall.user.entity.CustomUserDetails;
 import com.qidian.mall.user.entity.SysUser;
+import com.qidian.mall.user.enums.UserTypeEnum;
+import com.qidian.mall.user.request.RegUserDTO;
+import com.qidian.mall.user.request.SysSmsCodeDTO;
 import com.qidian.mall.user.request.SysUserDTO;
 import com.qidian.mall.user.response.SysUserVO;
 import com.qidian.mall.user.mapper.SysUserMapper;
+import com.qidian.mall.user.service.ISysSmsService;
 import com.qidian.mall.user.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -19,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -39,6 +46,60 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ISysSmsService iSysSmsService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+    /**
+     *  新用户注册
+     * @param regUserDTO
+     * @return
+     */
+    @Override
+    public boolean regUser(RegUserDTO regUserDTO) {
+        // 验证验证码
+        SysSmsCodeDTO sysSmsCodeDTO = new SysSmsCodeDTO();
+        sysSmsCodeDTO.setPlatformType(regUserDTO.getPlatformType());
+        sysSmsCodeDTO.setBusinessType(regUserDTO.getBusinessType());
+        sysSmsCodeDTO.setReceiveTerminalNo(regUserDTO.getUsername());
+        sysSmsCodeDTO.setReceiveTerminalType(regUserDTO.getReceiveTerminalType());
+        sysSmsCodeDTO.setVerificationCode(regUserDTO.getSmsCode());
+        sysSmsCodeDTO.setSmsCodeId(regUserDTO.getSmsCodeId());
+        iSysSmsService.verifyCode(sysSmsCodeDTO);
+
+        // 用户注册（新增用户）--- 密码和用户检查
+        if(!regUserDTO.getPassword().equals(regUserDTO.getConfirmPassword())){
+            throw new BusinessException("102320",e.getMessage("102320"));
+        }
+        SysUser sysUser = sysUserMapper.selectOne(new QueryWrapper<SysUser>().eq(SysUser.COL_USERNAME,regUserDTO.getUsername()));
+        if(sysUser!=null){
+            throw new BusinessException("102321",e.getMessage("102321"));
+        }
+        SysUser newUser = new SysUser();
+        newUser.setId(new IdWorker().nextId());
+        newUser.setUsername(regUserDTO.getUsername());
+        newUser.setPassword(passwordEncoder.encode(regUserDTO.getPassword()));
+        newUser.setMobile(regUserDTO.getUsername());
+        newUser.setEnabled(ConstantUtil.DELETE_FLAG_Y);
+        // web端注册为商家，移动端为app用户
+        if(3==regUserDTO.getPlatformType()){
+            newUser.setType(UserTypeEnum.MERCHANT.getCode());
+            newUser.setNickname(UserTypeEnum.MERCHANT.getCode()+regUserDTO.getUsername());
+        }else {
+            newUser.setType(UserTypeEnum.APP.getCode());
+            newUser.setNickname(UserTypeEnum.APP.getCode()+regUserDTO.getUsername());
+        }
+        newUser.setClientIp(regUserDTO.getClientIp());
+        int result = sysUserMapper.insert(newUser);
+        if(result!=1){
+            throw new BusinessException("102322",e.getMessage("102322"));
+        }
+        return true;
+    }
+
+     // =================================================== 业务接口 =====================================
     /**
     * 保存信息对象 ---JAVA8 新特性的时间属性为LocalDateTime
     * @param record
@@ -125,7 +186,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return iPage;
     }
 
-    //========================== 授权认证相关接口 ============================
+    // ===================================== 授权认证相关接口 ========================================
 
     @Override
     public CustomUserDetails findByUsername(String username) {

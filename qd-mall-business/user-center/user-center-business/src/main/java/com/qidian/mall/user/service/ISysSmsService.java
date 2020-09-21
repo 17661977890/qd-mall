@@ -18,4 +18,11 @@ public interface ISysSmsService {
      * @return
      */
     SysSmsCodeVo sendSmsVerificationCode(SysSmsCodeDTO sysSmsCodeDTO);
+
+
+    /**
+     * 验证验证码
+     * @param sysSmsCodeDTO
+     */
+    void verifyCode(SysSmsCodeDTO sysSmsCodeDTO);
 }

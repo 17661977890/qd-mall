@@ -12,6 +12,7 @@ import com.central.base.util.ConstantUtil;
 import com.central.base.util.IdWorker;
 import com.central.base.util.SmsCodeUtil;
 import com.qidian.mall.message.api.AliyunSmsApi;
+import com.qidian.mall.message.enums.SmsCodeVerifyEnum;
 import com.qidian.mall.message.enums.SmsTemplateTypeEnum;
 import com.qidian.mall.message.request.SendSmsDTO;
 import com.qidian.mall.message.response.SendSmsVo;
@@ -83,6 +84,10 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
                 throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE);
             }
             log.info("invoke alibaba send sms api,result:{} ",restResponse);
+            if(ConstantUtil.ERROR.equals(restResponse.getHeader().getCode())){
+                log.error("invoke alibaba send sms api,result:{} ",restResponse);
+                throw new BusinessException(ConstantUtil.ERROR,restResponse.getHeader().getMessage());
+            }
             sysSmsCodeVo.setSmsCodeId(sysSmsCode.getId());
             sysSmsCodeVo.setVerificationCode(sysSmsCode.getVerificationCode());
         }catch (Exception e){
@@ -90,6 +95,51 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             throw new BusinessException("102303",getMessage("102303"));
         }
         return sysSmsCodeVo;
+    }
+
+    /**
+     * 验证验证码
+     * @param sysSmsCodeDTO
+     */
+    @Override
+    public void verifyCode(SysSmsCodeDTO sysSmsCodeDTO) {
+        try {
+            SysSmsCode smsCode = sysSmsCodeMapper.selectById(sysSmsCodeDTO.getSmsCodeId());
+            if(smsCode==null){
+                throw new BusinessException("102313",getMessage("102313"));
+            }
+            if (!sysSmsCodeDTO.getReceiveTerminalNo().equals(smsCode.getReceiveTerminalNo())) {
+                // 终端号码匹配
+                verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102306"));
+                throw new BusinessException("102306",getMessage("102306"));
+            } else if (!sysSmsCodeDTO.getBusinessType().equals(smsCode.getBusinessType())) {
+                //业务类型匹配
+                verifyFailure(smsCode, SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("10237"));
+                throw new BusinessException("102306",getMessage("102306"));
+            } else if (!sysSmsCodeDTO.getVerificationCode().equals(smsCode.getVerificationCode())) {
+                //验证码匹配
+                verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102308"));
+                throw new BusinessException("102306",getMessage("102306"));
+            } else if (ConstantUtil.DELETE_FLAG_Y.equals(smsCode.getIsUsed())) {
+                //是否已使用检查
+                verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102309"));
+                throw new BusinessException("102306",getMessage("102306"));
+            } else if (DateUtil.between(new Date(),smsCode.getExpiredTime(),DateUnit.SECOND) < 0) {
+                //是否过期检查(hutool date2-date1 date1>date2 说明过期）
+                verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102310"));
+                throw new BusinessException("102310",getMessage("102310"));
+            } else {
+                verifySuccess(smsCode);
+                int i = sysSmsCodeMapper.updateById(smsCode);
+                if (i == 0) {
+                    verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102311"));
+                    throw new BusinessException("102311",getMessage("102311"));
+                }
+            }
+        } catch (Exception e) {
+            log.error("verify code error reason:{}",e.getMessage());
+            throw new BusinessException("102312",getMessage("102312"));
+        }
     }
 
 
@@ -144,7 +194,7 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
         sysSmsCode.setId(new IdWorker().nextId());
         sysSmsCode.setReceiveTerminalType(sysSmsCodeDTO.getReceiveTerminalType());
         sysSmsCode.setReceiveTerminalNo(sysSmsCodeDTO.getReceiveTerminalNo());
-        sysSmsCode.setExpiredTime(new Date());
+        sysSmsCode.setExpiredTime(DateUtil.offsetMinute(new Date(),5));
         sysSmsCode.setVerificationCode(code);
         sysSmsCode.setBusinessType(sysSmsCodeDTO.getBusinessType());
         sysSmsCode.setClientIp(sysSmsCodeDTO.getClientIp());
@@ -155,5 +205,34 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
         sysSmsCode.setDeleteFlag(ConstantUtil.DELETE_FLAG_N);
         sysSmsCode.setVersion(1);
         return sysSmsCode;
+    }
+
+
+
+    /**
+     * 验证码校验失败
+     * @param smsCode
+     * @param code
+     * @param message
+     */
+    private void verifyFailure(SysSmsCode smsCode,String code,String message){
+        smsCode.setVerifyCode(code);
+        smsCode.setVerifyMessage(message);
+        sysSmsCodeMapper.updateById(smsCode);
+    }
+
+    /**
+     * 校验成功数据组装
+     * @param smsCode
+     * @return
+     */
+    private SysSmsCode verifySuccess(SysSmsCode smsCode){
+        smsCode.setUpdateTime(new Date());
+        smsCode.setIsUsed(ConstantUtil.DELETE_FLAG_Y);
+        smsCode.setUseTime(new Date());
+        smsCode.setVerifyTime(new Date());
+        smsCode.setVerifyCode(SmsCodeVerifyEnum.VERIFY_SUCCESS.getCode());
+        smsCode.setVerifyMessage(SmsCodeVerifyEnum.VERIFY_SUCCESS.getDesc());
+        return smsCode;
     }
 }

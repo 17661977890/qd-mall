@@ -46,6 +46,7 @@ public class SysSmsCodeController extends BaseController {
         checkParam(sysSmsCodeDTO);
         sysSmsCodeDTO.setClientIp(IpUtil.getIpAddress(request));
         SysSmsCodeVo sysSmsCodeVo = iSysSmsService.sendSmsVerificationCode(sysSmsCodeDTO);
+        log.info("response:{}",sysSmsCodeVo);
         return RestResponse.resultSuccess(sysSmsCodeVo);
     }
 

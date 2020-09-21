@@ -669,7 +669,8 @@ qd-mall -- 父项目，公共依赖
         * （2） 关于调用feign的api接口，直接走熔断！！！
             * 1、配置不完善，因为超时配置问题造成（hystrix 超时小于ribbon，或者因为懒加载默认超时1s，首次熔断）
             * 2、客户端调用方启动类 开启feign的注解扫描没有写basePackages====>正确写法，多个逗号分隔  @EnableFeignClients(basePackages = "com.qidian.mall.message")
-                * 原因解释：如果使用了springcloud的openFeign,在application上需要添加@EnableFeignClients注解.却没有明确指明basePackages的路劲；则spring ioc不会自动为外部引入的其他服务jar包里, 标注了@FeignClient注解的interface自动生成bean对象
+                * 原因解释：如果使用了springcloud的openFeign,在application上需要添加@EnableFeignClients注解，如果没有明确指明basePackages的路劲，采用@EnableFeignClients注解的类所在的包作为basePackages。 
+                因为我们的项目是微服务，调用的的feign接口再其他服务模块，如果没有只当basePackages，则spring ioc不会自动为外部引入的其他服务jar包里,标注了@FeignClient注解的interface自动生成bean对象
     
     * 关于hystrix隔离策略带来的问题，以及后期优化： 
         * 1、信号量隔离策略虽然开销小（资源浪费较低），但是对于下游服务是在同一线程中处理，同步操作，多个服务调用耗时会累计，性能较差 ？？？
@@ -855,7 +856,9 @@ hystrix:
         ````
         * 配置pom后刷新maven 获取私服的jar，如果不行，或者打包报错无权，那就要配置nexus的匿名用户访问。
 
-
+* 关于基于雪花算法的id 生成器的使用： 
+    * id生成为Long 类型，传给其前端使用 数值范围超出js的最大范围，所以前端显示和后端给到的 不一致。
+    * 问题解决： 全局配置将 id 转换为字符串传给前端，保证数据无误。
 
 ### 认证鉴权实现结构：
    * uaa 作为认证服务和资源服务
@@ -869,5 +872,6 @@ hystrix:
        * 2、我们希望，内部微服务之间调用也需要有鉴权的过程，从而也避免出现直接避开网关而直接请求业务微服务模块而导致不需要鉴权的情况
        * 3、我们只希望网关做服务转发和角色权限的访问校验， 
    * 弊端：每个服务都做鉴权资源配置，问题： 服务之前toekn的传递（通过feign 拦截器）受熔断的隔离策略影响。信号量隔离性能比线程隔离并发性能差。
+   
    
    
