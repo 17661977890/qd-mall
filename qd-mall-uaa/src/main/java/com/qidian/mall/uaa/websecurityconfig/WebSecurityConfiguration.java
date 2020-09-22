@@ -146,6 +146,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      *                     .and()
      *                 .apply(smsAuthenticationSecurityConfig)
      *                     .and()
+     *            sessionManagement、formLogin、logout、apply（config）、authorizeRequests 都是之后调用一个and 方法构建（builder）一个 过滤器
+     *            每个方法都是通过一个xxxConfigure配置类最后调用apply来实现，将这些配置类放到一个集合中，这些configure都是配置了 某种验证过滤器
+     *            所以此方法调用时候，会调用每一种添加的过滤器（包括自定义的provider）
+     *
      * @param httpSecurity
      * @throws Exception
      */

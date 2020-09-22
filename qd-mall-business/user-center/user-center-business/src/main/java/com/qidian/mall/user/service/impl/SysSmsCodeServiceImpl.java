@@ -138,7 +138,7 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             }
         } catch (Exception e) {
             log.error("verify code error reason:{}",e.getMessage());
-            throw new BusinessException("102312",getMessage("102312"));
+            throw new BusinessException("102312",e.getMessage());
         }
         return true;
     }
