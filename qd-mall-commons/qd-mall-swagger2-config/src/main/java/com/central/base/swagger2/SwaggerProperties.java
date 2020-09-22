@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author mall
  * @date 2018/11/18 9:17
  */
+@Configuration
 @Data
 @ConfigurationProperties("mall.swagger")
 public class SwaggerProperties {
