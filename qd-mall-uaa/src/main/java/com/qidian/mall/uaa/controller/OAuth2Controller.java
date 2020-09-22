@@ -1,12 +1,16 @@
 package com.qidian.mall.uaa.controller;
 
+import com.central.base.exception.BusinessException;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qidian.mall.uaa.websecurityconfig.smsprovider.SmsAuthenticationToken;
+import com.qidian.mall.user.api.SysSmsCodeApi;
 import com.qidian.mall.user.api.SysUserApi;
 import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.uaa.websecurityconfig.mobileprovider.MobileAuthenticationToken;
 import com.qidian.mall.uaa.websecurityconfig.openIdprovider.OpenIdAuthenticationToken;
+import com.qidian.mall.user.request.SysSmsCodeDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,6 +28,7 @@ import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAut
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +68,9 @@ public class OAuth2Controller {
     @Resource
     private SysUserApi sysUserApi;
 
+    @Resource
+    private SysSmsCodeApi sysSmsCodeApi;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -100,6 +108,30 @@ public class OAuth2Controller {
         MobileAuthenticationToken token = new MobileAuthenticationToken(mobile, password);
         writerToken(request, response, token, "手机号或密码错误");
     }
+
+    @ApiOperation(value = "短信验证获取token")
+    @PostMapping("/sms/token")
+    public RestResponse getTokenBySms(@RequestBody @Validated({SysSmsCodeDTO.Verify.class}) SysSmsCodeDTO sysSmsCodeDTO,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 验证登录验证码
+        SysSmsCodeDTO verify = new SysSmsCodeDTO();
+        verify.setPlatformType(sysSmsCodeDTO.getPlatformType());
+        verify.setBusinessType(sysSmsCodeDTO.getBusinessType());
+        verify.setReceiveTerminalNo(sysSmsCodeDTO.getReceiveTerminalNo());
+        verify.setReceiveTerminalType(sysSmsCodeDTO.getReceiveTerminalType());
+        verify.setVerificationCode(sysSmsCodeDTO.getVerificationCode());
+        verify.setSmsCodeId(sysSmsCodeDTO.getSmsCodeId());
+        RestResponse<Boolean> restResponse = sysSmsCodeApi.verifyCode(verify);
+        if (restResponse == null || restResponse.getBody() == null) {
+            throw new BusinessException(ConstantUtil.ERROR,"短信验证失败");
+        }
+        if(ConstantUtil.USER_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
+            throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.USER_SERVICE_NOT_AVAILABLE);
+        }
+        SmsAuthenticationToken token = new SmsAuthenticationToken(sysSmsCodeDTO.getReceiveTerminalNo());
+        return writerToken(request, response, token, "手机号错误");
+    }
+
 
     /**
      * 获取登录用户信息 --- 测试feign拦截器（传递token 实现内部服务调用的token鉴权）

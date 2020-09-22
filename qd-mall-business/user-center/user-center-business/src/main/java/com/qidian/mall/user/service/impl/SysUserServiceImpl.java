@@ -188,6 +188,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     // ===================================== 授权认证相关接口 ========================================
 
+    /**
+     *  用户密码登录
+     * @param username
+     * @return
+     */
     @Override
     public CustomUserDetails findByUsername(String username) {
         SysUser sysUser = this.selectByUsername(username);
@@ -197,12 +202,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return getLoginAppUser(sysUser);
     }
 
+    /**
+     * 手机号 密码登录
+     * @param mobile
+     * @return
+     */
     @Override
     public CustomUserDetails findByMobile(String mobile) {
         SysUser sysUser = this.selectByMobile(mobile);
         return getLoginAppUser(sysUser);
     }
 
+    /**
+     * openId 登录
+     * @param openId
+     * @return
+     */
     @Override
     public CustomUserDetails findByOpenId(String openId) {
         SysUser sysUser = this.selectByOpenId(openId);

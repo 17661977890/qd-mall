@@ -184,9 +184,9 @@ public class SysUserController extends BaseController {
      *
      * @param mobile 手机号
      */
-    @GetMapping(value = "/users-anon/mobile", params = "mobile")
-    @ApiOperation(value = "根据手机号查询用户")
-    public RestResponse findByMobile(String mobile) {
+    @GetMapping(value = "/users-anon/mobile")
+    @ApiOperation(value = "根据手机号查询用户（密码/短信验证）")
+    public RestResponse findByMobile(@RequestParam("mobile") String mobile) {
         return RestResponse.resultSuccess(sysUserService.findByMobile(mobile));
     }
 
@@ -195,11 +195,15 @@ public class SysUserController extends BaseController {
      *
      * @param openId openId
      */
-    @GetMapping(value = "/users-anon/openId", params = "openId")
+    @GetMapping(value = "/users-anon/openId")
     @ApiOperation(value = "根据OpenId查询用户")
-    public RestResponse findByOpenId(String openId) {
+    public RestResponse findByOpenId(@RequestParam("openId") String openId) {
         return RestResponse.resultSuccess(sysUserService.findByOpenId(openId));
     }
+
+
+
+
 
     /**
      * =================  测试接口 =================

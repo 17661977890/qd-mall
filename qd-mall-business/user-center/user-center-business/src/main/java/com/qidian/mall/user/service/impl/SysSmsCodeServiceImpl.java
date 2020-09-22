@@ -79,15 +79,15 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             jsonObject.put("code",sysSmsCode.getVerificationCode());
             sendSmsDTO.setTemplateParam(jsonObject.toJSONString());
             sendSmsDTO.setBusinessType(sysSmsCodeDTO.getBusinessType());
-            RestResponse<SendSmsVo> restResponse = aliyunSmsApi.sendSms(sendSmsDTO);
-            if(ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
-                throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE);
-            }
-            log.info("invoke alibaba send sms api,result:{} ",restResponse);
-            if(ConstantUtil.ERROR.equals(restResponse.getHeader().getCode())){
-                log.error("invoke alibaba send sms api,result:{} ",restResponse);
-                throw new BusinessException(ConstantUtil.ERROR,restResponse.getHeader().getMessage());
-            }
+//            RestResponse<SendSmsVo> restResponse = aliyunSmsApi.sendSms(sendSmsDTO);
+//            if(ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE.equals(restResponse.getHeader().getMessage())){
+//                throw new BusinessException(ConstantUtil.ERROR,ConstantUtil.MESSAGE_SERVICE_NOT_AVAILABLE);
+//            }
+//            log.info("invoke alibaba send sms api,result:{} ",restResponse);
+//            if(ConstantUtil.ERROR.equals(restResponse.getHeader().getCode())){
+//                log.error("invoke alibaba send sms api,result:{} ",restResponse);
+//                throw new BusinessException(ConstantUtil.ERROR,restResponse.getHeader().getMessage());
+//            }
             sysSmsCodeVo.setSmsCodeId(sysSmsCode.getId());
             sysSmsCodeVo.setVerificationCode(sysSmsCode.getVerificationCode());
         }catch (Exception e){
@@ -102,7 +102,7 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
      * @param sysSmsCodeDTO
      */
     @Override
-    public void verifyCode(SysSmsCodeDTO sysSmsCodeDTO) {
+    public Boolean verifyCode(SysSmsCodeDTO sysSmsCodeDTO) {
         try {
             SysSmsCode smsCode = sysSmsCodeMapper.selectById(sysSmsCodeDTO.getSmsCodeId());
             if(smsCode==null){
@@ -115,15 +115,15 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             } else if (!sysSmsCodeDTO.getBusinessType().equals(smsCode.getBusinessType())) {
                 //业务类型匹配
                 verifyFailure(smsCode, SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("10237"));
-                throw new BusinessException("102306",getMessage("102306"));
+                throw new BusinessException("10237",getMessage("10237"));
             } else if (!sysSmsCodeDTO.getVerificationCode().equals(smsCode.getVerificationCode())) {
                 //验证码匹配
                 verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102308"));
-                throw new BusinessException("102306",getMessage("102306"));
+                throw new BusinessException("102308",getMessage("102308"));
             } else if (ConstantUtil.DELETE_FLAG_Y.equals(smsCode.getIsUsed())) {
                 //是否已使用检查
                 verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102309"));
-                throw new BusinessException("102306",getMessage("102306"));
+                throw new BusinessException("102309",getMessage("102309"));
             } else if (DateUtil.between(new Date(),smsCode.getExpiredTime(),DateUnit.SECOND) < 0) {
                 //是否过期检查(hutool date2-date1 date1>date2 说明过期）
                 verifyFailure(smsCode,SmsCodeVerifyEnum.VERIFY_FAILURE.getCode(),getMessage("102310"));
@@ -140,6 +140,7 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
             log.error("verify code error reason:{}",e.getMessage());
             throw new BusinessException("102312",getMessage("102312"));
         }
+        return true;
     }
 
 

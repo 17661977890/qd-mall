@@ -51,7 +51,7 @@ public interface SysUserApi {
      *
      * @param mobile 手机号
      */
-    @GetMapping(value = "/sys-user/users-anon/mobile", params = "mobile")
+    @GetMapping(value = "/sys-user/users-anon/mobile")
     RestResponse<CustomUserDetails> findByMobile(@RequestParam("mobile") String mobile);
 
     /**
@@ -59,6 +59,6 @@ public interface SysUserApi {
      *
      * @param openId openId
      */
-    @GetMapping(value = "/sys-user/users-anon/openId", params = "openId")
+    @GetMapping(value = "/sys-user/users-anon/openId")
     RestResponse<CustomUserDetails> findByOpenId(@RequestParam("openId") String openId);
 }

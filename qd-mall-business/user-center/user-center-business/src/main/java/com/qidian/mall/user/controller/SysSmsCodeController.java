@@ -50,6 +50,19 @@ public class SysSmsCodeController extends BaseController {
         return RestResponse.resultSuccess(sysSmsCodeVo);
     }
 
+    /**
+     * 验证短信验证码
+     * @param sysSmsCodeDTO
+     * @return
+     */
+    @ApiOperation(value = "验证短信验证码", notes = "验证短信验证码")
+    @RequestMapping(value = "/verifyCode", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse verifyCode(@Validated(SysSmsCodeDTO.Verify.class)  @RequestBody SysSmsCodeDTO sysSmsCodeDTO){
+        checkParam(sysSmsCodeDTO);
+        boolean result = iSysSmsService.verifyCode(sysSmsCodeDTO);
+        return RestResponse.resultSuccess(result);
+    }
+
 
 
     /**

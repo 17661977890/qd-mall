@@ -3,7 +3,10 @@ package com.qidian.mall.uaa.websecurityconfig;
 import com.central.auth.common.errorresponse.RestAuthenticationEntryPoint;
 import com.central.auth.common.errorresponse.RestfulAccessDeniedHandler;
 import com.qidian.mall.uaa.websecurityconfig.mobileprovider.MobileAuthenticationSecurityConfig;
+import com.qidian.mall.uaa.websecurityconfig.mobileprovider.MobileUserDetailsService;
 import com.qidian.mall.uaa.websecurityconfig.openIdprovider.OpenIdAuthenticationSecurityConfig;
+import com.qidian.mall.uaa.websecurityconfig.smsprovider.SmsAuthenticationProvider;
+import com.qidian.mall.uaa.websecurityconfig.smsprovider.SmsAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +55,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MobileAuthenticationSecurityConfig mobileAuthenticationSecurityConfig;
+
+    @Autowired
+    private SmsAuthenticationSecurityConfig smsAuthenticationSecurityConfig;
+
     @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
@@ -100,6 +107,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 以及为属性DaoAuthenticationProvider 设置 userDetailsService 属性，
         // 创建了UserBuilder对象，并设置了用户名和密码，
         // 所以再具体认证的时候，就会访问到这个userDetailsService，我们也可以对里面的方法进行重写来判断是否通过登录认证。
+
+        // 关于自定义provider 追加到认证链方法方式一：
+//        SmsAuthenticationProvider smsAuthenticationProvider=new SmsAuthenticationProvider();
+//        smsAuthenticationProvider.setUserDetailsService((MobileUserDetailsService) userDetailsService);
+//        auth.authenticationProvider(smsAuthenticationProvider);
+        // ... 这里可以添加多个
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
@@ -124,6 +137,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      *          缺点是，用户名密码基本等于是明文传输带来很大风险，并且没有注销认证信息的手段，只能依靠关闭浏览器退出认证。
      * OPTIONS方法是用于请求获得由Request-URI标识的资源在请求/响应的通信过程中可以使用的功能选项。
      * 通过这个方法，客户端可以在采取具体资源请求之前，决定对该资源采取何种必要措施，或者了解服务器的性能。
+     * apply(): 应用一个 SecurityConfigurer 到该 SecurityBuilder 上
+     *
+     *    自定义的认证链provider 需要在这里配置对应的config 才会生效，或者不用config 直接provider 使用注解扫描 以后再这里 auth.authenticationProvider（注入的provider）
+     *                  .apply(openIdAuthenticationSecurityConfig)
+     *                     .and()
+     *                 .apply(mobileAuthenticationSecurityConfig)
+     *                     .and()
+     *                 .apply(smsAuthenticationSecurityConfig)
+     *                     .and()
      * @param httpSecurity
      * @throws Exception
      */
@@ -152,6 +174,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .apply(openIdAuthenticationSecurityConfig)
                     .and()
                 .apply(mobileAuthenticationSecurityConfig)
+                    .and()
+                .apply(smsAuthenticationSecurityConfig)
                     .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求

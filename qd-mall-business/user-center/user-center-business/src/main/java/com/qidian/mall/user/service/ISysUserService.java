@@ -104,4 +104,5 @@ public interface ISysUserService extends IService<SysUser> {
      * @return
      */
     SysUser selectByOpenId(String openId);
+
 }

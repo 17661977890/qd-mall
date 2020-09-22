@@ -2,6 +2,7 @@ package com.qidian.mall.user.hystrix;
 
 import com.central.base.restparam.RestResponse;
 import com.qidian.mall.user.api.SysUserApi;
+import com.qidian.mall.user.entity.CustomUserDetails;
 import org.springframework.stereotype.Component;
 
 /**

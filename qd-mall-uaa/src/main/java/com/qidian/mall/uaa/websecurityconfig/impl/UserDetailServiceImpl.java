@@ -35,6 +35,7 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
 
 
     /**
+     * 用户名登录
      * additionalAuthenticationChecks  底层方法 有根据UsernamePasswordAuthenticationToken 对密码做校验，这里只需要查询用户是否存在就行了
      * @param username
      * @return
@@ -51,17 +52,26 @@ public class UserDetailServiceImpl implements MobileUserDetailsService,SocialUse
         return restResponse.getBody();
     }
 
+    /**
+     * openId 登录
+     * @param openId
+     * @return
+     */
     @Override
     public SocialUserDetails loadUserByUserId(String openId) {
         RestResponse<CustomUserDetails>  restResponse = sysUserApi.findByOpenId(openId);
         return  restResponse.getBody();
     }
 
+    /**
+     * 手机(密码/短信验证码)登录
+     * @param mobile
+     * @return
+     */
     @Override
     public UserDetails loadUserByMobile(String mobile) {
         RestResponse<CustomUserDetails>  restResponse = sysUserApi.findByMobile(mobile);
         return restResponse.getBody();
     }
-
 
 }

@@ -452,6 +452,22 @@ qd-mall -- 父项目，公共依赖
         * （1）将此依赖 spring-cloud-starter-oauth2 和一些认证鉴权的相关独立配置抽出来作为一个公共starter模块包提供依赖服务
     进而可以将用户资源服务器做相关配置优化
         * （2）对feign 做相关拦截配置，增加Authorization access-token的相关请求头等配置，进而在认证服务器调用用户服务查询时不会被拦截。
+
+
+* 自定义provider 认证方式：
+    * 添加自定义provider 得方式有两种：
+    * （1） 通过 AuthenticationManagerBuilder 进行添加， 就是WebSecurityConfiguration 的configureGlobal 配置方法中调用 auth.authenticationProvider(new myProvider()) 记得给provider set属性 注入的XXXDetailService
+    * （2） 通过 HttpSecurity 进行添加， 配置一个configure 配置类，调用 authenticationProvider(new myProvider（))方法,记得给provider set属性 注入的XXXDetailService
+    我们本代码中采用的第二种方式。第二种也是最后调用第一种方式的AuthenticationManagerBuilder 的authenticationProvider方法进行添加provider。
+    
+    * 我们目前通过 重写3个类来实现：
+    * （1） SmsAuthenticationSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>  重写config方法，在里面调用  http.authenticationProvider(provider);
+    * （2）自定义 SmsAuthenticationProvider implements AuthenticationProvider 重写 authenticate 和 support方法 --- support 用于只当认证token 和 provider 的一一对应
+    * （3）自定义认证token：  SmsAuthenticationToken extends AbstractAuthenticationToken
+    最后需要在 WebSecurityConfiguration的 configure方法中 apply 我们自定义的SmsAuthenticationSecurityConfig 才可以生效
+    或者 我们只是自定义 SmsAuthenticationProvider 和 SmsAuthenticationToken ，直接在 WebSecurityConfiguration的 configure方法中 追加auth.authenticationProvider(注入的provider)
+    
+    相关源码解读SecurityConfigurer 和 SecurityBuilder ：http://www.tianshouzhi.com/api/tutorials/spring_security_4/264
     
 #### (六)、quartz定时调度框架的集成：
 

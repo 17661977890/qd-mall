@@ -24,5 +24,5 @@ public interface ISysSmsService {
      * 验证验证码
      * @param sysSmsCodeDTO
      */
-    void verifyCode(SysSmsCodeDTO sysSmsCodeDTO);
+    Boolean verifyCode(SysSmsCodeDTO sysSmsCodeDTO);
 }
