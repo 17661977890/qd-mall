@@ -88,7 +88,39 @@ qd-mall -- 父项目，公共依赖
 #### （二） swagger 接口文档规范使用：
 
 * 启本地动模块项目后，访问默认地址（每个模块端口修调整）：http://localhost:9002/swagger-ui.html#/
-
+* 相关rul认证限制已放行 在PermitProperties 配置类中
+    ````
+    "/*/v2/api-docs",
+    "/v2/api-docs",  ---- 这个必须放行，要不然打开界面是空的 看不到接口列表
+    "/swagger/api-docs",
+    "/swagger-ui.html",
+    "/swagger-resources/**",
+    "/webjars/**",
+    "/csrf",
+    "/"
+    ````
+* 关于swagger ui界面的填充：
+    ````
+    # 相关其余配置项 可以查看SwaggerProperties 配置类进行填充
+    mall:
+      swagger:
+        enabled: true
+        title: 消息服务中心
+        description: 消息服务中心接口文档
+        version: 1.0
+        base-package: com.qidian.mall.message.sms.controller
+        globalOperationParameters:
+        - name: token
+          description: token
+          modelRef: string
+          parameterType: header
+          required: false
+    ````
+ * 代码规范编写：
+    * controller类注解 @Api(value = "AliyunSmsController", description = "消息服务")  或 @Api(tags = "用户认证token相关")
+    * 方法注解 @ApiOperation(value = "发送短信", notes = "阿里云发送短信，支持多手机")
+    * 入参或者实体： @ApiModel(value="SysUser对象", description="系统用户名")  
+    * 属性：  @ApiModelProperty(value = "用户名")
 #### （三） 日志配置
 
 * springboot默认使用自带的logback

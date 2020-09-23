@@ -49,7 +49,7 @@ import java.io.Writer;
  *
  * @author mall
  */
-@Api(tags = "OAuth2相关操作")
+@Api(tags = "用户认证token相关")
 @Slf4j
 @RequestMapping(value = "/api/oauth")
 @RestController

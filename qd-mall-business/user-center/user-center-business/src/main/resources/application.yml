@@ -153,8 +153,14 @@ mall:
     enabled: true
     title: 用户中心
     description: 用户中心接口文档
-    version: 2.0
+    version: 1.0
     base-package: com.qidian.mall.user.controller
+    globalOperationParameters:
+    - name: token
+      description: token
+      modelRef: string
+      parameterType: header
+      required: false
   cache-manager:
     configs:
       - key: menu

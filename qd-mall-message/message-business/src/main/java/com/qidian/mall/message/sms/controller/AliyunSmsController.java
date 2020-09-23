@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/sms-server")
-@Api(tags = {"阿里云短信web"})
+@Api(value = "AliyunSmsController", description = "消息服务")
 public class AliyunSmsController extends BaseController {
 
     @Autowired

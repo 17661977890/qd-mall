@@ -24,6 +24,7 @@ import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @Import( {
         Swagger2Configuration.class
 })
+@EnableSwagger2
 public class SwaggerAutoConfiguration implements BeanFactoryAware {
     private static final String AUTH_KEY = "Authorization";
 
