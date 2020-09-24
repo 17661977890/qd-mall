@@ -1,3 +1,4 @@
+[toc]
 
 # qd-mall
 * 奇点商城--->旨在项目搭建以及电商系统架构设计学习和研究，以及相关技术栈的整合学习
@@ -23,12 +24,12 @@ qd-mall -- 父项目，公共依赖
 |  |  |  |-async  -- 多线程异步任务使用案例
 |  |—qd-mall-codegenerator--mybatis-plus代码生成
 |  |─qd-mall-commons -- 通用工具(配置)一级工程
-|  |  |-qd-mall-auth-config -- 认证授权相关公共配置类配置
+|  |  |-qd-mall-auth-config -- 认证授权相关公共配置类配置（比如一些 资源服务器 放行url配置 等）
 |  |  |─qd-mall-base-config -- 封装基础项通用配置（异步async 定时线程池 cros跨域 统一异常处理 统一出参入参规范 redisTemplate序列化配置和工具类 httpclient配置 国际化 相关工具类）
-|  |  |─qd-mall-log-config -- 封装日志统一配置
-|  |  |─qd-mall-db-config -- 封装数据库通用配置
-|  |  |─qd-mall-swagger-config -- 封装swagger通用配置
-|  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）、jedis 连接池配置和相关命令工具类（springboot 整合redis(配置、工具类参考base模块) 和 jedis 两种方式 来操作redis ）
+|  |  |─qd-mall-log-config -- 封装日志统一配置 （基于logback-spring）
+|  |  |─qd-mall-db-config -- 封装数据库通用配置 (mysql+ mp)
+|  |  |─qd-mall-swagger-config -- 封装swagger通用配置 访问路径（端口为具体服务的端口）：http://localhost:9002/swagger-ui.html#/
+|  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）、jedis 连接池配置和相关命令工具类（springboot 整合redis(配置、工具类参考base模块) 和 jedis 两种方式 来操作redis ） ---连接池： lettuce （最强）
 |  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
 |  |-qd-mall-fileserver -- 文件存储服务oss、后期通过策略模式整合集中分布式文件存储服务支撑（包括华为云 swift、fastdfs等）
 |  |  |-file-business -- 业务实现 
@@ -37,12 +38,60 @@ qd-mall -- 父项目，公共依赖
 |  |-qd-mall-message -- rocketMq 消息队列（消息服务）、alibaba-sms短信服务、后期邮件服务也会增加
 |  |  |-message-business -- 业务实现 
 |  |  |-message-client -- 暴露接口feign
-|  |-qd-mall-register -- nacos注册中心
+|  |-qd-mall-register -- nacos注册中心 启动方式查看官网，访问：http://localhost:8848/nacos
 |  |-qd-mall-search -- 基于es搜索服务
 |  |  |-search-business -- 业务实现 
 |  |  |-search-client -- 暴露接口feign
-|  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）、 集成了spring boot admin 服务端，基于微服务的端点监控admin ui界面
+|  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）、 集成了spring boot admin 服务端，基于微服务的端点监控admin ui界面--访问路径 http://192.168.9.1:8088/admin/login 密码配置文件中可更改admin admin
 ````
+
+## 技术栈列表
+
+技术|名称说明|地址
+---|---|---
+spring boot|java快速开发标准框架|[github](https://github.com/spring-projects/spring-boot)、[官网](https://spring.io/projects/spring-boot)
+spring cloud|微服务开发与治理框架|[github](https://github.com/spring-cloud)、[官网](https://spring.io/projects/spring-cloud/)
+spring cloud openfeign|spring cloud 的子项目之一，将openfign集成到spring cloud|[github](https://github.com/spring-cloud/spring-cloud-openfeign)
+OpenFeign|声明式http服务调用|[github](https://github.com/OpenFeign/feign)
+spring-cloud-netflix|spring cloud对Netflix的集成|[github](https://github.com/spring-cloud/spring-cloud-netflix)
+ribbon|Netflix组件之一、负载均衡中间层服务|[github](https://github.com/Netflix/ribbon)
+hystrix|Netflix组件之一、断路器、延迟和容错库(官方不在更新版本)|[github](https://github.com/Netflix/Hystrix)  
+spring cloud gateway|Spring生态系统之上构建的API网关|[官网](https://cloud.spring.io/spring-cloud-gateway/reference/html/)、[github](https://github.com/spring-cloud/spring-cloud-gateway)
+spring security|spring 的安全框架|[github](https://github.com/spring-projects/spring-security)、[官网](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/)
+spring security oauth2|基于oauth2认证协议的一种安全认证和授权框架实现|[官网](https://projects.spring.io/spring-security-oauth/docs/oauth2.html)、[github](https://github.com/spring-projects/spring-security-oauth)
+spring social|第三方登录接入框架|[github](https://github.com/spring-projects/spring-social)
+spring boot admin|spring boot的监控和管理的源软件（参考手册：Reference Guide）|[github](https://github.com/codecentric/spring-boot-admin)
+spring cloud alibaba|阿里巴巴基于 Spring Cloud 编程模型的微服务生态|[github](https://github.com/alibaba/spring-cloud-alibaba)
+nacos|spring cloud alibaba组件之一,一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。|[github](https://github.com/alibaba/nacos)、[官网](https://nacos.io/en-us/)
+rocketMq|spring cloud alibaba组件之一，一款开源的分布式消息系统|[github](https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/rocketmq-example/readme.md)
+alibaba oss|spring cloud alibaba组件之一，阿里云对象存储服务|[阿里云](https://www.aliyun.com/product/oss)
+alibaba sms|spring cloud alibaba组件之一，覆盖全球的短信服务/[阿里云](https://www.aliyun.com/product/sms)
+mysql|关系型数据库|[官网](https://www.mysql.com/)
+HikariCP|数据库连接池（号称最快）|[github](https://github.com/brettwooldridge/HikariCP)
+druid|阿里的数据库连接池，主要用于监控|[github](https://github.com/alibaba/druid/)
+mybatis-plus|持久层orm增强框架，完美兼容mybatis|[官网](https://baomidou.com/)
+MybatisCodeHelper|Intellij IDEA 插件，用于 MyBatis 相关代码生成|[官网](https://plugins.jetbrains.com/plugin/9837-mybatiscodehelperpro)
+redis|分布式缓存（远程字典服务）|[官网](https://redis.io/)
+lettuce|是一个高性能基于Java编写的Redis驱动框架，springboot2.0以上默认支持|[官网](https://lettuce.io/)
+jedis|Redis 官方首选的 Java 客户端开发包。|[官网](https://github.com/xetorthio/jedis)
+elasticsearch|搜索引擎|[官网](https://www.elastic.co/cn/elasticsearch/)、[github](https://github.com/elastic/elasticsearch)
+quartz| Java 编写的开源作业调度框架|[官网](https://github.com/quartz-scheduler/quartz)
+Docker|	容器化引擎|[官网](https://www.docker.com/)
+Docker Compose|	容器编排工具|[官网](https://docs.docker.com/compose/)
+Swagger|API 文档生成工具|[官网](https://swagger.io/)
+logback-spring.xml|支持spring boot配置特性的日志框架配置文件|
+logback|springboot默认支持的日志框架|[中文官网](http://www.logback.cn/)
+OKHttp3|轻量级网络框架|[github](https://github.com/square/okhttp)
+httpclinet|支持 HTTP 协议的客户端编程工具包|[官网](http://hc.apache.org/httpclient-3.x/)
+lombok|java库，注解使代码简化|
+hutool|工具包|[官网](https://www.hutool.cn/)
+
+
+
+
+
+
+
 
 #### (一) mybatis-plus代码生成
 * 模块位置：qd-mall-codegenerator
@@ -886,7 +935,7 @@ hystrix:
     @EnableDiscoveryClient 此服务发现注解 就可以让admin服务端发现所有注册在注册中心的服务作为客户端，无需其他配置了
     ````
 
-
+* 关于ui界面 服务DOWN  可以wallboard 查看具体down的服务，是那个端点down，有一个依赖环境down 整个服务就会down。比如我之前消息服务中心因为依赖了base 基础包，里面包含了redis的依赖，但是我没有配置redis连接。所以监控到redis down，所以导致服务down ，配置以后就ok了 
 
 
 #### LAST: 问题整理：

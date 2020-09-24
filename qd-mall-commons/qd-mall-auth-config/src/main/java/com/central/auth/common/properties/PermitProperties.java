@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 public class PermitProperties {
     /**
-     * 应用监控、数据源监控中心druid 和swagger需要访问的url 等公共服务请求配置不需要认证即可访问
+     * 应用监控、数据源监控中心druid 和swagger需要访问的url 等公共服务请求配置不需要认证即可访问（ 后面的四项属于 admin 监控的 但是我们在uaa服务端配置了优先级较高的过滤器配置，所以这里作为资源服务过滤的url可以不用配置了）
      */
     private static final String[] ENDPOINTS = {
             "/actuator/**",
