@@ -41,7 +41,10 @@ mall:
         /login.html,
         /css/**,
         /images/**,
-        /js/**
+        /js/**,
+        /login,
+        /logout,
+        /*.ico
     code:
       # 忽略验证码的应用编号---暂时没用
       ignoreClientCode: app
@@ -90,9 +93,16 @@ ribbon:
   #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
   ReadTimeout: 3000
 
-# 暴露端点，暴露路由信息，
+#  整合spring boot admin + actuator
+# 暴露端点，暴露路由信息---
 management:
   endpoints:
     web:
       exposure:
         include: '*'
+  endpoint:
+    health:
+      show-details: always
+# admin 控制台日志线上查看需配置
+logging:
+  file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log

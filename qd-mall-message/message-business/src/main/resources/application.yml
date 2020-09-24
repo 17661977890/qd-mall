@@ -3,6 +3,18 @@ spring:
   jackson.time-zone: GMT+8
   profiles:
     include: base
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password: 123456
+    timeout: 5000
+    jedis:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-wait: -1
+        max-idle: 8
+    port: 6379
 # swagger配置、认证过滤请求配置
 mall:
   swagger:
@@ -11,6 +23,12 @@ mall:
     description: 消息服务中心接口文档
     version: 1.0
     base-package: com.qidian.mall.message.sms.controller
+    globalOperationParameters:
+    - name: token
+      description: token
+      modelRef: string
+      parameterType: header
+      required: false
   security:
     ignore:
       httpUrls: >
@@ -29,12 +47,6 @@ security:
       token-info-uri: http://localhost:8088/oauth/check_token
 
 
-# 暴露端点，暴露路由信息，
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
 
 # rocketMq 生产者配置
 #rocketmq:
@@ -100,3 +112,16 @@ aliyun:
     #服务结点
     endpointName: cn-hangzhou
 #--------阿里云短信配置参数 end--------------#
+
+
+# 暴露端点，暴露路由信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+logging:
+  file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-messageserver/qd-mall-messageserver.log

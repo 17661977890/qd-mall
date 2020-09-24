@@ -19,8 +19,8 @@ import javax.annotation.Resource;
  * 资源服务器配置---我们将认证服务器和资源服务器放在一起配置，
  * @EnableResourceServer 注解来开启一个 OAuth2AuthenticationProcessingFilter 类型的过滤器
  * @EnableConfigurationProperties(SecurityProperties.class) 此注解配合 @ConfigurationProperties(prefix = "mall.security") 使用，确保可以注入 spring可以扫描获取属性
- * @author mall
- * @date 2018/10/27
+ *
+ * 所属spring security oauth2里
  */
 @EnableConfigurationProperties(SecurityProperties.class)
 @Configuration

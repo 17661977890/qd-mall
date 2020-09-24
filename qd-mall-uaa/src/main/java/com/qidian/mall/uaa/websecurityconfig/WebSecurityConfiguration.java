@@ -7,6 +7,8 @@ import com.qidian.mall.uaa.websecurityconfig.mobileprovider.MobileUserDetailsSer
 import com.qidian.mall.uaa.websecurityconfig.openIdprovider.OpenIdAuthenticationSecurityConfig;
 import com.qidian.mall.uaa.websecurityconfig.smsprovider.SmsAuthenticationProvider;
 import com.qidian.mall.uaa.websecurityconfig.smsprovider.SmsAuthenticationSecurityConfig;
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
@@ -36,14 +39,10 @@ import javax.annotation.Resource;
  * 2.HttpSecurity
  * 3.AuthenticationManagerBuilder
  *
- * WebSecurityConfigurerAdapter是默认情况下spring security的http配置：
- * 在ResourceServerProperties中，定义了它的order默认值为SecurityProperties.ACCESS_OVERRIDE_ORDER - 1;，
- * 是大于100的,即WebSecurityConfigurerAdapter的配置的拦截要优先于ResourceServerConfigurerAdapter，
- * 优先级高的http配置是可以覆盖优先级低的配置的。
- * 某些情况下如果需要ResourceServerConfigurerAdapter的拦截优先于WebSecurityConfigurerAdapter
- * 优先级高于ResourceServerConfigurer，用于保护oauth相关的endpoints，同时主要作用于用户的登录（form login，Basic auth）
- * 需要在配置文件中添加 security.oauth2.resource.filter-order=99 或者重写WebSecurityConfigurerAdapter的Order配置
+ * 所属pring security的， 默认order 值为100 优先级在 ResourceServerConfiguration（order为3） 之后，所以相关请求先去走资源服务器校验，才会走这里，如果资源服务器全部请求拦截，这边的请求权限设置就不会生效了
+ *
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -150,6 +149,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      *            每个方法都是通过一个xxxConfigure配置类最后调用apply来实现，将这些配置类放到一个集合中，这些configure都是配置了 某种验证过滤器
      *            所以此方法调用时候，会调用每一种添加的过滤器（包括自定义的provider）
      *
+     *
+     *  这里所有的请求拦截放行配置 均无效 只是作为案例学习，因为资源服务器的配置 已经提前对所有请求做了权限拦截，并指定特殊请求的特殊操作，优先级更高，所以这里无效
+     *
      * @param httpSecurity
      * @throws Exception
      */
@@ -219,6 +221,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    private final String adminContextPath;
 
+    public WebSecurityConfiguration(AdminServerProperties adminServerProperties)
+    {
+        this.adminContextPath = adminServerProperties.getContextPath();
+    }
 
 }

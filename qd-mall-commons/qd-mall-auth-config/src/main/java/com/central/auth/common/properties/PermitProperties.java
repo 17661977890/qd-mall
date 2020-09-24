@@ -27,7 +27,11 @@ public class PermitProperties {
             "/webjars/**",
             "/druid/**",
             "/csrf",
-            "/"
+            "/",
+            "/applications",
+            "/assets/**",
+            "/notifications/**",
+            "/instances/**"
     };
 
     /**

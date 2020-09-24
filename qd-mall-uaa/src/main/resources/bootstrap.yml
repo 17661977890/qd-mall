@@ -23,3 +23,18 @@ spring:
         refreshable-dataids: common.yml
       discovery:
         server-addr: ${mall.nacos.server-addr}
+        metadata:
+          user:
+            name: admin
+            password: admin
+            management:
+              context-path: /actuator
+
+# spring boot admin 相关
+  security:
+    user:
+      name: "admin"
+      password: "admin"
+  boot:
+    admin:
+      context-path: /admin

@@ -30,18 +30,18 @@ qd-mall -- 父项目，公共依赖
 |  |  |─qd-mall-swagger-config -- 封装swagger通用配置
 |  |  |-qd-mall-redis-config -- redis 通用配置 （工具类、分布式锁、缓存、序列化）、jedis 连接池配置和相关命令工具类（springboot 整合redis(配置、工具类参考base模块) 和 jedis 两种方式 来操作redis ）
 |  |  |-qd-mall-quarzt-config -- quartz 定时调度框架的封装 （基于springboot2.x starter）
-|  |-qd-mall-fileserver -- 文件存储服务oss
+|  |-qd-mall-fileserver -- 文件存储服务oss、后期通过策略模式整合集中分布式文件存储服务支撑（包括华为云 swift、fastdfs等）
 |  |  |-file-business -- 业务实现 
 |  |  |-file-client -- 暴露接口feign
 |  |-qd-mall-gateway -- spring-cloud-gateway 动态路由网关
-|  |-qd-mall-message -- rocketMq 消息队列（消息服务）
+|  |-qd-mall-message -- rocketMq 消息队列（消息服务）、alibaba-sms短信服务、后期邮件服务也会增加
 |  |  |-message-business -- 业务实现 
 |  |  |-message-client -- 暴露接口feign
 |  |-qd-mall-register -- nacos注册中心
-|  |-qd-mall-search -- es搜索服务
+|  |-qd-mall-search -- 基于es搜索服务
 |  |  |-search-business -- 业务实现 
 |  |  |-search-client -- 暴露接口feign
-|  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）
+|  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）、 集成了spring boot admin 服务端，基于微服务的端点监控admin ui界面
 ````
 
 #### (一) mybatis-plus代码生成
@@ -281,10 +281,25 @@ qd-mall -- 父项目，公共依赖
     * WebSecurityConfiguration ：
     spring security配置安全认证类，配置从数据库读取用户信息，基于httpSecurity的安全配置，配置了登录登出和session以及自定义认证链的相关配置，
     优先级在资源服务器之前。
-    * ResourceServerConfiguration：资源服务器，基于httpSecurity的安全配置，在WebSecurityConfiguration的之后执行，定义了需要放过的请求和需要认证的请求。
+    * ResourceServerConfiguration：资源服务器，基于httpSecurity的安全配置，在WebSecurityConfiguration的之前执行（因为ResourceServerConfiguration中 order注解值 为3，而WebSecurityConfigurerAdapter为100 越小越优先），定义了需要放过的请求和需要认证的请求。
         * 注意：因为我们WebSecurityConfiguration 配置中只是做了那些请求免登录，没有对其他请求做拦截或者放行的配置，
         所以我们在资源服务器做这些请求的配置，那么.requestMatcher(request -> true) 这个要设置为true，否则匹配规则不生效，即不会匹配请求做认证拦截
     * AuthorizationServerConfiguration ：认证服务器，定义客户端详情配置（数据库读取）、令牌存储生成方式、授权模式（类型）、授权码管理、令牌端点约束等
+    
+    * 资源过滤器优先级的参考：https://www.jianshu.com/p/fe1194ca8ecd
+    ````
+     # 两者是不同的 第一种是对所有请求进行校验 匹配到指定的请求做指定的处理
+     .authorizeRequests()
+     .antMatchers("/api/**")
+  
+     # 第二种是对/api/** 这种请求 进行权限校验，
+     .antMatchers("/api/**")
+     .authorizeRequests()
+  
+    我们目前 WebSecurityConfiguration、 ResourceServerConfiguration 都是第一张类型的配置
+    所以我目前的 WebSecurityConfiguration 的配置 都会被 ResourceServerConfiguration 覆盖。 这其实是不合理的，后期优化 资源服务器的相关配置 只拦截相关业务请求，比如规范请求前缀等。
+    一些公共组件的请求（比如swagger、admin监控等）可以交给认证服务器统一来处理
+    ````
 
 * 关于资源服务器的配置简单说几句：
     * 1、我们本项目目前真正可以做到认证授权功能的模块只有qd-mall-uaa模块，有资源服务器的配置，而其他模块都没有做相关配置，所以不会对相应的请求做拦截判断是否需要认证授权
@@ -500,6 +515,9 @@ qd-mall -- 父项目，公共依赖
     或者 我们只是自定义 SmsAuthenticationProvider 和 SmsAuthenticationToken ，直接在 WebSecurityConfiguration的 configure方法中 追加auth.authenticationProvider(注入的provider)
     
     相关源码解读SecurityConfigurer 和 SecurityBuilder ：http://www.tianshouzhi.com/api/tutorials/spring_security_4/264
+ 
+ 
+ 
     
 #### (六)、quartz定时调度框架的集成：
 
@@ -561,7 +579,7 @@ qd-mall -- 父项目，公共依赖
     * 所有的定时任务处理逻辑方法，以后就可以写在此配置模块下job-taskexecute包下，按业务类型区分，不用在业务模块增加
     * 业务模块方法中直接调用QuartzJobManager工具类的新增定时任务等方法 即可测试。
 
-### 多线程异步 @Async 和 定时任务线程池 schedule 的引入：
+### （七）多线程异步 @Async 和 定时任务线程池 schedule 的引入：
 
 * 异步任务的使用：
     * 直接在需要做异步任务的方法加 @Async 注解接口，注意不可同类调用，否则无效，aop动态代理的原因 和事务注解一样。 
@@ -572,7 +590,7 @@ qd-mall -- 父项目，公共依赖
 * 多线程异常处理：
     * 利用异步方法返回值，延迟处理异常，手动回滚事务。
 
-### spring cloud gateway 动态路由网关的引入：
+### （八）spring cloud gateway 动态路由网关的引入：
 * 官网：https://cloud.spring.io/spring-cloud-gateway/reference/html/
 * 相关功能实现：https://blog.csdn.net/squirrelanimal0922/article/details/90517946
 * 依赖：
@@ -592,10 +610,10 @@ qd-mall -- 父项目，公共依赖
     * 1、动态路由配置：gateway配置路由主要有两种方式，1.用yml配置文件，2.写在代码里@Bean注入。此文在yml配置
     * 2、全局过滤器配置---待做
 
-### druid 数据源连接池
+### （九）druid 数据源连接池
 * （用户中心模块）监控访问地址：localhost:9002/druid/login.html
 
-### feign 客户端调用 + hystrix
+### （十）feign 客户端调用 + hystrix
 
 * 说明：
     * 在Spring Cloud微服务体系下，微服务之间的互相调用可以通过Feign进行声明式调用，在这个服务调用过程中Feign会通过Ribbon从服务注册中心获取目标微服务的服务器地址列表，之后在网络请求的过程中Ribbon就会将请求以负载均衡的方式打到微服务的不同实例上，从而实现Spring Cloud微服务架构中最为关键的功能即服务发现及客户端负载均衡调用。
@@ -728,7 +746,7 @@ qd-mall -- 父项目，公共依赖
 * 关于feign接口的请求问题：
     * 默认不支持文件上传和表单请求。https://www.cnblogs.com/yangzhilong/p/11714620.html
 
-### hystrix 熔断机制详解： ---- 后期优化 sentinel代替
+### （十一）hystrix 熔断机制详解： ---- 后期优化 sentinel代替
 * 隔离策略：https://www.jianshu.com/p/b8d21248c9b1、https://www.jianshu.com/p/dc0410558fc9
     ````
     线程池隔离：
@@ -754,18 +772,123 @@ hystrix:
             timeoutInMilliseconds: 5000
 ````
 
-### oss 云存储整合
-* 其余相关api 参考，控制台开发者指南
+### （十二）阿里云相关：oss 云存储、sms短信服务
+* 其余相关api 参考，控制台开发者指南，后期将dms服务中的分片相关功能迁移至此 并通过策略模式实现功能优化。作为强大的底层存储支撑
 
-### rocketMq 消息队列整合
+### （十三）rocketMq 消息队列整合
 
-## es 搜索引擎单机整合
+### （十四）es 搜索引擎单机整合
 * pom依赖 版本替换默认版本 注意在父pom做统一版本管理， 对照es服务端 为es 7.6.1版本
 * 测试类包含相关基本crud api
 * 完成仿京东 高级搜索实战--数据爬虫批量添加至索引库，高级搜索，高亮搜索等
 * es相关环境配置在linux 虚拟机
 * 相关请求拦截日志打印
+
+### （十五）spring boot admin + actuator 实现微服务的端点监控管理和线上日志管理
+
+* 1、qd-mall-uaa 统一认证服务中心 作为admin的服务端，服务端配置如下
+    ````
+    # 1、pom 依赖
+     <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+    <!--端点监控-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>de.codecentric</groupId>
+        <artifactId>spring-boot-admin-starter-server</artifactId>
+    </dependency>
+    # 2、application.yml 配置
+    # 整合spring boot admin + actuator
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: '*'
+      endpoint:
+        health:
+          show-details: always
+    # admin 控制台日志线上查看需配置
+    logging:
+      file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log
   
+    # 3、bootstrap.yml 配置如下
+    spring:
+      application:
+        name: qd-mall-uaaserver
+      cloud:
+        nacos:
+          config:
+            server-addr: ${mall.nacos.server-addr}
+            file-extension: yml
+            shared-dataids: common.yml
+            refreshable-dataids: common.yml
+          discovery:
+            server-addr: ${mall.nacos.server-addr}
+    # spring boot admin的相关配置 下方都是
+            metadata:
+              user:
+                name: admin
+                password: admin
+                management:
+                  context-path: /actuator
+      # 登录账户密码设置
+      security:
+        user:
+          name: "admin"
+          password: "admin"
+      # 访问路径前缀  登录访问： localhost:8088/admin/login 
+      boot:
+        admin:
+          context-path: /admin
+    ````
+* 2、服务端集成 logback-spring日志， 因为springboot 默认 是logback，所以只需要在配置文件配置日志文件输出 logging.file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log
+    * 问题整理：配置的时候启动 出现日志文件不能发现
+    * 注意 logback-spring.xml 配置文件中的我们用到springboot的配置特性 
+      <springProperty name="LOG_FILE" scope="context" source="logging.logPath" defaultValue="../logs/application/${APP_NAME}"/>
+      <fileNamePattern>${LOG_FILE}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+     一开始source是source="logging.file" 
+     那他就会直接拿我们yml配置logging.file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log 的属性值信息，进行组装日志文件的输出名称，会出现 D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log/qd-mall-uaaserver.log 的情况
+     如果之前已经生成了 这个日志文件 。启动就会报错 说 文件找不到，因为不能在文件中创建文件。如果之前没有日志文件 会新建一个日志文件 就这样.../qd-mall-uaaserver.log/qd-mall-uaaserver.log 很奇葩
+     所以 我们就source="logging.file"改成了source="logging.logPath" 我们让其使用默认值来创建日志文件即可。解决上述问题
+     
+* 3、服务端集成spring security
+   * 增加过滤器配置类 AdminActuatorSecurityConfig 并且指定优先级 值越小越优先， 要优先于资源服务器的配置。这个原由我们在 spring security oauth2的部分已经说过了。这里不再赘述。就是优先级和配置方式的问题
+   * 他的认证方式基于httpBasic 不走我们的同一认证。 所以登录admin后的相关url 都不会在走我们的认证校验
+   
+* 4、客户端配置
+    ````
+    # pom 依赖：
+     <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+   <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    # yml 配置，
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: '*'
+      endpoint:
+        health:
+          show-details: always
+    logging:
+      file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-messageserver/qd-mall-messageserver.log
+ 
+    @EnableDiscoveryClient 此服务发现注解 就可以让admin服务端发现所有注册在注册中心的服务作为客户端，无需其他配置了
+    ````
+
+
+
+
 #### LAST: 问题整理：
 
 * springboot整合mybatis-plus 过程中启动项目报错，mapper注入失败，主要是配置问题：
