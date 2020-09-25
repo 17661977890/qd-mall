@@ -45,7 +45,7 @@ qd-mall -- 父项目，公共依赖
 |  |-qd-mall-uaa -- spring-security-oauth2 统一认证与授权（既是认证服务器，又是资源服务器）、 集成了spring boot admin 服务端，基于微服务的端点监控admin ui界面--访问路径 http://192.168.9.1:8088/admin/login 密码配置文件中可更改admin admin
 ````
 
-## 技术栈列表
+## 后端技术栈列表
 
 技术|名称说明|地址
 ---|---|---
@@ -65,7 +65,7 @@ spring cloud alibaba|阿里巴巴基于 Spring Cloud 编程模型的微服务生
 nacos|spring cloud alibaba组件之一,一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。|[github](https://github.com/alibaba/nacos)、[官网](https://nacos.io/en-us/)
 rocketMq|spring cloud alibaba组件之一，一款开源的分布式消息系统|[github](https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/rocketmq-example/readme.md)
 alibaba oss|spring cloud alibaba组件之一，阿里云对象存储服务|[阿里云](https://www.aliyun.com/product/oss)
-alibaba sms|spring cloud alibaba组件之一，覆盖全球的短信服务/[阿里云](https://www.aliyun.com/product/sms)
+alibaba sms|spring cloud alibaba组件之一，覆盖全球的短信服务|[阿里云](https://www.aliyun.com/product/sms)
 mysql|关系型数据库|[官网](https://www.mysql.com/)
 HikariCP|数据库连接池（号称最快）|[github](https://github.com/brettwooldridge/HikariCP)
 druid|阿里的数据库连接池，主要用于监控|[github](https://github.com/alibaba/druid/)
@@ -85,12 +85,60 @@ OKHttp3|轻量级网络框架|[github](https://github.com/square/okhttp)
 httpclinet|支持 HTTP 协议的客户端编程工具包|[官网](http://hc.apache.org/httpclient-3.x/)
 lombok|java库，注解使代码简化|
 hutool|工具包|[官网](https://www.hutool.cn/)
+maven|项目构建管理工具|
 
 
+## 开发工具
+工具|地址
+---|---
+Intellij IDEA 项目开发工具|[download](https://www.jetbrains.com/idea/download)
+Xshell 免费授权版 终端连接工具| [download](https://www.netsarang.com/zh/xshell-download/)
+Postman 接口调试工具|[download](https://www.getpostman.com/downloads/)
+navicat 数据库连接工具|[download](http://www.navicat.com.cn/products)
+github 公共代码仓库|[download](https://github.com/)
+gitlab 私有代码仓库|[download](https://about.gitlab.com/install/#centos-7?version=ce)
+nexus maven 私服|[download](https://www.sonatype.com/nexus/repository-oss/download)
+vm 虚拟机|[官网](https://www.vmware.com/cn.html)
+阿里云ECS 云服务器节点|[阿里云](https://www.aliyun.com/product/ecs?spm=5176.12825654.eofdhaal5.2.e9392c4at81G8g)
+VS code 前端代码开发工具|[官网](https://code.visualstudio.com/)
 
 
+## 前端技术列表(vue001项目)
+技术|说明
+---|---
+vue|前端js框架，MVVM 模式的实现者
+vue cli|Vue 脚手架，基于 NodeJS
+vue router|Vue 路由框架
+vuex|Vue 全局状态管理框架
+axios|	前端 HTTP 通信框架
+element ui|	饿了么 UI 框架
+webpack|前端打包构建工具
+css|层叠样式表(网页样式编辑语言)
 
 
+## 已实现功能清单
+* 单点登录注册，统一认证相关
+
+|功能|完成度|
+|---|---|
+|账号密码登录| 完成✔|
+|手机短信验证码登录| 完成✔|
+|手机密码登录| 完成✔|
+|openId登录| 完成✔|
+|用户注册| 完成✔|
+|获取用户登录信息| 完成✔|
+|前端登出| 完成✔|
+|接口请求认证访问| 完成✔|
+
+* 系统管理
+
+功能|说明|完成度
+---|---|---
+用户管理| crud、角色分配、获取用户角色、权限分配、获取权限列表|10%
+角色管理| crud、获取角色权限、修改角色权限|
+菜单权限管理|crud、树形结构展示|
+
+* 其他管理模块还在规划中
 
 
 #### (一) mybatis-plus代码生成
