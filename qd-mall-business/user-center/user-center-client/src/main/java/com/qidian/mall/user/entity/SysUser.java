@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.central.base.mvc.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="SysUser对象", description="系统用户名")
-public class SysUser implements Serializable {
+public class SysUser extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,23 +56,12 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "类型")
     private String type;
 
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-
-    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "修改时间")
-    private Date updateTime;
 
     @ApiModelProperty(value = "公司")
     private String company;
 
     @ApiModelProperty(value = "open_id")
     private String openId;
-
-    @TableLogic
-    @ApiModelProperty(value = "删除标识")
-    private String deleteFlag;
 
     @ApiModelProperty(value = "用户注册来源ip")
     private String clientIp;

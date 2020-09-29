@@ -39,6 +39,11 @@ public class ConstantUtil {
 
     public static final String DELETE_FLAG_Y = "Y";
 
+    /**
+     * version初始值
+     */
+    public static final Integer INIT_VERSION = 1;
+
 
 
 

@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2020-01-10
  */
 @Slf4j
-@Api(tags = {"系统用户名web层"})
+@Api(tags = {"用户管理"})
 @RestController
 @RequestMapping("/sys-user")
 public class SysUserController extends BaseController {

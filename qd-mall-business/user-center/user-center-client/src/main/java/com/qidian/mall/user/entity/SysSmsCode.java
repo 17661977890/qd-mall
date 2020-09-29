@@ -1,18 +1,23 @@
 package com.qidian.mall.user.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.central.base.mvc.BaseEntity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 消息验证码实体
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "sys_sms_code")
-public class SysSmsCode {
+public class SysSmsCode extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1547201120616413158L;
     /**
      * 主键id
      */
@@ -102,31 +107,6 @@ public class SysSmsCode {
      */
     @TableField(value = "verify_message")
     private String verifyMessage;
-
-    /**
-     * 删除标识 Y、N
-     */
-    @TableLogic
-    @TableField(value = "delete_flag")
-    private String deleteFlag;
-
-    /**
-     * 乐观锁
-     */
-    @TableField(value = "version")
-    private Integer version;
-
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     public static final String COL_ID = "id";
 
