@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
@@ -108,8 +109,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Integer save(SysUserDTO record) {
         SysUser data = this.convertEntity(record);
+        data.setId(new IdWorker().nextId());
         data.setEnabled(ConstantUtil.DELETE_FLAG_Y);
         data.setType(UserTypeEnum.MERCHANT.getCode());
+
         //默认密码为123456
         data.setPassword(passwordEncoder.encode("123456"));
         return baseMapper.insert(data);
@@ -178,7 +181,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         Page<SysUser> page = new Page<>(pageNum,pageSize);
         // 查询条件
         QueryWrapper<SysUser> queryWrapper =  new QueryWrapper<>();
-        queryWrapper.setEntity(data);
+        queryWrapper.like(StringUtils.isNotEmpty(record.getNickname()),SysUser.COL_NICKNAME,record.getNickname())
+                .like(StringUtils.isNotEmpty(record.getUsername()),SysUser.COL_USERNAME,record.getUsername())
+                .like(StringUtils.isNotEmpty(record.getMobile()),SysUser.COL_MOBILE,record.getMobile()).eq(record.getSex()!=null,SysUser.COL_SEX, record.getSex());
+//        queryWrapper.setEntity(data);
         IPage<SysUser> list = baseMapper.selectPage(page, queryWrapper);
         IPage<SysUserVO> iPage = new Page<>();
         iPage.setRecords(this.convert(list.getRecords()));
