@@ -51,14 +51,14 @@ public interface ISysUserService extends IService<SysUser> {
     * @param id 主键
     * @return 影响记录数
     */
-    Integer deleteById(String id);
+    Integer deleteById(Long id);
 
     /**
     * 根据主键查询信息对象
     * @param id 主键
     * @return 信息对象
     */
-    SysUserVO selectById(String id);
+    SysUserVO selectById(Long id);
 
     /**
     * 根据条件查询信息对象

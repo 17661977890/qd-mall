@@ -108,7 +108,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Integer save(SysUserDTO record) {
         SysUser data = this.convertEntity(record);
-        data.setCreateTime(new Date());
+        data.setEnabled(ConstantUtil.DELETE_FLAG_Y);
+        data.setType(UserTypeEnum.MERCHANT.getCode());
+        //默认密码为123456
+        data.setPassword(passwordEncoder.encode("123456"));
         return baseMapper.insert(data);
     }
 
@@ -131,7 +134,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     * @return 影响记录数
     */
     @Override
-    public Integer deleteById(String id) {
+    public Integer deleteById(Long id) {
         return baseMapper.deleteById(id);
     }
 
@@ -141,7 +144,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     * @return 信息对象
     */
     @Override
-    public SysUserVO selectById(String id) {
+    public SysUserVO selectById(Long id) {
         SysUser data = baseMapper.selectById(id);
         SysUserVO vo = new SysUserVO();
         BeanUtils.copyProperties(data,vo);

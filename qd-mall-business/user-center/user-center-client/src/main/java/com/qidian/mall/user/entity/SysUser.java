@@ -51,6 +51,7 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * Y:启用 N：未启用
      */
+    @ApiModelProperty(value = "是否启用")
     private String enabled;
 
     @ApiModelProperty(value = "类型")
@@ -65,6 +66,9 @@ public class SysUser extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "用户注册来源ip")
     private String clientIp;
+
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
     public static final String COL_ID = "id";
 
@@ -98,6 +102,9 @@ public class SysUser extends BaseEntity implements Serializable {
     public static final String COL_CREATE_TIME = "create_time";
 
     public static final String COL_UPDATE_TIME = "update_time";
+
+    public static final String COL_EMAIL = "email";
+
 
 
 

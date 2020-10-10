@@ -1,11 +1,13 @@
 package com.qidian.mall.user.controller;
 
+import com.alibaba.nacos.client.utils.IPUtil;
 import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseController;
 import com.central.base.restparam.RestRequest;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.IpUtil;
 import com.qidian.mall.file.api.FileApi;
+import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.quartz.QuartzJobManager;
 import com.qidian.mall.user.quartz.TestQuartz;
 import com.qidian.mall.file.response.FileInfoDTO;
@@ -77,8 +79,9 @@ public class SysUserController extends BaseController {
     * @return 是否添加成功
     */
     @ApiOperation(value = "保存", notes = "保存数据到SysUser")
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse addSysUser(@RequestBody RestRequest<SysUserDTO> restRequest) {
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse addSysUser(@Validated(SysUserDTO.Add.class) @RequestBody RestRequest<SysUserDTO> restRequest, HttpServletRequest request) {
+        restRequest.getBody().setClientIp(IpUtil.getIpAddress(request));
         Integer result = sysUserService.save(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -89,8 +92,8 @@ public class SysUserController extends BaseController {
     * @return 是否更改成功
     */
     @ApiOperation(value = "更新数据", notes = "根据主键id更新SysUser数据")
-    @RequestMapping(value = "/updateById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse updateSysUserById(@RequestBody RestRequest<SysUserDTO> restRequest) {
+    @RequestMapping(value = "/updateUserById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse updateSysUserById(@Validated(SysUserDTO.Update.class) @RequestBody RestRequest<SysUserDTO> restRequest) {
         Integer result = sysUserService.updateById(restRequest.getBody());
         return new RestResponse().success(result);
     }
@@ -101,9 +104,9 @@ public class SysUserController extends BaseController {
     * @return 是否删除成功
     */
     @ApiOperation(value = "删除数据", notes = "根据主键id伪删除SysUser数据")
-    @RequestMapping(value = "/deleteById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse deleteSysUserById(@RequestBody RestRequest<String> restRequest) {
-        Integer result = sysUserService.deleteById(restRequest.getBody());
+    @RequestMapping(value = "/deleteUserById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse deleteSysUserById(@Validated(SysUserDTO.Id.class) @RequestBody RestRequest<SysUserDTO> restRequest) {
+        Integer result = sysUserService.deleteById(restRequest.getBody().getId());
         return new RestResponse().success(result);
     }
 
@@ -113,9 +116,9 @@ public class SysUserController extends BaseController {
     * @return 查询结果
     */
     @ApiOperation(value = "获取单条数据", notes = "根据主键id获取SysUser数据")
-    @RequestMapping(value = "/getById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse getSysUserById(@RequestBody RestRequest<String> restRequest) {
-        SysUserVO result = sysUserService.selectById(restRequest.getBody());
+    @RequestMapping(value = "/getUserInfoById", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse getSysUserById(@Validated(SysUserDTO.Id.class) @RequestBody RestRequest<SysUserDTO> restRequest) {
+        SysUserVO result = sysUserService.selectById(restRequest.getBody().getId());
         return new RestResponse().success(result);
     }
 
@@ -129,7 +132,6 @@ public class SysUserController extends BaseController {
     public RestResponse getSysUserAll(@RequestBody RestRequest<SysUserDTO> restRequest) throws InterruptedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication.getPrincipal());
-//        Thread.sleep(5000);
         log.info("查询系统用户入参：{}",restRequest);
         if(restRequest.getBody()==null){
             throw new BusinessException("102101",getMessage("102101"));

@@ -1,17 +1,18 @@
 package com.qidian.mall.user.request;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+
 
 /**
  * <p>
@@ -25,55 +26,44 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(value="SysUser对象", description="系统用户名")
-public class SysUserDTO extends Page implements Serializable {
+@ApiModel(value="SysUserDTO入参对象", description="系统用户")
+public class SysUserDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    public interface Add{}
+    public interface Update{}
+    public interface Id{}
 
+
+    @ApiModelProperty(value = "主键id")
+    @NotNull(message = "主键id不能为空",groups = {Update.class,Id.class})
+    private Long id;
+
+    @NotBlank(message = "用户名不能为空",groups = {Add.class,Update.class})
     @ApiModelProperty(value = "用户名")
     private String username;
 
-    @ApiModelProperty(value = "密码")
-    private String password;
-
+    @NotBlank(message = "昵称不能为空",groups = {Add.class,Update.class})
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
-    @ApiModelProperty(value = "头像")
-    private String headImgUrl;
-
+    @NotBlank(message = "手机号不能为空",groups = {Add.class,Update.class})
     @ApiModelProperty(value = "手机号")
     private String mobile;
 
+    @NotNull(message = "性别不能为空",groups = {Add.class,Update.class})
+    @Range(min = 0,max = 1,message = "性别只能使用1：男，0：女 标识",groups = {Add.class,Update.class})
     @ApiModelProperty(value = "性别")
     private Integer sex;
 
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "类型")
-    private String type;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-
-    @ApiModelProperty(value = "修改时间")
-    private Date updateTime;
-
-    @ApiModelProperty(value = "公司")
-    private String company;
-
-    @ApiModelProperty(value = "open_id")
-    private String openId;
-
-    @ApiModelProperty(value = "删除标识")
-    private Boolean deleteFlag;
-
     @ApiModelProperty(value = "用户注册来源ip")
-    private Boolean clientIp;
+    private String clientIp;
+
+    @Email
+    @NotBlank(message = "邮箱不能为空",groups = {Add.class,Update.class})
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
 
 }

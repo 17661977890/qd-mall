@@ -29,7 +29,7 @@ public class SysUserVO implements Serializable {
 
     @ApiModelProperty(value = "主键id")
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty(value = "用户名")
     private String username;
@@ -71,6 +71,9 @@ public class SysUserVO implements Serializable {
 
     @ApiModelProperty(value = "用户注册来源ip")
     private Boolean clientIp;
+
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
 
 }
