@@ -181,7 +181,33 @@ css|层叠样式表(网页样式编辑语言)
           "body": 1
       }
      ````
-
+* 其他MP 功能： 分页插件、逻辑删除、乐观锁（未使用）
+    * 配置均在qd-mall-db-config 模块 和各业务模块 yml文件
+    ````
+      mybatis-plus:
+        mapper-locations: classpath:/mapper/*Mapper.xml
+        type-aliases-package: com.qidain.mall.user.entity
+        global-config:
+          db-config:
+            #驼峰下划线转换
+            column-underline: true
+            #逻辑删除配置
+            logic-delete-field: deleteFlag  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+            logic-delete-value: 'Y' # 逻辑已删除值(默认为 1)
+            logic-not-delete-value: 'N' # 逻辑未删除值(默认为 0)
+    ````
+  * 关于逻辑删除不能自动填充更新字段的问题解决：
+     *  使用选装件 LogicDeleteByIdWithFill (自行实现mp的sql注入器)
+     *  mapper 添加方法：int deleteByIdWithFill(T entity);
+     *  需要逻辑删除，同时更新其他字段，其他字段需要添加注解   @TableField(value = "update_user",fill = FieldFill.UPDATE)
+    ````
+    SysRole role = new SysRole();
+    role.setId(id);
+    updateCommonField(role,username);
+    int result = sysRoleMapper.deleteByIdWithFill(role);
+    
+    生成sql ：UPDATE sys_role SET update_time=?,update_user=?,delete_flag='Y' WHERE id=? AND delete_flag='N'
+    ````
 #### （二） swagger 接口文档规范使用：
 
 * 启本地动模块项目后，访问默认地址（每个模块端口修调整）：http://localhost:9002/swagger-ui.html#/

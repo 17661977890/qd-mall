@@ -91,13 +91,21 @@ public class SysRoleServiceImpl extends BaseServiceImpl implements ISysRoleServi
         return result;
     }
 
+    /**
+     * 关于逻辑删除不能自动填充更新字段的问题解决：
+     *  LogicDeleteByIdWithFill 使用选装件
+     *  mapper 添加方法：int deleteByIdWithFill(T entity);
+     *  需要逻辑删除，同事更新其他字段，其他字段需要添加注解   @TableField(value = "update_user",fill = FieldFill.UPDATE)
+     * @param id
+     * @param username
+     * @return
+     */
     @Override
     public Integer deleteById(Long id, String username) {
         SysRole role = new SysRole();
         role.setId(id);
-        role.setDeleteFlag(ConstantUtil.DELETE_FLAG_Y);
         updateCommonField(role,username);
-        int result = sysRoleMapper.updateById(role);
+        int result = sysRoleMapper.deleteByIdWithFill(role);
         log.info("logic delete role error result:{}",result);
         if(result!=1){
             throw new BusinessException("102404",getMessage("102404"));

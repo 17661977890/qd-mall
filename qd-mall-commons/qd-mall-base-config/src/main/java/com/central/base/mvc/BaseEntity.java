@@ -35,7 +35,7 @@ public class BaseEntity {
     /**
      * 修改人
      */
-    @TableField(value = "update_user")
+    @TableField(value = "update_user",fill = FieldFill.UPDATE)
     private String updateUser;
 
     /**
