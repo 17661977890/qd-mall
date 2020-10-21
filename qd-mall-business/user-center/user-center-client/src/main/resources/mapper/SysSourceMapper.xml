@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qidian.mall.user.mapper.SysSourceMapper">
+  <resultMap id="BaseResultMap" type="com.qidian.mall.user.entity.SysSource">
+    <!--@mbg.generated-->
+    <!--@Table sys_source-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="source_name" jdbcType="VARCHAR" property="sourceName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+    <result column="source_type" jdbcType="INTEGER" property="sourceType" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="show_flag" jdbcType="CHAR" property="showFlag" />
+    <result column="delete_flag" jdbcType="CHAR" property="deleteFlag" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, source_name, parent_id, parent_name, source_type, url, sort, show_flag, delete_flag, 
+    version, create_user, create_time, update_user, update_time
+  </sql>
+</mapper>

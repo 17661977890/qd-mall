@@ -135,7 +135,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl implements ISysRoleServi
     public List<SysRoleVo> selectAll(SysRoleDTO sysRoleDTO) {
         List<SysRole> sysRoleList = sysRoleMapper.selectList(new QueryWrapper<SysRole>()
                 .eq(StringUtils.isNotEmpty(sysRoleDTO.getRoleCode()),SysRole.COL_ROLE_CODE,sysRoleDTO.getRoleCode())
-                .eq(StringUtils.isNotEmpty(sysRoleDTO.getRoleCode()),SysRole.COL_ROLE_NAME,sysRoleDTO.getRoleName()));
+                .eq(StringUtils.isNotEmpty(sysRoleDTO.getRoleName()),SysRole.COL_ROLE_NAME,sysRoleDTO.getRoleName()));
         List<SysRoleVo> list = new ArrayList<>();
         for (SysRole sysRole:sysRoleList) {
             SysRoleVo sysRoleVo = new SysRoleVo();
