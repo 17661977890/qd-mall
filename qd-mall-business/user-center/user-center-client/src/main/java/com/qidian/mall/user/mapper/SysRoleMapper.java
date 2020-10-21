@@ -3,6 +3,8 @@ package com.qidian.mall.user.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qidian.mall.user.entity.SysRole;
 
+import java.util.List;
+
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
@@ -11,4 +13,12 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @return
      */
     int deleteByIdWithFill(SysRole entity);
+
+
+    /**
+     * 根据用户id 获取角色列表
+     * @param userId
+     * @return
+     */
+    List<SysRole> getRoleByUserId(Long userId);
 }

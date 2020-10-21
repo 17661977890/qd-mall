@@ -19,4 +19,16 @@
     id, role_code, role_name, create_time, update_time, create_user, update_user, delete_flag, 
     version
   </sql>
+
+  <sql id="select_cloumn_list">
+    t.id,t.role_code,t.role_name,t.create_time,t.update_time,t.create_user,t.update_user,t.delete_flag,t.version
+  </sql>
+
+    <select id="getRoleByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+      select <include refid="select_cloumn_list"/>
+      from sys_role t
+      left join sys_user_role ur on t.id = ur.role_id
+      left join sys_user u on ur.user_id = u.id
+      where u.id = #{userId} and t.delete_flag='N' and u.delete_flag='N'
+    </select>
 </mapper>
