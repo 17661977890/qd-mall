@@ -65,6 +65,13 @@ public class SysSource extends BaseEntity {
     @TableField(value = "show_flag")
     private String showFlag;
 
+    /**
+     *  是不是父亲节点 --------- 目录和菜单都是父节点  按钮 是最底层节点 所以不是
+     *  Y N
+     */
+    @TableField(value = "is_parent")
+    private String isParent;
+
 
     public static final String COL_ID = "id";
 
@@ -93,4 +100,6 @@ public class SysSource extends BaseEntity {
     public static final String COL_UPDATE_USER = "update_user";
 
     public static final String COL_UPDATE_TIME = "update_time";
+
+    public static final String COL_IS_PARENT = "is_parent";
 }

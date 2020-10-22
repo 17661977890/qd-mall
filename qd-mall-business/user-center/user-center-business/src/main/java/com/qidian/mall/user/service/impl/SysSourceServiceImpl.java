@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.base.exception.BusinessException;
 import com.central.base.mvc.BaseServiceImpl;
+import com.central.base.util.ConstantUtil;
 import com.central.base.util.IdWorker;
 import com.qidian.mall.user.entity.SysSource;
 import com.qidian.mall.user.entity.SysUser;
+import com.qidian.mall.user.enums.SourceTypeEnum;
 import com.qidian.mall.user.mapper.SysSourceMapper;
 import com.qidian.mall.user.request.SysSourceDTO;
 import com.qidian.mall.user.response.SysSourceTreeVo;
@@ -56,6 +58,11 @@ public class SysSourceServiceImpl extends BaseServiceImpl implements ISysSourceS
         if(sysSourceDTO.getParentId()==null){
             newSource.setParentId(0L);
         }
+        if(SourceTypeEnum.CATALOG.getCode().equals(sysSourceDTO.getSourceType()) || SourceTypeEnum.MENU.getCode().equals(sysSourceDTO.getSourceType())){
+            newSource.setIsParent(ConstantUtil.DELETE_FLAG_Y);
+        }else {
+            newSource.setIsParent(ConstantUtil.DELETE_FLAG_N);
+        }
         addCommonField(newSource,username);
         int result = sysSourceMapper.insert(newSource);
         log.info("add new Source error result:{}",result);
@@ -81,6 +88,11 @@ public class SysSourceServiceImpl extends BaseServiceImpl implements ISysSourceS
         }
         SysSource Source = new SysSource();
         BeanUtils.copyProperties(sysSourceDTO,Source);
+        if(SourceTypeEnum.CATALOG.getCode().equals(sysSourceDTO.getSourceType()) || SourceTypeEnum.MENU.getCode().equals(sysSourceDTO.getSourceType())){
+            Source.setIsParent(ConstantUtil.DELETE_FLAG_Y);
+        }else {
+            Source.setIsParent(ConstantUtil.DELETE_FLAG_N);
+        }
         updateCommonField(Source,username);
         int result = sysSourceMapper.updateById(Source);
         log.info("update Source error result:{}",result);
@@ -134,7 +146,7 @@ public class SysSourceServiceImpl extends BaseServiceImpl implements ISysSourceS
     public List<Object> getTreeList(SysSourceDTO sysSourceDTO) {
         List<SysSource> sysSourceList = sysSourceMapper.selectList(new QueryWrapper<SysSource>()
                 .eq(sysSourceDTO.getSourceType()!=null,SysSource.COL_SOURCE_TYPE,sysSourceDTO.getSourceType())
-                .eq(StringUtils.isNotEmpty(sysSourceDTO.getSourceName()),SysSource.COL_SOURCE_NAME,sysSourceDTO.getSourceName()));
+                .like(StringUtils.isNotEmpty(sysSourceDTO.getSourceName()),SysSource.COL_SOURCE_NAME,sysSourceDTO.getSourceName()));
         List<SysSourceTreeVo> list = new ArrayList<>();
         for (SysSource sysSource:sysSourceList) {
             SysSourceTreeVo sysSourceTreeVo = new SysSourceTreeVo();
