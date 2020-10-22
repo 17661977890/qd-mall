@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qidian.mall.user.mapper.SysRoleSourceMapper">
+  <resultMap id="BaseResultMap" type="com.qidian.mall.user.entity.SysRoleSource">
+    <!--@mbg.generated-->
+    <!--@Table sys_role_source-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="source_id" jdbcType="INTEGER" property="sourceId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, role_id, source_id
+  </sql>
+
+
+
+  <!--批量新增用户角色关系-->
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into sys_role_source (id,role_id,source_id)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id}, #{item.roleId}, #{item.sourceId})
+    </foreach>
+  </insert>
+
+
+</mapper>

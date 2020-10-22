@@ -31,7 +31,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Slf4j
 @Service
-public class SysUserRoleService extends BaseServiceImpl implements ISysUserRoleService {
+public class SysUserRoleServiceImpl extends BaseServiceImpl implements ISysUserRoleService {
 
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
