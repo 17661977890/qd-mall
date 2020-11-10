@@ -6,28 +6,51 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="qd-mall-base-config" />
+        <module name="qd-mall-gateway" />
+        <module name="qd-mall-uaa" />
+        <module name="file-business" />
         <module name="user-center-client" />
+        <module name="qd-mall-base-config" />
+        <module name="search-business" />
+        <module name="qd-mall-feign-config" />
         <module name="user-center-business" />
         <module name="qd-mall-swagger2-config" />
-        <module name="qd-mall-log-config" />
-        <module name="qd-mall-db-config" />
-        <module name="qd-mall-codegenerator" />
         <module name="qd-mall-redis-config" />
-        <module name="qd-mall-uaa" />
+        <module name="message-client" />
+        <module name="qd-mall-auth-config" />
+        <module name="qd-mall-db-config" />
+        <module name="qd-mall-log-config" />
+        <module name="file-client" />
+        <module name="search-client" />
+        <module name="qd-mall-quartz-config" />
+        <module name="qd-mall-codegenerator" />
+        <module name="message-business" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
+      <module name="file-business" target="1.8" />
+      <module name="file-client" target="1.8" />
+      <module name="message-business" target="1.8" />
+      <module name="message-client" target="1.8" />
       <module name="qd-mall" target="1.8" />
+      <module name="qd-mall-auth-config" target="1.8" />
       <module name="qd-mall-base-config" target="1.8" />
       <module name="qd-mall-business" target="1.8" />
       <module name="qd-mall-codegenerator" target="1.8" />
       <module name="qd-mall-commons" target="1.8" />
       <module name="qd-mall-db-config" target="1.8" />
+      <module name="qd-mall-feign-config" target="1.8" />
+      <module name="qd-mall-fileserver" target="1.8" />
+      <module name="qd-mall-gateway" target="1.8" />
       <module name="qd-mall-log-config" target="1.8" />
+      <module name="qd-mall-message" target="1.8" />
+      <module name="qd-mall-quartz-config" target="1.8" />
       <module name="qd-mall-redis-config" target="1.8" />
+      <module name="qd-mall-search" target="1.8" />
       <module name="qd-mall-swagger2-config" target="1.8" />
       <module name="qd-mall-uaa" target="1.8" />
+      <module name="search-business" target="1.8" />
+      <module name="search-client" target="1.8" />
       <module name="user-center" target="1.8" />
       <module name="user-center-business" target="1.8" />
       <module name="user-center-client" target="1.8" />

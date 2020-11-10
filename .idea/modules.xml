@@ -2,16 +2,29 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-fileserver/file-business/file-business.iml" filepath="$PROJECT_DIR$/qd-mall-fileserver/file-business/file-business.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-fileserver/file-client/file-client.iml" filepath="$PROJECT_DIR$/qd-mall-fileserver/file-client/file-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-message/message-business/message-business.iml" filepath="$PROJECT_DIR$/qd-mall-message/message-business/message-business.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-message/message-client/message-client.iml" filepath="$PROJECT_DIR$/qd-mall-message/message-client/message-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall.iml" filepath="$PROJECT_DIR$/qd-mall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-auth-config/qd-mall-auth-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-auth-config/qd-mall-auth-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-base-config/qd-mall-base-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-base-config/qd-mall-base-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-business/qd-mall-business.iml" filepath="$PROJECT_DIR$/qd-mall-business/qd-mall-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-codegenerator/qd-mall-codegenerator.iml" filepath="$PROJECT_DIR$/qd-mall-codegenerator/qd-mall-codegenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-commons.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-db-config/qd-mall-db-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-db-config/qd-mall-db-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-feign-config/qd-mall-feign-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-feign-config/qd-mall-feign-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-fileserver/qd-mall-fileserver.iml" filepath="$PROJECT_DIR$/qd-mall-fileserver/qd-mall-fileserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-gateway/qd-mall-gateway.iml" filepath="$PROJECT_DIR$/qd-mall-gateway/qd-mall-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-log-config/qd-mall-log-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-log-config/qd-mall-log-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-message/qd-mall-message.iml" filepath="$PROJECT_DIR$/qd-mall-message/qd-mall-message.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-quartz-config/qd-mall-quartz-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-quartz-config/qd-mall-quartz-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-redis-config/qd-mall-redis-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-redis-config/qd-mall-redis-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-search/qd-mall-search.iml" filepath="$PROJECT_DIR$/qd-mall-search/qd-mall-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-commons/qd-mall-swagger2-config/qd-mall-swagger2-config.iml" filepath="$PROJECT_DIR$/qd-mall-commons/qd-mall-swagger2-config/qd-mall-swagger2-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-uaa/qd-mall-uaa.iml" filepath="$PROJECT_DIR$/qd-mall-uaa/qd-mall-uaa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-search/search-business/search-business.iml" filepath="$PROJECT_DIR$/qd-mall-search/search-business/search-business.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qd-mall-search/search-client/search-client.iml" filepath="$PROJECT_DIR$/qd-mall-search/search-client/search-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-business/user-center/user-center.iml" filepath="$PROJECT_DIR$/qd-mall-business/user-center/user-center.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-business/user-center/user-center-business/user-center-business.iml" filepath="$PROJECT_DIR$/qd-mall-business/user-center/user-center-business/user-center-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/qd-mall-business/user-center/user-center-client/user-center-client.iml" filepath="$PROJECT_DIR$/qd-mall-business/user-center/user-center-client/user-center-client.iml" />
