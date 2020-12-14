@@ -868,6 +868,7 @@ css|层叠样式表(网页样式编辑语言)
         
 * 关于feign接口的请求问题：
     * 默认不支持文件上传和表单请求。https://www.cnblogs.com/yangzhilong/p/11714620.html
+    * 对于get delete 请求方式方式， feign不支持requestbody方式入参，支持Map入参 所以在spring cloud 2.1版本以后可以是使用使用@springQueryMap注解 在入参实体前面可以解决。 postman测试则使用form-data表单传参即可
 
 ### （十一）hystrix 熔断机制详解： ---- 后期优化 sentinel代替
 * 隔离策略：https://www.jianshu.com/p/b8d21248c9b1、https://www.jianshu.com/p/dc0410558fc9

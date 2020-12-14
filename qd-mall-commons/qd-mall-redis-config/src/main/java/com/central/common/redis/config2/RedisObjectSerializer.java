@@ -1,4 +1,4 @@
-package com.central.common.redis.util;
+package com.central.common.redis.config2;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.serializer.support.DeserializingConverter;

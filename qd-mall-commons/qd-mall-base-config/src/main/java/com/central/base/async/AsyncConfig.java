@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
  * @author bin
  * @EnableAsync :开启异步支持
  */
-@Configuration
+//@Configuration
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 

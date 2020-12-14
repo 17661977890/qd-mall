@@ -4,7 +4,7 @@ spring:
   redis:
     database: 0
     # Redis服务器地址
-    host: localhost
+    host: 127.0.0.1
       # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
@@ -24,7 +24,7 @@ spring:
       pool:
         max-active: 100
         max-wait: 10000
-        min-idle: 0
+        min-idle: 6
         max-idle: 30
     # 连接超时时间（毫秒）
     timeout: 10000

@@ -36,7 +36,7 @@ import java.util.Map;
  * @author bin
  * @date 2020-02-19
  */
-@Component
+//@Component
 public class HttpClientHelper {
 	
 	private Logger LOGGER = LoggerFactory.getLogger(HttpClientHelper.class);

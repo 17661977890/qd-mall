@@ -1,4 +1,4 @@
-package com.central.base.redis;
+package com.central.common.redis.config1;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @date   2018年6月6日
  *
  */
-@Configuration
+//@Configuration
 public class RedisTemplateConfig {
 
     @Bean("redisTemplate1")

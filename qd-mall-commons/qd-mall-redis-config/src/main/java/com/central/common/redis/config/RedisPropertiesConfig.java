@@ -8,8 +8,8 @@ import org.springframework.context.annotation.PropertySource;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
  
-@Configuration
-@PropertySource("classpath:application-redis.yml")
+//@Configuration
+//@PropertySource("classpath:application-redis.yml")
 @Slf4j
 public class RedisPropertiesConfig {
  
@@ -48,5 +48,8 @@ public class RedisPropertiesConfig {
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
         return jedisPool;
     }
+
+
+
  
 }

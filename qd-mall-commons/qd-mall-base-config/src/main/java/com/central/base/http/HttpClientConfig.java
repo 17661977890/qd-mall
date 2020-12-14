@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @Author bin
  * @Date 2020-02-19
  */
-@Configuration
+//@Configuration
 public class HttpClientConfig {
  
     @Value("${http.maxTotal}")

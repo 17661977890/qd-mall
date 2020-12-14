@@ -1,4 +1,4 @@
-package com.central.common.redis.util;
+package com.central.common.redis.config;
  
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,11 +23,11 @@ import javax.annotation.Resource;
  * springboot 整合jedis pool 的工具类
  * 对应redis的五大基本类型的大部分命令 ,剩余的3个特殊数据类型 也可以通过jedis 获取相关方法。
  */
-@Component
+//@Component
 @Slf4j
 public class RedisJedisUtil {
  
-	@Resource
+	@Autowired
 	private JedisPool jedisPool;
  
 	/**

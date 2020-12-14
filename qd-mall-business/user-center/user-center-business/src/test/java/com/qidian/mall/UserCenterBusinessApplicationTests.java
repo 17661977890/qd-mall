@@ -3,21 +3,28 @@ package com.qidian.mall;
 import com.central.base.exception.BusinessException;
 import com.central.base.restparam.RestResponse;
 import com.central.base.util.ConstantUtil;
+import com.central.common.redis.config1.RedisUtil;
+import com.central.common.redis.config2.RedisRepository;
+import com.central.common.redis.lock.RedisDistributedLock;
 import com.qidian.mall.message.api.AliyunSmsApi;
 import com.qidian.mall.message.request.SendSmsDTO;
 import com.qidian.mall.message.response.SendSmsVo;
 import com.qidian.mall.user.UserCenterBusinessApplication;
 import com.qidian.mall.user.api.SysUserApi;
-import com.qidian.mall.user.entity.CustomUserDetails;
 import com.qidian.mall.user.quartz.QuartzJobManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.jasypt.encryption.StringEncryptor;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -110,6 +117,63 @@ public class UserCenterBusinessApplicationTests {
         }
         return changeWords.toString();
     }
+
+
+    @Autowired
+    private com.central.common.redis.config1.RedisUtil RedisUtil;
+
+    @Test
+    public void testRedis() throws InterruptedException {
+        int count =3;
+        CountDownLatch countDownLatch = new CountDownLatch(count);
+        for (int i = 0; i <count ; i++) {
+            new Thread(() -> {
+                countDownLatch.countDown();
+                task();
+            }).start();
+        }
+        countDownLatch.await();
+
+    }
+
+    @Autowired
+    private RedisDistributedLock redisDistributedLock;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    private void task(){
+        RLock rLock = redissonClient.getLock("lock_key"+System.currentTimeMillis());
+        try {
+
+            rLock.lock(20, TimeUnit.SECONDS);
+            if(rLock.isLocked()){
+                int count =(Integer) RedisUtil.get("stock");
+                String result ="";
+                if(count>0){
+                    count--;
+                    result ="扣减库存，剩余库存数量："+count;
+                    RedisUtil.set("stock",count);
+                    log.info(Thread.currentThread().getName()+"======>result:{}",result);
+                }else {
+                    result="库存不足";
+                    log.info(Thread.currentThread().getName()+"======>result:{}",result);
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            rLock.unlock();
+        }
+
+
+    }
+    @Test
+    public void test2(){
+        System.out.println(RedisUtil.get("stock"));
+    }
+
 
 
 }

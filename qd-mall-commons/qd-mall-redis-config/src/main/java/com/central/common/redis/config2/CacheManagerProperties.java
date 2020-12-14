@@ -1,4 +1,4 @@
-package com.central.common.redis.properties;
+package com.central.common.redis.config2;
 
 import lombok.Getter;
 import lombok.Setter;

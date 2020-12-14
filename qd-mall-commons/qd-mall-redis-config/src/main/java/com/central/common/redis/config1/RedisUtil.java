@@ -1,4 +1,4 @@
-package com.central.base.util;
+package com.central.common.redis.config1;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ public final class RedisUtil {
      *  todo 所以  @Qualifier("redisTemplate1")使用此注解显式的指向 base的配置
      */
     @Autowired
-    @Qualifier("redisTemplate1")
+    @Qualifier("redisTemplate2")
     private RedisTemplate<String, Object> redisTemplate;
     // =============================common============================
     /**
