@@ -26,7 +26,7 @@ public final class RedisUtil {
      *  todo 所以  @Qualifier("redisTemplate1")使用此注解显式的指向 base的配置
      */
     @Autowired
-    @Qualifier("redisTemplate2")
+    @Qualifier("redisTemplate3")
     private RedisTemplate<String, Object> redisTemplate;
     // =============================common============================
     /**

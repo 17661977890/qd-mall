@@ -24,7 +24,7 @@ import java.util.UUID;
 @Component
 public class RedisDistributedLock extends AbstractDistributedLock {
 
-    @Qualifier("redisTemplate2")
+    @Qualifier("redisTemplate3")
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 

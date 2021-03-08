@@ -29,53 +29,45 @@ import java.util.Map;
  * @author mall
  * @date 2018/11/6 11:02
  */
-@ConditionalOnClass(RedisRepository.class)
-@EnableConfigurationProperties({RedisProperties.class, CacheManagerProperties.class})
-@EnableCaching
+//@ConditionalOnClass(RedisRepository.class)
+//@EnableConfigurationProperties({RedisProperties.class, CacheManagerProperties.class})
+//@EnableCaching
 public class RedisAutoConfigure {
-    @Autowired
-    private CacheManagerProperties cacheManagerProperties;
+//    @Autowired
+//    private CacheManagerProperties cacheManagerProperties;
 
     /**
      * RedisTemplate配置
      * @param factory
      */
-    @Bean("redisTemplate2")
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(factory);
+//    @Bean("redisTemplate2")
+//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
 //
-//        RedisSerializer stringSerializer = new StringRedisSerializer();
-//        RedisSerializer redisObjectSerializer = new RedisObjectSerializer();
-//        redisTemplate.setKeySerializer(stringSerializer);
-//        redisTemplate.setHashKeySerializer(stringSerializer);
-//        redisTemplate.setValueSerializer(redisObjectSerializer);
-//        redisTemplate.afterPropertiesSet();
 
-        // 为了开发方便，我们覆盖底层的object泛型为string
-        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-        template.setConnectionFactory(factory);
-        // jackson序列化配置、转义
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-        // string序列化
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+//        // 为了开发方便，我们覆盖底层的object泛型为string
+//        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+//        template.setConnectionFactory(factory);
+//        // jackson序列化配置、转义
+//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//        ObjectMapper om = new ObjectMapper();
+//        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+//        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//        jackson2JsonRedisSerializer.setObjectMapper(om);
+//        // string序列化
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
         // key采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        // value序列化方式采用jackson
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        // hash的value序列化方式采用jackson
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        template.afterPropertiesSet();
-        return template;
+//        template.setKeySerializer(stringRedisSerializer);
+//        // hash的key也采用String的序列化方式
+//        template.setHashKeySerializer(stringRedisSerializer);
+//        // value序列化方式采用jackson
+//        template.setValueSerializer(jackson2JsonRedisSerializer);
+//        // hash的value序列化方式采用jackson
+//        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+//        template.afterPropertiesSet();
+//        return template;
 
-    }
+//    }
 
     /**
      * Redis repository redis repository.
@@ -89,45 +81,45 @@ public class RedisAutoConfigure {
 //        return new RedisRepository(redisTemplate2);
 //    }
 
-    @Bean(name = "cacheManager")
-    @Primary
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration difConf = getDefConf().entryTtl(Duration.ofHours(1));
-
-        //自定义的缓存过期时间配置
-        int configSize = cacheManagerProperties.getConfigs() == null ? 0 : cacheManagerProperties.getConfigs().size();
-        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(configSize);
-        if (configSize > 0) {
-            cacheManagerProperties.getConfigs().forEach(e -> {
-                RedisCacheConfiguration conf = getDefConf().entryTtl(Duration.ofSeconds(e.getSecond()));
-                redisCacheConfigurationMap.put(e.getKey(), conf);
-            });
-        }
-
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(difConf)
-                .withInitialCacheConfigurations(redisCacheConfigurationMap)
-                .build();
-    }
-
-    @Bean
-    public KeyGenerator keyGenerator() {
-        return (target, method, objects) -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(target.getClass().getName());
-            sb.append(":" + method.getName() + ":");
-            for (Object obj : objects) {
-                sb.append(obj.toString());
-            }
-            return sb.toString();
-        };
-    }
-
-    private RedisCacheConfiguration getDefConf() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .disableCachingNullValues()
-                .computePrefixWith(cacheName -> "cache".concat(":").concat(cacheName).concat(":"))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new RedisObjectSerializer()));
-    }
+//    @Bean(name = "cacheManager")
+//    @Primary
+//    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+//        RedisCacheConfiguration difConf = getDefConf().entryTtl(Duration.ofHours(1));
+//
+//        //自定义的缓存过期时间配置
+//        int configSize = cacheManagerProperties.getConfigs() == null ? 0 : cacheManagerProperties.getConfigs().size();
+//        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(configSize);
+//        if (configSize > 0) {
+//            cacheManagerProperties.getConfigs().forEach(e -> {
+//                RedisCacheConfiguration conf = getDefConf().entryTtl(Duration.ofSeconds(e.getSecond()));
+//                redisCacheConfigurationMap.put(e.getKey(), conf);
+//            });
+//        }
+//
+//        return RedisCacheManager.builder(redisConnectionFactory)
+//                .cacheDefaults(difConf)
+//                .withInitialCacheConfigurations(redisCacheConfigurationMap)
+//                .build();
+//    }
+//
+//    @Bean
+//    public KeyGenerator keyGenerator() {
+//        return (target, method, objects) -> {
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(target.getClass().getName());
+//            sb.append(":" + method.getName() + ":");
+//            for (Object obj : objects) {
+//                sb.append(obj.toString());
+//            }
+//            return sb.toString();
+//        };
+//    }
+//
+//    private RedisCacheConfiguration getDefConf() {
+//        return RedisCacheConfiguration.defaultCacheConfig()
+//                .disableCachingNullValues()
+//                .computePrefixWith(cacheName -> "cache".concat(":").concat(cacheName).concat(":"))
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new RedisObjectSerializer()));
+//    }
 }
