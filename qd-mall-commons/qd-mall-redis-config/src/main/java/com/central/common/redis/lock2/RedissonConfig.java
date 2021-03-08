@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * redisson 配置类
  */
-@Configuration
+//@Configuration
 public class RedissonConfig {
 
     @Value("${spring.redis.host}")

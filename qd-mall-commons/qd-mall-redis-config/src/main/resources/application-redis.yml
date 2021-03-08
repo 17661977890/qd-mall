@@ -3,12 +3,49 @@
 spring:
   redis:
     database: 0
-    # Redis服务器地址
-    host: 127.0.0.1
-      # Redis服务器连接端口
     port: 6379
-    # Redis服务器连接密码（默认为空）
+    host: 127.0.0.1
     password:
+    #redis 部署模式 哨兵：sentinel 集群：cluster 单节点：single(默认单机)
+    mode: single
+    timeout: 10000
+    # 自动释放分布式锁的时间 单位 s
+    autoReleaseLockTime: 20
+    # 连接池配置
+    pool:
+      maxActive: 100
+      maxWait: 10000
+      minIdle: 1
+      maxIdle: 30
+      soTimeout: 10000
+      connTimeout: 10000
+      size: 100
+    # 集群模式:(nodes 后配置 ip:port,ip:port,...)
+    cluster:
+      nodes: 192.168.50.55:6379,192.168.60.101:6379
+      scanInterval: 1000
+      readMode: SLAVE
+      retryAttempts: 3
+      slaveConnectionPoolSize: 64
+      masterConnectionPoolSize: 64
+      retryInterval: 1500
+      # 最大重定向次数
+      maxRedirects: 6
+    #哨兵配置:(nodes 后配置 ip:port,ip:port,...)
+    sentinel:
+      master: business-master
+      nodes: 192.168.50.55:6379,192.168.60.101:6379
+      masterOnlyWrite: true
+      failMax: 3
+#spring:
+#  redis:
+#    database: 0
+#    # Redis服务器地址
+#    host: 127.0.0.1
+#      # Redis服务器连接端口
+#    port: 6379
+#    # Redis服务器连接密码（默认为空）
+#    password:
     # jedis连接池 --- springboot版本2.x 已经替换底层jedis为lettuce 所以不推荐使用jedis pool（有时候不生效，有的springboot版本源码很多类不存在） 我们使用lettuce pool
 #    jedis:
 #      pool:
@@ -20,13 +57,13 @@ spring:
 #        max-idle: 200
 #        # 连接池中的最小空闲连接
 #        min-idle: 0
-    lettuce:
-      pool:
-        max-active: 100
-        max-wait: 10000
-        min-idle: 6
-        max-idle: 30
-    # 连接超时时间（毫秒）
-    timeout: 10000
+#    lettuce:
+#      pool:
+#        max-active: 100
+#        max-wait: 10000
+#        min-idle: 6
+#        max-idle: 30
+#    # 连接超时时间（毫秒）
+#    timeout: 10000
     #redis配置结束
 #    block-when-exhausted: true

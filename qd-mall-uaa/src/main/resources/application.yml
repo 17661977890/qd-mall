@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: base
+    include: base,redis
   jackson.date-format: yyyy-MM-dd HH:mm:ss
   jackson.time-zone: GMT+8
   datasource:
@@ -9,18 +9,18 @@ spring:
     password: root
     driverClassName: com.mysql.jdbc.Driver
   # 本地mac redis 没有密码，公司本地 123456
-  redis:
-    database: 0
-    host: 127.0.0.1
-    password: 123456
-    timeout: 5000
-    jedis:
-      pool:
-        max-active: 8
-        min-idle: 0
-        max-wait: -1
-        max-idle: 8
-    port: 6379
+#  redis:
+#    database: 0
+#    host: 127.0.0.1
+#    password: 123456
+#    timeout: 5000
+#    jedis:
+#      pool:
+#        max-active: 8
+#        min-idle: 0
+#        max-wait: -1
+#        max-idle: 8
+#    port: 6379
   thymeleaf:
     prefix: classpath:/static/
 # 配置token 的存储配置方式 jwt
