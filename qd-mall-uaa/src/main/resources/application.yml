@@ -113,6 +113,7 @@ management:
   endpoint:
     health:
       show-details: always
-# admin 控制台日志线上查看需配置
+# admin 控制台日志线上查看需配置(如果不配置 springboot admin 的日志模块不会显示日志文件和实时日志，此处配置和logback-spring中保持一致)
 logging:
-  file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-uaaserver/qd-mall-uaaserver.log
+  file: /Users/minyoung/sunbin/logs/qd-mall-uaaserver/qd-mall-uaaserver.log
+  path: /Users/minyoung/sunbin/logs

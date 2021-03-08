@@ -124,4 +124,5 @@ management:
     health:
       show-details: always
 logging:
-  file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-messageserver/qd-mall-messageserver.log
+  file: /Users/minyoung/sunbin/logs/qd-mall-messageserver/qd-mall-messageserver.log
+  path: /Users/minyoung/sunbin/logs

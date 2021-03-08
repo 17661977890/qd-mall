@@ -10,7 +10,7 @@ mall:
     title: 文件服务中心
     description: 文件服务中心接口文档
     version: 1.0
-    base-package: com.qidian.mall.uaa.controller
+    base-package: com.qidian.mall.file.controller
   security:
     ignore:
       httpUrls:

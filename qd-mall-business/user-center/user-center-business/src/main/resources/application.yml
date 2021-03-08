@@ -200,4 +200,5 @@ logging:
   level:
     root: INFO
     com.qidian.mall.user.mapper: debug
-  file: D:/WorkSpace/qd-mall-all/logs/application/qd-mall-usercenter/qd-mall-usercenter.log
+  file: /Users/minyoung/sunbin/logs/qd-mall-usercenter/qd-mall-usercenter.log
+  path: /Users/minyoung/sunbin/logs
