@@ -12,6 +12,7 @@ import com.qidian.mall.message.response.SendSmsVo;
 import com.qidian.mall.user.UserCenterBusinessApplication;
 import com.qidian.mall.user.api.SysUserApi;
 import com.qidian.mall.user.quartz.QuartzJobManager;
+import com.qidian.mall.user.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.jasypt.encryption.StringEncryptor;
 
+import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +37,7 @@ public class UserCenterBusinessApplicationTests {
 
     @Autowired
     private SysUserApi sysUserApi;
-    @Autowired
+    @Resource
     private AliyunSmsApi aliyunSmsApi;
 
     @Test
@@ -169,9 +171,13 @@ public class UserCenterBusinessApplicationTests {
 
 
     }
+
+    @Autowired
+    private ISysUserService sysUserService;
+
     @Test
     public void test2(){
-        System.out.println(RedisUtil.get("stock"));
+        System.out.println(sysUserService.getUserInfo("admin"));
     }
 
 

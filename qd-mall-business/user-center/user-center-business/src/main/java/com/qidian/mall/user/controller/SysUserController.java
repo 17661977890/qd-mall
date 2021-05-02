@@ -12,6 +12,7 @@ import com.qidian.mall.user.quartz.QuartzJobManager;
 import com.qidian.mall.user.quartz.TestQuartz;
 import com.qidian.mall.file.response.FileInfoDTO;
 import com.qidian.mall.user.request.RegUserDTO;
+import com.qidian.mall.user.response.UserInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -164,6 +165,15 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "根据用户名查询用户")
     public RestResponse queryByUsername(String username) {
         return RestResponse.resultSuccess(sysUserService.selectByUsername(username));
+    }
+
+    /**
+     * 根据用户名查询用户信息
+     */
+    @GetMapping(value = "/queryUserInfo", params = "username")
+    @ApiOperation(value = "查询用户详细信息")
+    public RestResponse<UserInfoVO> queryUserInfo(String username) {
+        return RestResponse.resultSuccess(sysUserService.getUserInfo(username));
     }
 
 

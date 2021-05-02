@@ -8,6 +8,7 @@ import com.qidian.mall.user.request.SysUserDTO;
 import com.qidian.mall.user.response.SysUserVO;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qidian.mall.user.response.UserInfoVO;
 
 /**
 * <p>
@@ -73,6 +74,13 @@ public interface ISysUserService extends IService<SysUser> {
     * @return 信息列表
     */
     IPage<SysUserVO> selectPage(SysUserDTO record,int pageSize,int pageNum);
+
+    /**
+     * 获取用户+角色信息
+     * @param username
+     * @return
+     */
+    UserInfoVO getUserInfo(String username);
 
 
     /**

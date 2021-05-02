@@ -4,6 +4,8 @@ import com.central.base.restparam.RestResponse;
 import com.qidian.mall.user.entity.CustomUserDetails;
 import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.hystrix.SysUserApiHystrix;
+import com.qidian.mall.user.response.UserInfoVO;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,13 @@ public interface SysUserApi {
     @RequestMapping(value = "/sys-user/queryByUsername",method = RequestMethod.GET)
     RestResponse<SysUser> queryByUsername(@RequestParam("username") String username);
 
+
+    /**
+     * 根据用户名查询用户信息
+     */
+    @GetMapping(value = "/sys-user/queryUserInfo", params = "username")
+    @ApiOperation(value = "查询用户详细信息")
+    RestResponse<UserInfoVO> queryUserInfo(@RequestParam("username") String username) ;
 
     /**
      *  ================== uaa 获取token 接口使用 ============

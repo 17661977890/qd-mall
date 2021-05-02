@@ -12,6 +12,7 @@ import com.qidian.mall.user.request.SysSmsCodeDTO;
 import com.qidian.mall.user.request.SysUserDTO;
 import com.qidian.mall.user.response.SysUserVO;
 import com.qidian.mall.user.mapper.SysUserMapper;
+import com.qidian.mall.user.response.UserInfoVO;
 import com.qidian.mall.user.service.ISysSmsService;
 import com.qidian.mall.user.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -193,6 +194,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         iPage.setTotal(list.getTotal());
         iPage.setPages(list.getPages());
         return iPage;
+    }
+
+    /**
+     * 获取用户 + 角色信息
+     * @param username
+     * @return
+     */
+    @Override
+    public UserInfoVO getUserInfo(String username) {
+        return sysUserMapper.getUserInfo(username);
     }
 
     // ===================================== 授权认证相关接口 ========================================

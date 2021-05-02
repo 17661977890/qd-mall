@@ -157,7 +157,7 @@ mall:
     version: 1.0
     base-package: com.qidian.mall.user.controller
     globalOperationParameters:
-    - name: token
+    - name: Authorization
       description: token
       modelRef: string
       parameterType: header

@@ -2,6 +2,7 @@ package com.qidian.mall.user.mapper;
 
 import com.qidian.mall.user.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qidian.mall.user.response.UserInfoVO;
 
 /**
  * <p>
@@ -12,4 +13,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2020-01-10
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
+
+    UserInfoVO getUserInfo(String username);
 }

@@ -21,9 +21,41 @@
         <result column="client_ip" property="clientIp"/>
     </resultMap>
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="UsefoInoResultMap" type="com.qidian.mall.user.response.UserInfoVO">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="nickname" property="nickname" />
+        <result column="head_img_url" property="headImgUrl" />
+        <result column="mobile" property="mobile" />
+        <result column="sex" property="sex" />
+        <result column="enabled" property="enabled" />
+        <result column="type" property="type" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="company" property="company" />
+        <result column="open_id" property="openId" />
+        <result column="client_ip" property="clientIp"/>
+        <collection property="roleVoList" ofType="com.qidian.mall.user.response.SysRoleVo" >
+            <result column="id" jdbcType="VARCHAR" property="id" />
+            <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+            <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, username, password, nickname, head_img_url, mobile, sex, enabled, type, create_time, update_time, company, open_id, delete_flag,client_id
     </sql>
+
+    <select id="getUserInfo" resultMap="UsefoInoResultMap" parameterType="java.lang.String">
+        select t.id,t.username,t.password,t.nickname,t.head_img_url,t.mobile,t.sex,t.enabled,t.type,t.create_time,t.update_time,
+        t.company,t.open_id,t.delete_flag,t.create_user,t.update_user,t.version,t.email,t.client_ip,u.id,u.role_name,u.role_code
+        from sys_user t
+        left join sys_user_role ur on t.id = ur.user_id
+        left join sys_role u on ur.role_id = u.id
+        where t.username = #{username} and t.delete_flag='N' and u.delete_flag='N'
+    </select>
 
 </mapper>

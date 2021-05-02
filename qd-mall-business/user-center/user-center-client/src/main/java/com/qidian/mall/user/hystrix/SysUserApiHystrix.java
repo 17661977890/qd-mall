@@ -3,6 +3,7 @@ package com.qidian.mall.user.hystrix;
 import com.central.base.restparam.RestResponse;
 import com.qidian.mall.user.api.SysUserApi;
 import com.qidian.mall.user.entity.CustomUserDetails;
+import com.qidian.mall.user.response.UserInfoVO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +16,11 @@ import org.springframework.stereotype.Component;
 public class SysUserApiHystrix extends BaseUserHystrix implements SysUserApi {
     @Override
     public RestResponse queryByUsername(String username) {
+        return getError2();
+    }
+
+    @Override
+    public RestResponse<UserInfoVO> queryUserInfo(String username) {
         return getError2();
     }
 

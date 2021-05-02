@@ -11,6 +11,7 @@ import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.uaa.websecurityconfig.mobileprovider.MobileAuthenticationToken;
 import com.qidian.mall.uaa.websecurityconfig.openIdprovider.OpenIdAuthenticationToken;
 import com.qidian.mall.user.request.SysSmsCodeDTO;
+import com.qidian.mall.user.response.UserInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -149,8 +150,8 @@ public class OAuth2Controller {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 通过feign远程调用用户中心的获取用户信息接口，来追加登录用户信息
         // 根据用户名查询 authentication.getName()
-        RestResponse<SysUser> restResponse  = sysUserApi.queryByUsername(authentication.getName());
-        SysUser sysUser = restResponse.getBody();
+        RestResponse<UserInfoVO> restResponse  = sysUserApi.queryUserInfo(authentication.getName());
+        UserInfoVO sysUser = restResponse.getBody();
 //        LoginUserInfo loginUserInfo = new LoginUserInfo();
 //        BeanUtils.copyProperties(sysUser,loginUserInfo);
 //        return RestResponse.resultSuccess(loginUserInfo);
