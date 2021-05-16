@@ -40,6 +40,9 @@ public class SysSourceDTO implements Serializable {
     @NotBlank(message = "资源名称不能为空",groups = {Add.class,Update.class})
     private String sourceName;
 
+    @NotBlank(message = "资源code不能为空",groups = {Add.class,Update.class})
+    private String sourceCode;
+
     /**
      * 上级资源id
      */

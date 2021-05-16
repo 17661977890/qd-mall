@@ -18,6 +18,10 @@ public class SysSourceVo implements Serializable {
     private Long id ;
     /** 资源名称 */
     private String sourceName ;
+    /**
+     * 资源code
+     */
+    private String sourceCode;
     /** 上级资源id */
     private Long parentId ;
     /** 上级资源名称 */

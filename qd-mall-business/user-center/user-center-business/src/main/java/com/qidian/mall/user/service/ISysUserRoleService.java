@@ -1,6 +1,7 @@
 package com.qidian.mall.user.service;
 
 import com.qidian.mall.user.entity.SysRole;
+import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.request.UserRoleDTO;
 
 import java.util.List;
@@ -25,4 +26,11 @@ public interface ISysUserRoleService {
      * @return
      */
     List<SysRole> getRoleByUserId(Long userId);
+
+    /**
+     * 获取角色下用户列表信息
+     * @param roleId
+     * @return
+     */
+    List<SysUser> getUserByRoleId(Long roleId);
 }

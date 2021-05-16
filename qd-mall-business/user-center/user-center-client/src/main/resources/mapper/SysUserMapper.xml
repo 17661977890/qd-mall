@@ -37,8 +37,8 @@
         <result column="company" property="company" />
         <result column="open_id" property="openId" />
         <result column="client_ip" property="clientIp"/>
-        <collection property="roleVoList" ofType="com.qidian.mall.user.response.SysRoleVo" >
-            <result column="id" jdbcType="VARCHAR" property="id" />
+        <collection property="roleVoList" ofType="com.qidian.mall.user.response.UserRoleVo" >
+            <result column="role_id" jdbcType="VARCHAR" property="id" />
             <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
             <result column="role_name" jdbcType="VARCHAR" property="roleName" />
         </collection>
@@ -49,13 +49,25 @@
         id, username, password, nickname, head_img_url, mobile, sex, enabled, type, create_time, update_time, company, open_id, delete_flag,client_id
     </sql>
 
+    <sql id="select_cloumn_list">
+        t.id,t.username,t.password,t.nickname,t.head_img_url,t.mobile,t.sex,t.enabled,t.type,t.create_time,t.update_time,
+t.company,t.open_id,t.delete_flag,t.create_user,t.update_user,t.version,t.email,t.client_ip
+    </sql>
+
     <select id="getUserInfo" resultMap="UsefoInoResultMap" parameterType="java.lang.String">
         select t.id,t.username,t.password,t.nickname,t.head_img_url,t.mobile,t.sex,t.enabled,t.type,t.create_time,t.update_time,
-        t.company,t.open_id,t.delete_flag,t.create_user,t.update_user,t.version,t.email,t.client_ip,u.id,u.role_name,u.role_code
+        t.company,t.open_id,t.delete_flag,t.create_user,t.update_user,t.version,t.email,t.client_ip,u.id role_id,u.role_name,u.role_code
         from sys_user t
         left join sys_user_role ur on t.id = ur.user_id
-        left join sys_role u on ur.role_id = u.id
-        where t.username = #{username} and t.delete_flag='N' and u.delete_flag='N'
+        left join sys_role u on ur.role_id = u.id and u.delete_flag='N'
+        where t.username = #{username} and t.delete_flag='N'
     </select>
 
+    <select id="getUserByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select <include refid="select_cloumn_list"/>
+        from sys_user t
+        left join sys_user_role ur on t.id = ur.user_id
+        left join sys_role r on ur.role_id = r.id and r.delete_flag='N'
+        where r.id = #{roleId} and t.delete_flag='N'
+    </select>
 </mapper>

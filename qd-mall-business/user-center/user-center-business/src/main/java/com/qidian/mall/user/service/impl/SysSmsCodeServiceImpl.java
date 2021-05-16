@@ -205,6 +205,7 @@ public class SysSmsCodeServiceImpl extends BaseServiceImpl implements ISysSmsSer
         sysSmsCode.setIsUsed(ConstantUtil.DELETE_FLAG_N);
         sysSmsCode.setDeleteFlag(ConstantUtil.DELETE_FLAG_N);
         sysSmsCode.setVersion(1);
+        addCommonField(sysSmsCode,"sys");
         return sysSmsCode;
     }
 

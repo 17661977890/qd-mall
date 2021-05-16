@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.central.base.mvc.BaseServiceImpl;
 import com.central.base.util.IdWorker;
 import com.qidian.mall.user.entity.SysRole;
+import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.entity.SysUserRole;
 import com.qidian.mall.user.mapper.SysRoleMapper;
+import com.qidian.mall.user.mapper.SysUserMapper;
 import com.qidian.mall.user.mapper.SysUserRoleMapper;
 import com.qidian.mall.user.request.UserRoleDTO;
 import com.qidian.mall.user.service.ISysUserRoleService;
@@ -38,6 +40,8 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl implements ISysUserR
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
 
     /**
@@ -96,5 +100,9 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl implements ISysUserR
     @Override
     public List<SysRole> getRoleByUserId(Long userId) {
         return sysRoleMapper.getRoleByUserId(userId);
+    }
+
+    public List<SysUser> getUserByRoleId(Long roleId){
+        return sysUserMapper.getUserByRoleId(roleId);
     }
 }

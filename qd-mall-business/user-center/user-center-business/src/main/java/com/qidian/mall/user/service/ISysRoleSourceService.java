@@ -28,6 +28,9 @@ public interface ISysRoleSourceService {
      */
     List<SysSource> getSourceListByRoleId(Long roleId);
 
+
+    List<SysSource> getSourceListByRoleIds(List<Long> roleIdList);
+
     /**
      * 获取用户得资源权限列表信息 (用户--角色--资源 （角色共有资源去重）)
      * @return

@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -97,6 +99,14 @@ public class SysRoleSourceServiceImpl extends BaseServiceImpl implements ISysRol
     @Override
     public List<SysSource> getSourceListByRoleId(Long roleId) {
         return sysSourceMapper.getSourceListByRoleId(roleId);
+    }
+
+    @Override
+    public List<SysSource> getSourceListByRoleIds(List<Long> roleIdList) {
+        List<SysSource> sourceList = sysSourceMapper.getSourceListByRoleIds(roleIdList);
+        sourceList = sourceList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()
+                -> new TreeSet<>(Comparator.comparing(SysSource::getId))), ArrayList::new));
+        return sourceList;
     }
 
     /**

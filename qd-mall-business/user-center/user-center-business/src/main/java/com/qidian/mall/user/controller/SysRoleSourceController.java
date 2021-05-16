@@ -38,7 +38,7 @@ import java.util.List;
 public class SysRoleSourceController extends BaseController {
 
     @Autowired
-    public ISysRoleSourceService saveRoleSource;
+    public ISysRoleSourceService sysRoleSourceService;
 
      
     /**
@@ -48,10 +48,10 @@ public class SysRoleSourceController extends BaseController {
     */
     @ApiOperation(value = "保存角色资源关系", notes = "保存角色资源关系")
     @RequestMapping(value = "/saveRoleSource", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse saveRoleSource(@Validated @RequestBody RestRequest<RoleSourceDTO> restRequest) {
+    public RestResponse saveRoleSource(@Validated(RoleSourceDTO.Add.class) @RequestBody RestRequest<RoleSourceDTO> restRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String)authentication.getPrincipal(); 
-        Boolean result = saveRoleSource.saveRoleSource(restRequest.getBody(),username);
+        Boolean result = sysRoleSourceService.saveRoleSource(restRequest.getBody(),username);
         return new RestResponse().success(result);
     }
 
@@ -64,8 +64,21 @@ public class SysRoleSourceController extends BaseController {
     */
     @ApiOperation(value = "查询角色拥有资源", notes = "查询角色拥有资源")
     @RequestMapping(value = "/querySourceByRole", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse querySourceByRole(@RequestBody RestRequest<RoleSourceDTO> restRequest) throws InterruptedException {
-        List<SysSource> result = saveRoleSource.getSourceListByRoleId(restRequest.getBody().getRoleId());
+    public RestResponse querySourceByRole(@RequestBody @Validated(RoleSourceDTO.RoleSource.class) RestRequest<RoleSourceDTO> restRequest) {
+        List<SysSource> result = sysRoleSourceService.getSourceListByRoleId(restRequest.getBody().getRoleId());
+        return new RestResponse().success(result);
+    }
+
+
+    /**
+     * 查询角色拥有资源
+     * @param restRequest 查询条件
+     * @return 查询结果
+     */
+    @ApiOperation(value = "查询角色拥有资源", notes = "查询角色拥有资源")
+    @RequestMapping(value = "/querySourceByRoles", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    public RestResponse querySourceByRoles(@RequestBody @Validated(RoleSourceDTO.RoleListSource.class) RestRequest<RoleSourceDTO> restRequest) {
+        List<SysSource> result = sysRoleSourceService.getSourceListByRoleIds(restRequest.getBody().getRoleIds());
         return new RestResponse().success(result);
     }
 
@@ -76,8 +89,8 @@ public class SysRoleSourceController extends BaseController {
      */
     @ApiOperation(value = "查询用户拥有资源", notes = "查询用户拥有资源")
     @RequestMapping(value = "/querySourceByUser", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    public RestResponse querySourceByUser(@RequestBody RestRequest<RoleSourceDTO> restRequest) throws InterruptedException {
-        List<SysSource> result = saveRoleSource.getSourceListByUserId(restRequest.getBody().getUserId());
+    public RestResponse querySourceByUser(@RequestBody @Validated(RoleSourceDTO.UserSource.class) RestRequest<RoleSourceDTO> restRequest)  {
+        List<SysSource> result = sysRoleSourceService.getSourceListByUserId(restRequest.getBody().getUserId());
         return new RestResponse().success(result);
     }
 

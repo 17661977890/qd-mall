@@ -30,6 +30,12 @@ public class SysSource extends BaseEntity {
     private String sourceName;
 
     /**
+     * 资源code
+     */
+    @TableField(value = "source_code")
+    private String sourceCode;
+
+    /**
      * 上级资源id
      */
     @TableField(value = "parent_id")

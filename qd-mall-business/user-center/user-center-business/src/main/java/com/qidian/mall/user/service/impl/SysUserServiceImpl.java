@@ -5,14 +5,15 @@ import com.central.base.message.MessageSourceService;
 import com.central.base.util.ConstantUtil;
 import com.central.base.util.IdWorker;
 import com.qidian.mall.user.entity.CustomUserDetails;
+import com.qidian.mall.user.entity.SysSource;
 import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.enums.UserTypeEnum;
+import com.qidian.mall.user.mapper.SysSourceMapper;
 import com.qidian.mall.user.request.RegUserDTO;
 import com.qidian.mall.user.request.SysSmsCodeDTO;
 import com.qidian.mall.user.request.SysUserDTO;
-import com.qidian.mall.user.response.SysUserVO;
+import com.qidian.mall.user.response.*;
 import com.qidian.mall.user.mapper.SysUserMapper;
-import com.qidian.mall.user.response.UserInfoVO;
 import com.qidian.mall.user.service.ISysSmsService;
 import com.qidian.mall.user.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,9 +29,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -53,6 +53,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Resource
     private SysUserMapper sysUserMapper;
+    @Resource
+    private SysSourceMapper sysSourceMapper;
 
     /**
      *  新用户注册
@@ -203,7 +205,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public UserInfoVO getUserInfo(String username) {
-        return sysUserMapper.getUserInfo(username);
+        UserInfoVO userInfoVO = sysUserMapper.getUserInfo(username);
+        List<Long> roleIdList = userInfoVO.getRoleVoList().stream().map(UserRoleVo::getId).collect(Collectors.toList());
+        List<RoleSourceVo> sourceList = sysSourceMapper.getSourceVoListByRoleIds(roleIdList);
+        // 资源去重（不同角色可能有重复资源）
+        sourceList = sourceList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()
+                -> new TreeSet<>(Comparator.comparing(RoleSourceVo::getId))), ArrayList::new));
+        userInfoVO.setSourceList(sourceList);
+        return userInfoVO;
     }
 
     // ===================================== 授权认证相关接口 ========================================

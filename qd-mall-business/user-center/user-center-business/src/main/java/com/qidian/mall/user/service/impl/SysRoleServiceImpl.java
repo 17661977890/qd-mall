@@ -9,22 +9,29 @@ import com.central.base.mvc.BaseServiceImpl;
 import com.central.base.util.ConstantUtil;
 import com.central.base.util.IdWorker;
 import com.qidian.mall.user.entity.SysRole;
+import com.qidian.mall.user.entity.SysRoleSource;
+import com.qidian.mall.user.entity.SysSource;
 import com.qidian.mall.user.entity.SysUser;
 import com.qidian.mall.user.mapper.SysRoleMapper;
+import com.qidian.mall.user.mapper.SysRoleSourceMapper;
 import com.qidian.mall.user.request.SysRoleDTO;
 import com.qidian.mall.user.request.SysUserDTO;
 import com.qidian.mall.user.response.SysRoleVo;
 import com.qidian.mall.user.response.SysUserVO;
 import com.qidian.mall.user.service.ISysRoleService;
+import com.qidian.mall.user.service.ISysRoleSourceService;
+import com.qidian.mall.user.service.ISysUserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色管理业务实现类
@@ -38,6 +45,12 @@ public class SysRoleServiceImpl extends BaseServiceImpl implements ISysRoleServi
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
+    @Autowired
+    private ISysUserRoleService sysUserRoleService;
+    @Autowired
+    private ISysRoleSourceService sysRoleSourceService;
+    @Autowired
+    private SysRoleSourceMapper sysRoleSourceMapper;
 
     /**
      * 新增角色
@@ -96,20 +109,34 @@ public class SysRoleServiceImpl extends BaseServiceImpl implements ISysRoleServi
      *  LogicDeleteByIdWithFill 使用选装件
      *  mapper 添加方法：int deleteByIdWithFill(T entity);
      *  需要逻辑删除，同事更新其他字段，其他字段需要添加注解   @TableField(value = "update_user",fill = FieldFill.UPDATE)
+     *
+     * 如果有用户绑定此角色提示不能删除
+     * 同时删除角色下的资源数据
      * @param id
      * @param username
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Integer deleteById(Long id, String username) {
+        List<SysUser> sysUserList =sysUserRoleService.getUserByRoleId(id);
+        if(CollectionUtils.isNotEmpty(sysUserList)){
+            throw new BusinessException("102405",getMessage("102405"));
+        }
         SysRole role = new SysRole();
         role.setId(id);
         updateCommonField(role,username);
         int result = sysRoleMapper.deleteByIdWithFill(role);
-        log.info("logic delete role error result:{}",result);
+        log.info("logic delete role result:{}",result);
         if(result!=1){
             throw new BusinessException("102404",getMessage("102404"));
         }
+        QueryWrapper<SysRoleSource> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysRoleSource.COL_ROLE_ID,id);
+        List<SysRoleSource> sysRoleSourceList = sysRoleSourceMapper.selectList(queryWrapper);
+        List<Long> idList = sysRoleSourceList.stream().map(SysRoleSource::getId).collect(Collectors.toList());
+        int count = sysRoleSourceMapper.deleteBatchIds(idList);
+        log.info("delete role source result:{}",count);
         return result;
     }
 

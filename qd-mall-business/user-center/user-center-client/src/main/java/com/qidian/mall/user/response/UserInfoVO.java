@@ -2,6 +2,7 @@ package com.qidian.mall.user.response;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.qidian.mall.user.entity.SysSource;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -67,5 +68,8 @@ public class UserInfoVO implements Serializable {
 
     // ============================== 角色信息 =====================
     @ApiModelProperty(value = "角色列表")
-    private List<SysRoleVo> roleVoList;
+    private List<UserRoleVo> roleVoList;
+
+    @ApiModelProperty(value = "授权资源列表")
+    private List<RoleSourceVo> sourceList;
 }
