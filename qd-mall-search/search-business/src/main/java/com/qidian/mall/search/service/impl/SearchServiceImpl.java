@@ -78,7 +78,7 @@ public class SearchServiceImpl implements SearchService {
             page=1;
         }
         // 搜索条件封装
-        SearchRequest searchRequest = new SearchRequest();
+        SearchRequest searchRequest = new SearchRequest("jd-goods");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         // 精准匹配
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("title",keyWord);
@@ -106,7 +106,7 @@ public class SearchServiceImpl implements SearchService {
             page=1;
         }
         // 搜索条件封装
-        SearchRequest searchRequest = new SearchRequest();
+        SearchRequest searchRequest = new SearchRequest("jd-goods");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         // 精准匹配
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("title",keyWord);
